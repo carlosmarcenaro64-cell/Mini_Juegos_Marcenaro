@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Principal - Palabra Secreta</title>
+    <title>Menú Principal - Mini Juegos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -25,7 +25,7 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
 
-     <!-- Pantalla de Carga (Splash Screen) -->
+    <!-- Pantalla de Carga (Splash Screen) -->
     <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
         <div class="flex flex-col items-center justify-center pop-animation">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
@@ -38,7 +38,7 @@
                 </span>
             </div>
             
-            <!-- Pequeño indicador de carga -->
+            <!-- Indicador de carga -->
             <div class="mt-8 flex gap-1">
                 <div class="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
                 <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
@@ -50,6 +50,7 @@
     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[140px] pointer-events-none rounded-full"></div>
     <div class="absolute bottom-0 right-10 w-[400px] h-[300px] bg-purple-600/15 blur-[120px] pointer-events-none rounded-full"></div>
 
+    <!-- Header con botón Iniciar Sesión apuntando a index_palabra_secreta.html -->
     <header class="p-4 sm:p-6 flex items-center justify-between max-w-4xl mx-auto w-full z-10">
         <a href="index_palabra_secreta.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-sm font-medium shadow-lg hover:border-indigo-500/40">
             <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
@@ -74,7 +75,7 @@
 
         <div class="w-full grid gap-4">
             
-            <!-- Adivina la Palabra en Español (index.html) -->
+            <!-- 1. Adivina la Palabra en Español (index.html) -->
             <a href="index.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md">
@@ -88,7 +89,7 @@
                 <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-lg pr-2">→</span>
             </a>
 
-            <!-- Modo Temperatura -->
+            <!-- 2. Modo Temperatura -->
             <a href="index_temp.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md">
@@ -102,7 +103,7 @@
                 <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-lg pr-2">→</span>
             </a>
 
-            <!-- Modo Inglés -->
+            <!-- 3. Modo Inglés -->
             <a href="index_en.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md">
@@ -116,7 +117,7 @@
                 <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-lg pr-2">→</span>
             </a>
 
-            <!-- Ranking Global (Ubicado al final de las opciones) -->
+            <!-- 4. Ranking Global (Ubicado al final de las opciones) -->
             <a href="ranking.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md">
@@ -134,6 +135,7 @@
 
     </main>
 
+    <!-- Footer completamente centrado -->
     <footer class="w-full max-w-md mx-auto flex flex-col items-center justify-center gap-2 text-xs text-indigo-300/80 pt-4 pb-4 px-4 border-t border-white/10 mt-auto text-center">
         <span class="font-bold tracking-wide text-indigo-200/90 text-center w-full block">
             By: <span class="text-pink-400">Marcenaroc64</span>
@@ -153,7 +155,7 @@
     </footer>
 
     <script>
-        // Ocultar la pantalla de carga después de 1.2 segundos con efecto suave de desvanecimiento
+        // Ocultar la pantalla de carga después de 1 segundo con efecto suave de desvanecimiento
         window.addEventListener('load', () => {
             const splash = document.getElementById('splash-screen');
             setTimeout(() => {
