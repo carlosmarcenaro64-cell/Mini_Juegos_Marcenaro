@@ -2,17 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menú Principal - Mini Juegos</title>
+    <!-- Favicon de control de videojuegos -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23ec4899' d='M448 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V96c0-35.35-28.65-64-64-64zm-244.5 288.5h-37.8v37.8c0 10.5-8.5 19-19 19s-19-8.5-19-19v-37.8h-37.8c-10.5 0-19-8.5-19-19s8.5-19 19-19h37.8v-37.8c0-10.5 8.5-19 19-19s19 8.5 19 19v37.8h37.8c10.5 0 19 8.5 19 19s-8.5 19-19 19zm171.5 37.8c-21.2 0-38.5-17.3-38.5-38.5s17.3-38.5 38.5-38.5 38.5 17.3 38.5 38.5-17.3 38.5-38.5 38.5zm64-96c-21.2 0-38.5-17.3-38.5-38.5s17.3-38.5 38.5-38.5 38.5 17.3 38.5 38.5-17.3 38.5-38.5 38.5z'/></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
         .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
         @keyframes popIn {
             0% { transform: scale(0.9); opacity: 0; }
@@ -26,20 +28,20 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
 
     <!-- Pantalla de Carga (Splash Screen) -->
-    <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
-        <div class="flex flex-col items-center justify-center pop-animation">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
+    <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out px-4">
+        <div class="flex flex-col items-center justify-center pop-animation text-center">
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-4 sm:mb-6 animate-pulse">
                 Mini<br>Juegos
             </h1>
             
-            <div class="flex items-center gap-2 mt-4 opacity-80 animate-bounce">
-                <span class="font-bold tracking-widest text-indigo-200 text-sm">
+            <div class="flex items-center gap-2 mt-2 sm:mt-4 opacity-80 animate-bounce">
+                <span class="font-bold tracking-widest text-indigo-200 text-xs sm:text-sm">
                     By: <span class="text-pink-400">Marcenaroc64</span>
                 </span>
             </div>
             
             <!-- Indicador de carga -->
-            <div class="mt-8 flex gap-1">
+            <div class="mt-6 sm:mt-8 flex gap-1.5">
                 <div class="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
                 <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
                 <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
@@ -47,96 +49,96 @@
         </div>
     </div>
 
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[140px] pointer-events-none rounded-full"></div>
-    <div class="absolute bottom-0 right-10 w-[400px] h-[300px] bg-purple-600/15 blur-[120px] pointer-events-none rounded-full"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[600px] h-[180px] sm:h-[350px] bg-indigo-600/20 blur-[90px] sm:blur-[140px] pointer-events-none rounded-full"></div>
+    <div class="absolute bottom-0 right-4 sm:right-10 w-[220px] sm:w-[400px] h-[180px] sm:h-[300px] bg-purple-600/15 blur-[80px] sm:blur-[120px] pointer-events-none rounded-full"></div>
 
     <!-- Header con botón Iniciar Sesión apuntando a index_palabra_secreta.html -->
-    <header class="p-4 sm:p-6 flex items-center justify-between max-w-4xl mx-auto w-full z-10">
-        <a href="index_palabra_secreta.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-sm font-medium shadow-lg hover:border-indigo-500/40">
-            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+    <header class="p-4 sm:p-6 flex items-center justify-between max-w-2xl mx-auto w-full z-10">
+        <a href="index_palabra_secreta.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-xs sm:text-sm font-medium shadow-lg hover:border-indigo-500/40 active:scale-95">
+            <i class="fa-solid fa-arrow-right-to-bracket text-xs text-indigo-400"></i>
             <span>Iniciar Sesión</span>
         </a>
         <div>
-            <span class="text-xs uppercase tracking-widest text-indigo-400 font-semibold px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40">Mini Juegos Marcenaro</span>
+            <span class="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-indigo-400 font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40 whitespace-nowrap">Mini Juegos</span>
         </div>
     </header>
 
-    <main class="flex-grow px-4 py-6 max-w-xl mx-auto w-full flex flex-col items-center justify-center z-10">
+    <main class="flex-grow px-4 sm:px-6 py-4 sm:py-6 max-w-xl mx-auto w-full flex flex-col items-center justify-center z-10">
         
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-4 shadow-xl shadow-indigo-500/20">
-                <i class="fa-solid fa-gamepad text-2xl"></i>
+        <div class="text-center mb-6 sm:mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-3 sm:mb-4 shadow-xl shadow-indigo-500/20">
+                <i class="fa-solid fa-gamepad text-xl sm:text-2xl"></i>
             </div>
-            <h1 class="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-500 bg-clip-text text-transparent">
+            <h1 class="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-500 bg-clip-text text-transparent px-2">
                 MENÚ PRINCIPAL
             </h1>
-            <p class="text-slate-400 text-sm sm:text-base mt-2">Selecciona el modo de juego o sección que deseas explorar</p>
+            <p class="text-slate-400 text-xs sm:text-sm mt-2 px-2">Selecciona el modo de juego o sección que deseas explorar</p>
         </div>
 
-        <div class="w-full grid gap-4">
+        <div class="w-full grid gap-3 sm:gap-4">
             
             <!-- 1. Adivina la Palabra en Español (index.html) -->
-            <a href="index_palabra_secreta.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md">
+            <a href="index_palabra_secreta.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-language"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-slate-200 group-hover:text-indigo-300 transition-colors">Adivina la Palabra en Español</h2>
-                        <p class="text-xs text-slate-400">Ir al juego clásico en idioma español</p>
+                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-indigo-300 transition-colors">Adivina la Palabra en Español</h2>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Ir al juego clásico en idioma español</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-lg pr-2">→</span>
+                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-base pr-1">→</span>
             </a>
 
             <!-- 2. Modo Temperatura -->
-            <a href="index_temp.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md">
+            <a href="index_temp.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-temperature-three-quarters"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-slate-200 group-hover:text-orange-300 transition-colors">Modo Temperatura</h2>
-                        <p class="text-xs text-slate-400">Adivina guiado por pistas de frío o calor</p>
+                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-orange-300 transition-colors">Modo Temperatura</h2>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Adivina guiado por pistas de frío o calor</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-lg pr-2">→</span>
+                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-base pr-1">→</span>
             </a>
 
             <!-- 3. Modo Inglés -->
-            <a href="index_en.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md">
+            <a href="index_en.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-globe"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-slate-200 group-hover:text-cyan-300 transition-colors">Modo Inglés</h2>
-                        <p class="text-xs text-slate-400">Practica y adivina palabras en idioma inglés</p>
+                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-cyan-300 transition-colors">Modo Inglés</h2>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Practica y adivina palabras en idioma inglés</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-lg pr-2">→</span>
+                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-base pr-1">→</span>
             </a>
 
-            <!-- 4. Ranking Global (Ubicado al final de las opciones) -->
-            <a href="ranking.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md">
+            <!-- 4. Ranking Global -->
+            <a href="ranking.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+                <div class="flex items-center gap-3 sm:gap-4">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-trophy"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-slate-200 group-hover:text-amber-300 transition-colors">Ranking Global</h2>
-                        <p class="text-xs text-slate-400">Tabla de líderes y mejores puntuaciones</p>
+                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-amber-300 transition-colors">Ranking Global</h2>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Tabla de líderes y mejores puntuaciones</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-lg pr-2">→</span>
+                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-base pr-1">→</span>
             </a>
 
         </div>
 
     </main>
 
-    <!-- Footer completamente centrado -->
-    <footer class="w-full max-w-md mx-auto flex flex-col items-center justify-center gap-2 text-xs text-indigo-300/80 pt-4 pb-4 px-4 border-t border-white/10 mt-auto text-center">
+    <!-- Footer completamente centrado y adaptado -->
+    <footer class="w-full max-w-sm mx-auto flex flex-col items-center justify-center gap-2 text-xs text-indigo-300/80 pt-4 pb-6 px-4 border-t border-white/10 mt-auto text-center">
         <span class="font-bold tracking-wide text-indigo-200/90 text-center w-full block">
             By: <span class="text-pink-400">Marcenaroc64</span>
         </span>
@@ -145,7 +147,7 @@
             <a href="https://www.tiktok.com/@marcenaroc64" 
                target="_blank" 
                rel="noopener noreferrer" 
-               class="inline-flex items-center justify-center gap-1.5 bg-black/60 hover:bg-black/95 active:scale-95 border border-white/20 text-white px-3 py-1 rounded-full text-xs font-semibold transition-all shadow-md hover:border-pink-500/50">
+               class="inline-flex items-center justify-center gap-1.5 bg-black/60 hover:bg-black/95 active:scale-95 border border-white/20 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all shadow-md hover:border-pink-500/50">
                 <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24">
                     <path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/>
                 </svg>
@@ -161,7 +163,7 @@
             setTimeout(() => {
                 splash.style.opacity = '0';
                 splash.style.visibility = 'hidden';
-            }, 1000);
+            }, 900);
         });
     </script>
 
