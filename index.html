@@ -15,6 +15,11 @@
             background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.25);
         }
         @keyframes popIn {
             0% { transform: scale(0.9); opacity: 0; }
@@ -23,6 +28,12 @@
         .pop-animation {
             animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+        @keyframes floatGlow {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.2; }
+            50% { transform: translateY(-15px) scale(1.05); opacity: 0.35; }
+        }
+        .floating-blob-1 { animation: floatGlow 8s ease-in-out infinite; }
+        .floating-blob-2 { animation: floatGlow 10s ease-in-out infinite reverse; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
@@ -31,7 +42,7 @@
     <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out px-4">
         <div class="flex flex-col items-center justify-center pop-animation text-center">
             <h1 class="text-3xl sm:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-4 sm:mb-6 animate-pulse">
-                Mini<br>Juegos
+                MINI<br>JUEGOS
             </h1>
             
             <div class="flex items-center gap-2 mt-2 sm:mt-4 opacity-80 animate-bounce">
@@ -49,24 +60,39 @@
         </div>
     </div>
 
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[600px] h-[180px] sm:h-[350px] bg-indigo-600/20 blur-[90px] sm:blur-[140px] pointer-events-none rounded-full"></div>
-    <div class="absolute bottom-0 right-4 sm:right-10 w-[220px] sm:w-[400px] h-[180px] sm:h-[300px] bg-purple-600/15 blur-[80px] sm:blur-[120px] pointer-events-none rounded-full"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[600px] h-[180px] sm:h-[350px] bg-indigo-600/20 blur-[90px] sm:blur-[140px] pointer-events-none rounded-full floating-blob-1"></div>
+    <div class="absolute bottom-0 right-4 sm:right-10 w-[220px] sm:w-[400px] h-[180px] sm:h-[300px] bg-purple-600/15 blur-[80px] sm:blur-[120px] pointer-events-none rounded-full floating-blob-2"></div>
 
-    <!-- Header con botón Iniciar Sesión apuntando a index_palabra_secreta.html -->
+    <!-- Header con botón Iniciar Sesión y Control de Audio/Vibración -->
     <header class="p-4 sm:p-6 flex items-center justify-between max-w-2xl mx-auto w-full z-10">
-        <a href="index_palabra_secreta.html" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-xs sm:text-sm font-medium shadow-lg hover:border-indigo-500/40 active:scale-95">
+        <a href="index_palabra_secreta.html" 
+           onmouseenter="playSound('hover')" 
+           onclick="playSound('click'); triggerVibration(30);"
+           class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-xs sm:text-sm font-medium shadow-lg hover:border-indigo-500/40 active:scale-95">
             <i class="fa-solid fa-arrow-right-to-bracket text-xs text-indigo-400"></i>
             <span>Iniciar Sesión</span>
         </a>
-        <div>
-            <span class="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-indigo-400 font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40 whitespace-nowrap">Mini Juegos</span>
+
+        <div class="flex items-center gap-2 sm:gap-3">
+            <!-- Botón de Audio y Vibración -->
+            <button id="sound-toggle-btn" 
+                    onclick="toggleAudio()" 
+                    onmouseenter="playSound('hover')"
+                    class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-indigo-400 shadow-lg hover:border-indigo-500/40 active:scale-95"
+                    title="Activar / Desactivar Sonidos y Vibración">
+                <i id="sound-icon" class="fa-solid fa-volume-high text-sm"></i>
+            </button>
+            <div>
+                <span class="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-indigo-400 font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40 whitespace-nowrap">Mini Juegos</span>
+            </div>
         </div>
     </header>
 
+    <!-- Main Content -->
     <main class="flex-grow px-4 sm:px-6 py-4 sm:py-6 max-w-xl mx-auto w-full flex flex-col items-center justify-center z-10">
         
         <div class="text-center mb-6 sm:mb-8">
-            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-3 sm:mb-4 shadow-xl shadow-indigo-500/20">
+            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-3 sm:mb-4 shadow-xl shadow-indigo-500/20 animate-pulse">
                 <i class="fa-solid fa-gamepad text-xl sm:text-2xl"></i>
             </div>
             <h1 class="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-500 bg-clip-text text-transparent px-2">
@@ -78,7 +104,10 @@
         <div class="w-full grid gap-3 sm:gap-4">
             
             <!-- 1. Adivina la Palabra en Español (index.html) -->
-            <a href="index_palabra_secreta.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+            <a href="index.html" 
+               onmouseenter="playSound('hover')" 
+               onclick="playSound('click'); triggerVibration(40);"
+               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
                 <div class="flex items-center gap-3 sm:gap-4">
                     <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-language"></i>
@@ -88,11 +117,14 @@
                         <p class="text-[11px] sm:text-xs text-slate-400">Ir al juego clásico en idioma español</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-base pr-1">→</span>
+                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
             </a>
 
             <!-- 2. Modo Temperatura -->
-            <a href="index_temp.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+            <a href="index_temp.html" 
+               onmouseenter="playSound('hover')" 
+               onclick="playSound('click'); triggerVibration(40);"
+               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
                 <div class="flex items-center gap-3 sm:gap-4">
                     <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-temperature-three-quarters"></i>
@@ -102,11 +134,14 @@
                         <p class="text-[11px] sm:text-xs text-slate-400">Adivina guiado por pistas de frío o calor</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-base pr-1">→</span>
+                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
             </a>
 
             <!-- 3. Modo Inglés -->
-            <a href="index_en.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+            <a href="index_en.html" 
+               onmouseenter="playSound('hover')" 
+               onclick="playSound('click'); triggerVibration(40);"
+               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
                 <div class="flex items-center gap-3 sm:gap-4">
                     <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-globe"></i>
@@ -116,11 +151,14 @@
                         <p class="text-[11px] sm:text-xs text-slate-400">Practica y adivina palabras en idioma inglés</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-base pr-1">→</span>
+                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
             </a>
 
             <!-- 4. Ranking Global -->
-            <a href="ranking.html" class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90 active:scale-[0.98]">
+            <a href="ranking.html" 
+               onmouseenter="playSound('hover')" 
+               onclick="playSound('click'); triggerVibration(40);"
+               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
                 <div class="flex items-center gap-3 sm:gap-4">
                     <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md shrink-0">
                         <i class="fa-solid fa-trophy"></i>
@@ -130,7 +168,7 @@
                         <p class="text-[11px] sm:text-xs text-slate-400">Tabla de líderes y mejores puntuaciones</p>
                     </div>
                 </div>
-                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-base pr-1">→</span>
+                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
             </a>
 
         </div>
@@ -147,6 +185,8 @@
             <a href="https://www.tiktok.com/@marcenaroc64" 
                target="_blank" 
                rel="noopener noreferrer" 
+               onmouseenter="playSound('hover')" 
+               onclick="playSound('click'); triggerVibration(30);"
                class="inline-flex items-center justify-center gap-1.5 bg-black/60 hover:bg-black/95 active:scale-95 border border-white/20 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all shadow-md hover:border-pink-500/50">
                 <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24">
                     <path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/>
@@ -157,7 +197,7 @@
     </footer>
 
     <script>
-        // Ocultar la pantalla de carga después de 1 segundo con efecto suave de desvanecimiento
+        // Ocultar la pantalla de carga después de 900ms con efecto suave
         window.addEventListener('load', () => {
             const splash = document.getElementById('splash-screen');
             setTimeout(() => {
@@ -165,6 +205,96 @@
                 splash.style.visibility = 'hidden';
             }, 900);
         });
+
+        // Configuración de Audio (Web Audio API) y Vibración Háptica
+        let audioEnabled = localStorage.getItem('mini_juegos_audio') !== 'false';
+        let audioCtx = null;
+
+        function initAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Inicializar al primer toque o clic en la página
+        window.addEventListener('pointerdown', () => {
+            initAudioContext();
+        }, { once: true });
+        
+        // Actualizar icono inicial de audio según preferencia guardada
+        window.addEventListener('DOMContentLoaded', () => {
+            updateSoundIcon();
+        });
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            localStorage.setItem('mini_juegos_audio', audioEnabled);
+            updateSoundIcon();
+            if (audioEnabled) {
+                initAudioContext();
+                playSound('click');
+                triggerVibration(50);
+            }
+        }
+
+        function updateSoundIcon() {
+            const icon = document.getElementById('sound-icon');
+            if (audioEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-sm';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-sm text-slate-500';
+            }
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            try {
+                initAudioContext();
+                if (!audioCtx) return;
+                
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime); // Nota A4
+                    osc.frequency.exponentialRampToValueAtTime(554.37, audioCtx.currentTime + 0.08); // Nota C#5
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // Nota D5
+                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.12); // Nota A5
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.12);
+                }
+            } catch (e) {
+                console.warn('AudioContext restricted or error:', e);
+            }
+        }
+
+        function triggerVibration(duration) {
+            if (!audioEnabled) return;
+            if (typeof navigator !== 'undefined' && navigator.vibrate) {
+                try {
+                    navigator.vibrate(duration);
+                } catch (e) {
+                    // Ignorar si el navegador bloquea la vibración
+                }
+            }
+        }
     </script>
 
 </body>
