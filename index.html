@@ -2,85 +2,34 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Adivina la Palabra - Con Guardado en la Nube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal - Palabra Secreta</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
-        body {
-            font-family: 'Outfit', sans-serif;
-            touch-action: manipulation;
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-        .pop-animation {
-            animation: pop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes pop {
-            0% { transform: scale(0.85); opacity: 0.7; }
-            50% { transform: scale(1.08); }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .shake-animation {
-            animation: shake 0.4s ease-in-out;
+        .pop-animation {
+            animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-6px); }
-            40%, 80% { transform: translateX(6px); }
-        }
-        .flip-tile {
-            animation: flip 0.6s ease-in-out forwards;
-        }
-        @keyframes flip {
-            0% { transform: rotateX(0deg); }
-            50% { transform: rotateX(90deg); }
-            100% { transform: rotateX(0deg); }
-        }
-        .pulse-glow {
-            animation: pulseGlow 2s infinite;
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
-            50% { box-shadow: 0 0 25px rgba(234, 179, 8, 0.6); }
-        }
-        
-        /* Animación para el hito de fuego (cada 5 rachas) */
-        .fire-milestone-popup {
-            animation: firePop 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes firePop {
-            0% { transform: scale(0.3) translateY(40px); opacity: 0; }
-            20% { transform: scale(1.15) translateY(0); opacity: 1; }
-            35% { transform: scale(1) translateY(0); opacity: 1; }
-            80% { transform: scale(1) translateY(-20px); opacity: 1; }
-            100% { transform: scale(0.9) translateY(-60px); opacity: 0; }
-        }
-
-        .flame-wiggle {
-            animation: flameWiggle 0.6s ease-in-out infinite alternate;
-        }
-        @keyframes flameWiggle {
-            0% { transform: rotate(-5deg) scale(1); }
-            100% { transform: rotate(5deg) scale(1.08); }
-        }
-        
-        /* Utility classes for tile colors to simplify JS */
-        .tile-correct { background-color: #059669; border-color: #059669; color: white; }
-        .tile-present { background-color: #d97706; border-color: #d97706; color: white; }
-        .tile-absent { background-color: #dc2626; border-color: #dc2626; color: white; }
-        
-        /* Custom Scrollbar para modales */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(20, 184, 166, 0.5); border-radius: 10px; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950 min-h-screen text-white flex flex-col justify-between items-center p-3 select-none overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
 
-    <!-- Pantalla de Carga (Splash Screen) -->
+     <!-- Pantalla de Carga (Splash Screen) -->
     <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out">
         <div class="flex flex-col items-center justify-center pop-animation">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-6 text-center animate-pulse">
-                PALABRA<br>SECRETA
+                Mini<br>Juegos
             </h1>
             
             <div class="flex items-center gap-2 mt-4 opacity-80 animate-bounce">
@@ -98,355 +47,103 @@
         </div>
     </div>
 
-    <!-- Contenedor flotante para animación de racha de fuego (cada 5 niveles) -->
-    <div id="fire-milestone-container" class="fixed inset-0 z-[200] pointer-events-none flex items-center justify-center overflow-hidden hidden">
-        <div id="fire-milestone-box" class="bg-slate-900/90 backdrop-blur-md border-2 border-amber-500/80 px-8 py-6 rounded-3xl shadow-2xl flex flex-col items-center justify-center text-center transform scale-50 opacity-0">
-            <div class="text-6xl md:text-7xl mb-2 flame-wiggle">🔥</div>
-            <h3 class="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-300 uppercase tracking-wider">
-                ¡Racha Legendaria!
-            </h3>
-            <p class="text-sm md:text-base font-bold text-amber-200 mt-1">
-                ¡Has alcanzado <span id="milestone-streak-num" class="text-white text-lg underline">5</span> victorias seguidas!
-            </p>
-        </div>
-    </div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-indigo-600/20 blur-[140px] pointer-events-none rounded-full"></div>
+    <div class="absolute bottom-0 right-10 w-[400px] h-[300px] bg-purple-600/15 blur-[120px] pointer-events-none rounded-full"></div>
 
-    <header class="w-full max-w-md flex flex-col gap-2 py-2">
-        <div class="flex flex-wrap items-center justify-between gap-2 bg-white/10 backdrop-blur-md px-3 py-2 rounded-2xl border border-white/10">
-            <!-- Info de Usuario -->
-            <div id="user-profile" class="flex items-center gap-2">
-                <div id="user-avatar" class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase shadow">
-                    👤
-                </div>
-                <div class="flex flex-col">
-                    <span id="user-name" class="text-xs font-bold truncate max-w-[120px] text-indigo-100">Invitado</span>
-                    <span id="user-status" class="text-[10px] text-indigo-300">Progreso Local</span>
-                </div>
-            </div>
-
-            <!-- Acciones de Cuenta / Estadísticas -->
-            <div class="flex flex-wrap justify-end items-center gap-1.5">
-                <button id="words-btn" title="Diccionario de Palabras" class="bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/30 active:scale-95 transition-all p-2 rounded-xl text-sm md:text-xs flex items-center gap-1 font-bold">
-                    📖<span class="hidden sm:inline">Diccionario</span>
-                </button>
-                <button id="suggest-btn" title="Recomendar Palabra" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    💡<span class="hidden sm:inline">Sugerir</span>
-                </button>
-                <button id="bug-btn" title="Reportar Bug" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 active:scale-95 transition-all p-2 rounded-xl text-xs flex items-center gap-1 font-bold">
-                    🐛<span class="hidden sm:inline">Bug</span>
-                </button>
-                <button id="help-btn" title="Cómo jugar" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
-                    ❓
-                </button>
-                <button id="stats-btn" title="Ver Estadísticas" class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
-                    📊
-                </button>
-
-                <button id="menu-btn"
-                onclick="window.location.href='index_menu.html';"
-                title="Menu"
-                class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
-                🏠
-                </button>
-
-                <button id="ranking-btn"
-                onclick="window.location.href='ranking.html';"
-                title="Global Ranking"
-                class="bg-white/15 hover:bg-white/25 active:scale-95 transition-all p-2 rounded-xl text-sm border border-white/10">
-                🏆
-                </button>
-                
-                <button id="auth-btn" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-bold text-xs px-2.5 py-2 rounded-xl shadow-md transition-all flex items-center gap-1">
-                    <span>Acceder</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Título -->
-        <div class="text-center mt-1">
-            <h1 class="text-2xl md:text-3xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-sm">
-                PALABRA SECRETA
-            </h1>
-            <div class="flex items-center justify-center gap-2 mt-1 flex-wrap">
-                <span class="bg-indigo-900/60 border border-indigo-400/30 text-indigo-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                    📚 <span id="total-words-count" class="font-extrabold text-yellow-300">--</span> palabras disponibles
-                </span>
-                <span class="bg-purple-900/60 border border-purple-400/30 text-purple-200 text-[11px] font-medium px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1">
-                    🔠 <span id="word-length-count" class="font-extrabold text-yellow-300">--</span> letras
-                </span>
-                <button id="skip-btn" title="Cambiar palabra (solo para palabras largas)" class="hidden bg-rose-500/20 hover:bg-rose-500/40 border border-rose-500/40 text-rose-200 text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-sm flex items-center gap-1 active:scale-95 transition-all">
-                    ⏭️ Cambiar
-                </button>
-            </div>
-            <p id="subtitle-info" class="text-xs text-indigo-200 mt-1">Adivina la palabra oculta</p>
+    <header class="p-4 sm:p-6 flex items-center justify-between max-w-4xl mx-auto w-full z-10">
+        <a href="index_palabra_secreta.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-sm font-medium shadow-lg hover:border-indigo-500/40">
+            <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
+            <span>Iniciar Sesión</span>
+        </a>
+        <div>
+            <span class="text-xs uppercase tracking-widest text-indigo-400 font-semibold px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40">Mini Juegos Marcenaro</span>
         </div>
     </header>
 
-    <main class="w-full max-w-md flex flex-col items-center gap-3 my-auto">
+    <main class="flex-grow px-4 py-6 max-w-xl mx-auto w-full flex flex-col items-center justify-center z-10">
         
-        <!-- Pista Actual -->
-        <div id="hint-box" class="bg-white/15 backdrop-blur-md border border-yellow-400/30 rounded-xl px-4 py-2 text-center text-xs md:text-sm text-yellow-200 font-medium shadow-lg w-full transition-all duration-500 opacity-0 scale-95 pointer-events-none hidden">
-            🔮 <span class="font-bold">Pista:</span> <span id="clue-text" class="italic">...</span>
-        </div>
-
-        <!-- Cuadrícula del Tablero -->
-        <div id="board" class="w-full mx-auto flex flex-col gap-1.5 justify-center items-center px-2">
-            <!-- Celdas dinámicas se insertan aquí -->
-        </div>
-
-        <!-- Mensajes de Estado -->
-        <div id="message-container" class="h-8 flex items-center justify-center mt-2 z-10">
-            <span id="game-message" class="text-xs md:text-sm font-semibold px-4 py-2 rounded-xl bg-slate-900/90 backdrop-blur border border-pink-500/30 text-pink-300 opacity-0 transition-opacity duration-300 shadow-lg pointer-events-none"></span>
-        </div>
-
-        <div id="keyboard" class="w-full flex flex-col gap-1.5 max-w-md px-1 mt-2">
-            <!-- Fila 1 -->
-            <div class="flex justify-center gap-1 w-full">
-                <button data-key="Q" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Q</button>
-                <button data-key="W" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">W</button>
-                <button data-key="E" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">E</button>
-                <button data-key="R" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">R</button>
-                <button data-key="T" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">T</button>
-                <button data-key="Y" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Y</button>
-                <button data-key="U" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">U</button>
-                <button data-key="I" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">I</button>
-                <button data-key="O" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">O</button>
-                <button data-key="P" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">P</button>
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-4 shadow-xl shadow-indigo-500/20">
+                <i class="fa-solid fa-gamepad text-2xl"></i>
             </div>
-            <!-- Fila 2 -->
-            <div class="flex justify-center gap-1 w-full px-3">
-                <button data-key="A" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">A</button>
-                <button data-key="S" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">S</button>
-                <button data-key="D" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">D</button>
-                <button data-key="F" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">F</button>
-                <button data-key="G" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">G</button>
-                <button data-key="H" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">H</button>
-                <button data-key="J" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">J</button>
-                <button data-key="K" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">K</button>
-                <button data-key="L" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">L</button>
-                <button data-key="Ñ" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Ñ</button>
-            </div>
-            <!-- Fila 3 -->
-            <div class="flex justify-center gap-1 w-full">
-                <button data-key="ENTER" class="key-btn flex-[1.5] bg-indigo-600 hover:bg-indigo-500 active:scale-90 transition-all font-bold py-3 rounded-lg text-[10px] md:text-xs shadow-md">ENTER</button>
-                <button data-key="Z" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">Z</button>
-                <button data-key="X" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">X</button>
-                <button data-key="C" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">C</button>
-                <button data-key="V" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">V</button>
-                <button data-key="B" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">B</button>
-                <button data-key="N" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">N</button>
-                <button data-key="M" class="key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">M</button>
-                <button data-key="BACK" class="key-btn flex-[1.5] bg-rose-600 hover:bg-rose-500 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md">⌫</button>
-            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-500 bg-clip-text text-transparent">
+                MENÚ PRINCIPAL
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base mt-2">Selecciona el modo de juego o sección que deseas explorar</p>
         </div>
 
-        <!-- Botón Reiniciar -->
-        <button id="restart-btn" class="hidden mt-4 bg-gradient-to-r from-pink-500 to-yellow-400 hover:opacity-95 active:scale-95 text-slate-950 font-bold px-8 py-3 rounded-xl shadow-xl transition-all tracking-wide text-sm animate-bounce">
-            ✨ Jugar Nuevamente
-        </button>
+        <div class="w-full grid gap-4">
+            
+            <!-- Adivina la Palabra en Español (index.html) -->
+            <a href="index.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md">
+                        <i class="fa-solid fa-language"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-200 group-hover:text-indigo-300 transition-colors">Adivina la Palabra en Español</h2>
+                        <p class="text-xs text-slate-400">Ir al juego clásico en idioma español</p>
+                    </div>
+                </div>
+                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-lg pr-2">→</span>
+            </a>
+
+            <!-- Modo Temperatura -->
+            <a href="index_temp.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md">
+                        <i class="fa-solid fa-temperature-three-quarters"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-200 group-hover:text-orange-300 transition-colors">Modo Temperatura</h2>
+                        <p class="text-xs text-slate-400">Adivina guiado por pistas de frío o calor</p>
+                    </div>
+                </div>
+                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-lg pr-2">→</span>
+            </a>
+
+            <!-- Modo Inglés -->
+            <a href="index_en.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-200 group-hover:text-cyan-300 transition-colors">Modo Inglés</h2>
+                        <p class="text-xs text-slate-400">Practica y adivina palabras en idioma inglés</p>
+                    </div>
+                </div>
+                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-lg pr-2">→</span>
+            </a>
+
+            <!-- Ranking Global (Ubicado al final de las opciones) -->
+            <a href="ranking.html" class="group flex items-center justify-between p-4 sm:p-5 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl transition-all duration-300 hover:translate-y-[-2px] hover:bg-slate-900/90">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-xl text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-200 group-hover:text-amber-300 transition-colors">Ranking Global</h2>
+                        <p class="text-xs text-slate-400">Tabla de líderes y mejores puntuaciones</p>
+                    </div>
+                </div>
+                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-lg pr-2">→</span>
+            </a>
+
+        </div>
 
     </main>
 
-    <!-- Modal Estadísticas -->
-    <div id="stats-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl relative transform scale-90 transition-all duration-300" id="stats-modal-content">
-            <button id="close-stats-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-pink-400 mb-1">
-                Estadísticas de Juego
-            </h2>
-            <p id="stats-user-label" class="text-xs text-indigo-300 mb-5">Progreso Local</p>
-
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-won" class="text-2xl font-black text-emerald-400">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Acertadas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-lost" class="text-2xl font-black text-rose-400">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Falladas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-played" class="text-2xl font-black text-indigo-300">0</span>
-                    <span class="text-[11px] text-slate-300 font-medium">Jugadas</span>
-                </div>
-                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex flex-col items-center">
-                    <span id="stat-winrate" class="text-2xl font-black text-amber-300">0%</span>
-                    <span class="text-[11px] text-slate-300 font-medium">% Victoria</span>
-                </div>
-            </div>
-
-            <div class="bg-indigo-950/60 border border-indigo-500/30 p-3 rounded-xl flex justify-between items-center mb-4">
-                <span class="text-xs text-indigo-200">🔥 Racha Actual:</span>
-                <span id="stat-streak" class="text-base font-bold text-yellow-400">0</span>
-            </div>
-
-            <button id="modal-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">
-                Cerrar
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal Cómo Jugar -->
-    <div id="help-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-white/20 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="help-modal-content">
-            <button id="close-help-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 mb-2 text-center">
-                ¿Cómo Jugar?
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                Adivina la palabra oculta en 6 intentos. El color de las casillas cambiará para darte pistas.
-            </p>
-
-            <div class="space-y-3 text-xs mb-5">
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center font-bold text-white shrink-0">A</div>
-                    <div>
-                        <span class="font-bold text-emerald-400 block">Verde: Correcto</span>
-                        <span class="text-slate-300 text-[11px]">La letra está en la palabra y en el lugar correcto.</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-amber-500 flex items-center justify-center font-bold text-white shrink-0">B</div>
-                    <div>
-                        <span class="font-bold text-amber-300 block">Amarillo: Otra Posición</span>
-                        <span class="text-slate-300 text-[11px]">La letra está en la palabra, pero en otra posición.</span>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-3 bg-white/5 p-2.5 rounded-xl border border-white/10">
-                    <div class="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center font-bold text-white shrink-0">C</div>
-                    <div>
-                        <span class="font-bold text-red-400 block">Rojo: No Incluida</span>
-                        <span class="text-slate-300 text-[11px]">La letra no se encuentra en la palabra oculta.</span>
-                    </div>
-                </div>
-
-                <div class="bg-indigo-950/80 p-2.5 rounded-xl border border-indigo-500/30 text-[11px] text-indigo-200">
-                    💡 <span class="font-semibold text-yellow-300">Pistas progresivas:</span> Obtendrás una pista en el 5º intento y la descripción completa al finalizar.
-                </div>
-            </div>
-
-            <button id="modal-help-close-action" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 rounded-xl text-xs tracking-wide transition-all">
-                ¡Entendido, a jugar!
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal Recomendar Palabra -->
-    <div id="suggest-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-amber-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="suggest-modal-content">
-            <button id="close-suggest-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-400 mb-1 text-center flex items-center justify-center gap-2">
-                💡 Recomendar Palabra
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                ¡Envía tu idea de palabra para agregarla al juego!
-            </p>
-
-            <form id="suggest-form" class="space-y-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Palabra *</label>
-                    <input type="text" id="suggest-word" placeholder="Ej: ASTRONAUTA" required 
-                           class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 uppercase font-bold tracking-wider">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Corta (Pista) *</label>
-                    <input type="text" id="suggest-short" placeholder="Ej: Viajero espacial" required
-                           class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400">
-                </div>
-
-                <div>
-                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">Descripción Larga (Final) *</label>
-                    <textarea id="suggest-long" rows="2" placeholder="Ej: Persona entrenada para viajar y explorar..." required
-                              class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 resize-none"></textarea>
-                </div>
-
-                <div class="bg-amber-950/40 p-2.5 rounded-xl border border-amber-500/30 text-[11px] text-amber-200 leading-tight">
-                    📲 Al enviar, el texto se copiará y se abrirá Instagram para que lo mandes por mensaje directo.
-                </div>
-
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black py-2.5 rounded-xl text-xs tracking-wide shadow-lg transition-all active:scale-95">
-                    🚀 Enviar vía Instagram
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Reportar Bug -->
-    <div id="bug-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-rose-500/30 rounded-2xl w-full max-w-sm p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="bug-modal-content">
-            <button id="close-bug-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-400 mb-1 text-center flex items-center justify-center gap-2">
-                🐛 Reportar un Fallo
-            </h2>
-            <p class="text-xs text-indigo-200 mb-4 text-center">
-                ¿Encontraste un problema? Ayúdanos a solucionarlo.
-            </p>
-
-            <form id="bug-form" class="space-y-3">
-                <div>
-                    <label class="block text-[11px] font-bold text-rose-300 uppercase mb-1">Descripción del fallo *</label>
-                    <textarea id="bug-desc" rows="4" placeholder="Describe lo que ocurrió y cómo replicarlo..." required
-                              class="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-rose-400 resize-none"></textarea>
-                </div>
-
-                <div class="bg-rose-950/40 p-2.5 rounded-xl border border-rose-500/30 text-[11px] text-rose-200 leading-tight">
-                    📲 El texto se copiará al portapapeles y se abrirá Instagram para enviarlo por mensaje directo.
-                </div>
-
-                <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-black py-2.5 rounded-xl text-xs tracking-wide shadow-lg transition-all active:scale-95">
-                    📩 Reportar vía Instagram
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Listado de Palabras -->
-    <div id="words-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-slate-900 border border-teal-500/30 rounded-2xl w-full max-w-md max-h-[85vh] flex flex-col p-5 text-left shadow-2xl relative transform scale-90 transition-all duration-300" id="words-modal-content">
-            <button id="close-words-btn" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1 text-lg font-bold z-10">✕</button>
-            
-            <h2 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300 mb-1 text-center flex items-center justify-center gap-2 shrink-0">
-                📖 Diccionario del Juego
-            </h2>
-            <p class="text-[11px] text-teal-200/70 mb-3 text-center shrink-0">
-                Pulsa sobre una palabra para ver su pista.
-            </p>
-
-            <!-- Contenedor para desbloquear con PIN -->
-            <div id="dic-unlock-container" class="flex gap-2 mb-3 bg-slate-800/50 p-2 rounded-xl border border-white/10 shrink-0">
-                <input type="password" id="dic-pin" placeholder="PIN secreto..." class="flex-1 bg-white/10 border border-white/20 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-teal-400 text-center tracking-widest">
-                <button id="dic-unlock-btn" class="bg-teal-600 hover:bg-teal-500 active:scale-95 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-all shadow-md">Desbloquear</button>
-            </div>
-
-            <div id="words-list-container" class="overflow-y-auto pr-2 space-y-4 flex-1 custom-scrollbar">
-                <!-- Contenido dinámico -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Pie de página -->
-    <footer class="w-full max-w-md flex items-center justify-between text-[11px] text-indigo-300/80 pt-2 pb-1 px-2 border-t border-white/10 mt-auto">
-        <span class="font-bold tracking-wide text-indigo-200/90">
+    <footer class="w-full max-w-md mx-auto flex flex-col items-center justify-center gap-2 text-xs text-indigo-300/80 pt-4 pb-4 px-4 border-t border-white/10 mt-auto text-center">
+        <span class="font-bold tracking-wide text-indigo-200/90 text-center w-full block">
             By: <span class="text-pink-400">Marcenaroc64</span>
         </span>
 
-        <div class="flex items-center gap-2">
-            <!-- Indicador de Racha en el Footer -->
-            <div id="footer-streak" class="flex items-center gap-1 bg-amber-500/10 border border-amber-500/30 text-amber-300 px-2.5 py-1 rounded-full text-[10px] font-bold shadow-sm">
-                🔥 <span id="footer-streak-val">0</span>
-            </div>
-
+        <div class="flex items-center justify-center gap-2 w-full">
             <a href="https://www.tiktok.com/@marcenaroc64" 
                target="_blank" 
                rel="noopener noreferrer" 
-               class="flex items-center gap-1.5 bg-black/60 hover:bg-black/90 active:scale-95 border border-white/20 text-white px-2.5 py-1 rounded-full text-[10px] font-semibold transition-all shadow-md hover:border-pink-500/50">
+               class="inline-flex items-center justify-center gap-1.5 bg-black/60 hover:bg-black/95 active:scale-95 border border-white/20 text-white px-3 py-1 rounded-full text-xs font-semibold transition-all shadow-md hover:border-pink-500/50">
                 <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24">
                     <path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/>
                 </svg>
@@ -455,764 +152,16 @@
         </div>
     </footer>
 
-    <script type="module">
-        // Firebase imports preserved as requested by the original structure
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, signInAnonymously, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-           getFirestore,collectionGroup,getDocs
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const rawData = [
-            // 3 LETRAS (50)
-            "SOL|Astro|Astro diurno","PAN|Alimento|Hecho de harina","LUZ|Claridad|Vence a las sombras","MAR|Agua|Masa de agua salada","REY|Monarca|Soberano de un reino","VOZ|Sonido|Producido por cuerdas vocales","ORO|Metal|Metal precioso amarillo","RIO|Cauce|Corriente natural de agua","PAZ|Tranquilidad|Estado sin conflictos","RED|Malla|Malla de hilos","OLA|Onda|Onda en el agua","SUR|Punto|Punto cardinal","AJO|Planta|Bulbo usado en cocina","DIA|Periodo|Iluminado por el sol","GAS|Estado|Estado fluido de la materia","LEY|Norma|Regla establecida","BAR|Local|Para tomar bebidas","BUS|Transporte|Vehículo urbano","UVA|Fruta|Para hacer vino","COL|Hortaliza|Hojas apretadas","PIE|Extremidad|Base para caminar","SAL|Condimento|Sustancia blanca","VIA|Camino|Carril de tránsito","OJO|Órgano|Órgano visual","REO|Acusado|Persona juzgada","DOS|Número|Después del uno","SIN|Preposición|Carencia de algo","CON|Preposición|Compañía de algo","POR|Preposición|Causa o motivo","QUE|Pronombre|Pronombre relativo","TAL|Adjetivo|Semejante o igual","VER|Verbo|Percibir por los ojos","DAR|Verbo|Entregar algo","SER|Verbo|Tener existencia","FIN|Término|Final de algo","MAL|Daño|Lo contrario al bien","MES|Tiempo|Doceava parte del año","ECO|Sonido|Reflejo de sonido","EGO|Psicología|Conciencia del yo","IRA|Emoción|Enojo profundo","TIO|Familiar|Hermano del padre","TIA|Familiar|Hermana de la madre","OSO|Animal|Mamífero peludo","RON|Bebida|Licor de caña","TOS|Reflejo|Expulsión de aire","USO|Acción|Acción de usar","UNO|Número|El primer número","VEN|Verbo|Del verbo venir","VIO|Verbo|Del verbo ver","DIO|Verbo|Del verbo dar",
-
-            // 4 LETRAS (50)
-            "CASA|Vivienda|Lugar habitable","LUNA|Satélite|Satélite natural","AGUA|Líquido|Líquido vital","AZUL|Color|Color del cielo","ROJO|Color|Color del fuego","FLOR|Planta|Parte reproductiva","GATO|Felino|Mascota maulladora","ISLA|Tierra|Rodeada de agua","VIDA|Existencia|Estado de los seres vivos","NUBE|Vapor|Masa en el cielo","ARTE|Expresión|Creación estética","RUTA|Camino|Vía a seguir","AMOR|Sentimiento|Afecto profundo","ROCA|Piedra|Material sólido","AIRE|Gas|Gas que respiramos","ALMA|Espíritu|Esencia humana","NAVE|Vehículo|Embarcación","MALA|Adjetivo|Sin bondad","LAGO|Agua|Cuerpo de agua dulce","MESA|Mueble|Tabla con patas","PINO|Árbol|De hojas perennes","PASO|Movimiento|Al caminar","RAYO|Luz|Descarga eléctrica","MIEL|Dulce|Producida por abejas","LEON|Felino|Rey de la selva","TREN|Transporte|Vehículo sobre vías","HOJA|Planta|Parte de un árbol","BOLA|Objeto|Esfera de juego","CAJA|Recipiente|Para guardar cosas","BOTE|Vehículo|Pequeña embarcación","RANA|Anfibio|Animal saltarín","PATO|Ave|Ave acuática","LOBO|Canino|Animal salvaje","COPA|Vaso|Recipiente para beber","ROPA|Prenda|Para vestir","TELA|Tejido|Material textil","LORO|Ave|Ave que habla","CARA|Rostro|Parte frontal de la cabeza","BOCA|Órgano|Abertura digestiva","PELO|Cabello|Fibra capilar","MANO|Extremidad|Para agarrar","DEDO|Extremidad|Parte de la mano","NUDO|Lazo|Atadura de cuerda","FOTO|Imagen|Captura visual","MOTO|Vehículo|Dos ruedas motorizadas","AUTO|Vehículo|Coche de cuatro ruedas","TAZA|Recipiente|Para bebidas calientes","PICO|Herramienta|Para cavar","RATA|Roedor|Animal de alcantarilla","SAPO|Anfibio|Parecido a la rana",
-
-            // 5 LETRAS (50)
-            "PERRO|Mascota|Compañero canino","PLAYA|Costa|Arena junto al mar","LIBRO|Lectura|Hojas encuadernadas","FUEGO|Llama|Calor intenso","MUNDO|Planeta|El planeta Tierra","SABIO|Experto|Persona con mucha sabiduría","RELOJ|Tiempo|Mide el tiempo","VALLE|Geografía|Terreno entre montañas","TIGRE|Felino|Animal rayado","SUEÑO|Descanso|Imágenes al dormir","MAGIA|Ilusión|Arte ilusorio","BARCO|Vehículo|Embarcación grande","CIELO|Atmósfera|Bóveda celeste","ARBOL|Planta|Planta de tronco leñoso","NOCHE|Oscuridad|Periodo sin sol","PLUMA|Ave|Cobertura de aves","VERDE|Color|Color de la naturaleza","MONTE|Elevación|Elevación de tierra","CAMPO|Terreno|Fuera de la ciudad","FRUTA|Alimento|Fruto dulce","HOTEL|Alojamiento|Lugar para dormir","BANDA|Grupo|Grupo musical","BRUJA|Mística|Mujer con magia","CARTA|Mensaje|Mensaje escrito","LLAVE|Herramienta|Para abrir cerraduras","RATON|Roedor|Animal pequeño","GAFAS|Lentes|Para ver mejor","SILLA|Mueble|Para sentarse","BOLSO|Accesorio|Para llevar cosas","LAPIZ|Escritura|Para escribir","CABLE|Conexión|Hilo conductor","PANEL|Superficie|Placa plana","LIMON|Cítrico|Fruto ácido","MELON|Fruta|Fruta jugosa","FRESA|Fruta|Fruta roja pequeña","MANGO|Fruta|Fruta tropical","PERLA|Joya|Gema del mar","CISNE|Ave|Ave elegante","CALOR|Temperatura|Alta temperatura","VAPOR|Gas|Agua en gas","HIELO|Agua|Agua congelada","NIEVE|Clima|Agua helada que cae","LLAMA|Fuego|Fuego vivo","ARENA|Tierra|Granitos en la playa","POLVO|Tierra|Partículas finas","TAZAS|Vajilla|Para beber café","GORRO|Prenda|Para la cabeza","DISCO|Objeto|Círculo plano","LETRA|Símbolo|Signo del alfabeto","PIZZA|Comida|Masa con queso",
-
-            // 6 LETRAS (50)
-            "MUSICA|Arte|Arte sonoro","FUTURO|Tiempo|Tiempo por venir","VOLCAN|Montaña|Montaña que lanza lava","CAMINO|Ruta|Vía de paso","TESORO|Riqueza|Objeto valioso oculto","PUERTA|Acceso|Entrada a un cuarto","CIUDAD|Urbano|Población grande","TIEMPO|Dimensión|Avance cronológico","LLUVIA|Clima|Agua del cielo","VIENTO|Aire|Aire en movimiento","SANGRE|Líquido|Líquido vital rojo","PLANTA|Vegetal|Ser vivo vegetal","SABADO|Día|Día de la semana","CUERPO|Físico|Estructura física","JARDIN|Exterior|Donde crecen flores","PINTOR|Artista|Quien pinta cuadros","MADERA|Material|Del tronco del árbol","TEATRO|Escenario|Arte escénico","JIRAFA|Animal|De cuello muy largo","VERANO|Estación|Época de calor","ESPEJO|Cristal|Refleja la imagen","CUMBRE|Cima|Punto más alto","CENTRO|Medio|Punto central","BOSQUE|Naturaleza|Lleno de árboles","OCEANO|Mar|Gran masa de agua","BLANCO|Color|Color de la nieve","AMARGO|Sabor|Sabor fuerte","FUERTE|Fuerza|Con mucha energía","LIGERO|Peso|Poco peso","PESADO|Peso|Mucho peso","RAPIDO|Veloz|Alta velocidad","GRANDE|Tamaño|De gran tamaño","CABEZA|Cuerpo|Parte superior del cuerpo","PIERNA|Cuerpo|Extremidad inferior","BRAZOS|Cuerpo|Extremidades superiores","BANANA|Fruta|Fruta amarilla","TOMATE|Vegetal|Fruto rojo","PATATA|Tubérculo|Tubérculo comestible","PEPINO|Vegetal|Vegetal verde alargado","CARNES|Comida|Alimento animal","HELADO|Postre|Postre congelado","POSTRE|Comida|Dulce tras la comida","LENGUA|Órgano|Órgano del gusto","DIENTE|Boca|Pieza para masticar","PUEBLO|Lugar|Localidad pequeña","MEDICO|Doctor|Profesional de salud","COHETE|Espacio|Nave espacial","METEOR|Astro|Roca espacial","SIERRA|Herramienta|Para cortar madera","FLORES|Plantas|Partes coloridas de plantas",
-
-            // 7 LETRAS (50)
-            "PLANETA|Astro|Cuerpo celeste","CIENCIA|Estudio|Conocimiento riguroso","GALAXIA|Espacio|Sistema estelar","MONTAÑA|Geografía|Gran elevación","DESTINO|Rumbo|Punto de llegada","ENERGIA|Fuerza|Capacidad de trabajo","TRIUNFO|Éxito|Gran victoria","LEYENDA|Relato|Historia mítica","CORAZON|Órgano|Bombea la sangre","SECRETO|Oculto|Información reservada","MEMORIA|Mente|Capacidad de recordar","VENTANA|Abertura|Abertura en la pared","PALABRA|Lenguaje|Unidad del idioma","CANCION|Música|Composición cantada","GIRASOL|Flor|Flor que sigue al sol","RIQUEZA|Dinero|Abundancia de bienes","BATALLA|Combate|Enfrentamiento bélico","BRAVURA|Valor|Gran valentía","BARRERA|Obstáculo|Impide el paso","CAMELLO|Animal|Mamífero del desierto","REFUGIO|Protección|Lugar seguro","ANTIGUO|Viejo|De gran edad","ESPECIE|Biología|Grupo de seres vivos","PINTURA|Arte|Arte con colores","MASCOTA|Animal|Compañero en casa","SILUETA|Sombra|Contorno de figura","SOMBRAS|Oscuridad|Reflejos oscuros","CORTINA|Tela|Cubre ventanas","PUERTAS|Accesos|Entradas a lugares","PAREDES|Estructura|Muros de una casa","CUADROS|Arte|Pinturas enmarcadas","ADORNOS|Decoración|Objetos decorativos","PLANTAS|Vegetales|Seres vivos verdes","ARBOLES|Naturaleza|Plantas grandes","INSECTO|Bicho|Animal pequeño","PAJAROS|Aves|Animales que vuelan","TIBURON|Pez|Depredador marino","MEDUSAS|Mar|Animales gelatinosos","COMETAS|Astros|Cuerpos celestes con cola","ESPACIO|Universo|El cosmos","COHETES|Naves|Vehículos espaciales","MOTORES|Máquinas|Generan movimiento","ABUELOS|Familia|Padres de los padres","CAMISAS|Ropa|Prendas de vestir","ZAPATOS|Calzado|Para proteger los pies","VESTIDO|Ropa|Prenda femenina","CORBATA|Accesorio|Accesorio formal","GUANTES|Ropa|Protegen las manos","CALZADO|Ropa|Zapatos en general","TARTUFO|Hongo|Hongo muy cotizado",
-
-            // 8 LETRAS (50)
-            "HISTORIA|Pasado|Relato del pasado","SILENCIO|Paz|Ausencia de sonido","ESTRELLA|Astro|Cuerpo que brilla","ACERTIJO|Juego|Enigma de ingenio","CRIATURA|Ser|Ser vivo","AVENTURA|Emoción|Experiencia incierta","CASTILLO|Fortaleza|Construcción medieval","MARIPOSA|Insecto|Insecto de colores","LIBERTAD|Derecho|Autonomía total","BRUJERIA|Magia|Práctica mística","TORMENTA|Clima|Lluvia fuerte y rayos","FANTASMA|Espectro|Espíritu o aparición","LINTERNA|Luz|Luz portátil","VICTORIA|Éxito|Triunfo en competencia","PASAJERO|Viajero|Persona que viaja","ESTACION|Lugar|Parada o época","SOMBRERO|Prenda|Para cubrir la cabeza","UNIVERSO|Todo|Todo lo que existe","MISTERIO|Enigma|Algo incomprensible","ELEFANTE|Animal|Mamífero enorme","TESORERO|Finanzas|Cuida los fondos","INVIERNO|Estación|Época de frío","GUERRERO|Luchador|Combatiente audaz","PIRAMIDE|Monumento|Construcción cónica","FARMACIA|Medicina|Lugar de medicamentos","HOSPITAL|Salud|Centro médico","GOBIERNO|Política|Autoridad estatal","SOCIEDAD|Comunidad|Conjunto de personas","LENGUAJE|Idioma|Sistema de comunicación","COMERCIO|Negocios|Compra y venta","MERCADOS|Comercio|Lugares de venta","NEGOCIOS|Empresa|Actividades comerciales","FINANZAS|Dinero|Manejo de dinero","ECONOMIA|Ciencia|Ciencia de recursos","POLITICA|Gobierno|Asuntos de Estado","RELIGION|Creencia|Sistema de fe","DEPORTES|Juegos|Actividad física","OLIMPICO|Deporte|De los juegos","MEDALLAS|Premio|Premios metálicos","DERROTAS|Fracaso|Pérdidas en juego","ARBITROS|Jueces|Jueces deportivos","ESTADIOS|Recintos|Donde se juega","ALFOMBRA|Decoración|Cubre el piso","ANIMALES|Seres|Seres vivos que se mueven","REPTILES|Animales|Como serpientes y lagartos","MAMIFERO|Animal|Que amamanta","DELFINES|Mar|Mamíferos marinos","MAQUINAS|Aparatos|Aparatos mecánicos","CAMIONES|Vehículos|Transporte pesado","VEHICULO|Transporte|Medio de transporte",
-
-            // 9 LETRAS (50)
-            "EVOLUCION|Cambio|Transformación gradual","SABIDURIA|Intelecto|Gran conocimiento","HORIZONTE|Línea|Línea del paisaje","ESCULTURA|Arte|Arte en volumen","MARAVILLA|Admiración|Algo asombroso","VELOCIDAD|Rapidez|Rapidez de marcha","GEOGRAFIA|Ciencia|Estudio terrestre","MITOLOGIA|Mitos|Mitos ancestrales","SOMBRILLA|Protección|Para cubrirse del sol","AUTOMATAS|Robots|Máquinas autónomas","PASAPORTE|Documento|Para viajar al exterior","BIOLOGIAS|Estudio|Ciencias de la vida","TELEFONIA|Red|Comunicación a distancia","DIAMANTES|Gemas|Piedras preciosas","NAVEGANTE|Marino|Piloto de barco","OCULTISMO|Misterio|Ciencias secretas","ACTIVIDAD|Acción|Acción en marcha","ELECTRICO|Energía|Funciona con electricidad","COCODRILO|Reptil|Reptil de río","SATELITES|Astros|Objetos en órbita","CAMPEONES|Ganadores|Los mejores del torneo","ORQUIDEAS|Flores|Flores muy exóticas","COLECCION|Conjunto|Cosas reunidas","REFLEXION|Pensamiento|Análisis mental","ALQUIMIAS|Ciencia|Antigua química","PRIMAVERA|Estación|Época de flores","ASTEROIDE|Roca|Roca espacial","RADIACION|Energía|Emisión de energía","PARTICULA|Materia|Fragmento diminuto","MOLECULAS|Química|Uniones de átomos","ELEMENTOS|Componentes|Partes de un todo","COMPUESTO|Mezcla|Sustancia mezclada","SUSTANCIA|Materia|Materia con propiedades","PLASTICOS|Material|Material moldeable","MINERALES|Rocas|Elementos naturales","CRISTALES|Vidrios|Materiales transparentes","INDUSTRIA|Fábricas|Producción masiva","JUGADORES|Deporte|Quienes juegan","DESCUBRIR|Hallazgo|Encontrar algo nuevo","ENSEÑANZA|Educación|Transmisión de saber","EDUCACION|Escuela|Formación académica","HERRERIAS|Taller|Donde trabajan metal","BANQUEROS|Finanzas|Dueños de bancos","BOLIGRAFO|Escritura|Pluma con tinta","CAFETALES|Cultivo|Plantaciones de café","CARNICERO|Oficio|Vendedor de carne","CARAMELOS|Dulces|Golosinas de azúcar","CHOCOLATE|Dulce|Del cacao","DICIEMBRE|Mes|Último mes del año","NOVIEMBRE|Mes|Penúltimo mes",
-
-            // 10 LETRAS (50)
-            "NATURALEZA|Entorno|Mundo natural vivo","TECNOLOGIA|Innovación|Avances científicos","LITERATURA|Arte|Arte de escribir","ASTRONOMIA|Ciencia|Estudio de los astros","DIVERSIDAD|Variedad|Gran multiplicidad","FOTOGRAFIA|Arte|Capturar imágenes","REVOLUCION|Cambio|Cambio radical","EXPLORADOR|Viajero|Descubridor de lugares","RESPLANDOR|Brillo|Luz muy brillante","ASTRONAUTA|Viajero|Viajero espacial","DINOSAURIO|Reptil|Reptil prehistórico","FANTASTICO|Irreal|Algo extraordinario","CAMPEONATO|Torneo|Competencia mayor","ESTUDIANTE|Alumno|Quien aprende","MATEMATICA|Ciencia|Ciencia de números","ALQUIMISTA|Sabio|Buscador mágico","VIDEOJUEGO|Juego|Juego electrónico","MULTIVERSO|Espacio|Universos paralelos","VELOCIPEDO|Vehículo|Antecesor de la bici","BIODIVERSO|Naturaleza|Rico en especies","TELEVISION|Pantalla|Caja que transmite imágenes","PSICOLOGIA|Ciencia|Estudio de la mente","CONTINENTE|Tierra|Gran masa terrestre","DEMOCRACIA|Política|Sistema de gobierno","PERIODISMO|Noticias|Profesión de informar","ARQUITECTO|Diseñador|Diseña edificios","CARPINTERO|Oficio|Trabajador de la madera","INGENIERIA|Ciencia|Aplicación de ciencia","DESARROLLO|Crecimiento|Evolución progresiva","INNOVACION|Novedad|Creación de lo nuevo","EXTRANJERO|Foráneo|De otro país","CIENTIFICO|Experto|Investigador de ciencia","INVESTIGAR|Estudio|Buscar respuestas","ACADEMICOS|Educación|Expertos universitarios","PROFESORES|Maestros|Quienes enseñan","GANADERIAS|Agricultura|Cría de animales","INGENIEROS|Profesión|Profesionales técnicos","ENFERMEROS|Salud|Asistentes médicos","DETECTIVES|Policía|Investigadores privados","ESCRITORES|Autores|Creadores de libros","DIRECTORES|Líderes|Jefes o cineastas","VENDEDORES|Comercio|Quienes venden","CAMIONETAS|Vehículos|Autos de carga","BICICLETAS|Transporte|Vehículos a pedal","DEFINICION|Concepto|Significado exacto","ESCULTURAS|Arte|Obras talladas","ESTRUCTURA|Armazón|Base de un edificio","HABITACION|Cuarto|Espacio en una casa","AEROPLANOS|Aviación|Aviones antiguos","MECANISMOS|Sistemas|Partes que se mueven",
-
-            // 11 LETRAS (50)
-            "CREATIVIDAD|Imaginación|Facultad inventiva","IMAGINACION|Mente|Creación mental","INSPIRACION|Arte|Chispa creativa","DICCIONARIO|Libro|Libro de palabras","ESPECTACULO|Función|Show público","COMPUTADORA|Tecnología|Ordenador personal","ESTUDIANTES|Alumnos|Quienes aprenden","MOTOCICLETA|Vehículo|Vehículo motorizado de dos ruedas","HELICOPTERO|Aeronave|Aeronave con hélices","EXPLORACION|Viaje|Búsqueda de lo desconocido","FERROCARRIL|Transporte|Sistema de trenes","TRANSBORDAR|Viaje|Cambiar de transporte","AMBULANCIAS|Salud|Vehículos de emergencia","RESTAURANTE|Comida|Lugar para comer","INGREDIENTE|Cocina|Parte de una receta","AGRICULTURA|Campo|Cultivo de la tierra","PESCADERIAS|Comercio|Donde venden peces","CARNICERIAS|Comercio|Venta de carnes","PASTELERIAS|Comercio|Venta de dulces y pasteles","CARPINTERIA|Taller|Taller de madera","FONTANERIAS|Oficio|Trabajos de tuberías","CERRAJERIAS|Oficio|Fabricación de llaves","PROGRAMADOR|Tecnología|Creador de software","ARQUITECTOS|Profesión|Diseñadores de casas","VETERINARIO|Salud|Médico de animales","ODONTOLOGOS|Salud|Médicos de dientes","PARAMEDICOS|Salud|Personal de emergencia","PERIODISTAS|Noticias|Reportan la verdad","HISTORIADOR|Estudio|Experto en el pasado","CIENTIFICOS|Ciencia|Investigadores exactos","ASTRONAUTAS|Espacio|Viajeros del cosmos","MATEMATICOS|Ciencia|Expertos en números","ESTADISTICA|Matemática|Análisis de datos","PORCENTAJES|Matemática|Medidas proporcionales","MULTIPLICAR|Operación|Operación matemática","EXAMINACION|Prueba|Evaluación rigurosa","RENDIMIENTO|Desempeño|Capacidad de trabajo","CONTESTARON|Respuesta|Verbo responder","INFORMACION|Datos|Conjunto de datos","COMUNICADOR|Medios|Persona que transmite","TRANSMISION|Señal|Emisión de datos","FRECUENCIAS|Física|Ondas repetitivas","RADIOGRAFIA|Medicina|Imagen de huesos","ULTRASONIDO|Medicina|Eco médico","TRATAMIENTO|Salud|Cura médica","ANTIBIOTICO|Medicina|Medicina para infecciones","INYECCIONES|Medicina|Vacunas aplicadas","TERMOMETROS|Salud|Miden la temperatura","SENTIMIENTO|Emoción|Estado de ánimo","ADOLESCENTE|Juventud|Etapa antes de ser adulto",
-
-            // 12 LETRAS (50)
-            "CONSTITUCION|Ley|Ley máxima de un país","INVESTIGADOR|Ciencia|Quien busca respuestas","TRANQUILIDAD|Paz|Estado de profunda calma","CONOCIMIENTO|Saber|Información aprendida","ARCHIPIELAGO|Islas|Conjunto de islas","ASTRONOMICOS|Espacio|Relativo al cosmos","NACIONALIDAD|Origen|País de procedencia","DEMOCRATICOS|Política|Sistemas de libertad","LEGISLADORES|Política|Quienes hacen las leyes","JURISDICCION|Ley|Autoridad legal","DEPARTAMENTO|División|Área de un lugar","AYUNTAMIENTO|Gobierno|Gobierno de ciudad","SUPERVISORES|Trabajo|Quienes controlan tareas","TRABAJADORES|Empleo|Quienes laboran","PRESTAMISTAS|Finanzas|Quien da dinero","CONSUMIDORES|Comercio|Quienes compran","DISTRIBUIDOR|Comercio|Quien reparte","EXPORTADORES|Comercio|Venden al exterior","IMPORTADORES|Comercio|Compran del exterior","COMERCIANTES|Negocios|Vendedores formales","ADOLESCENCIA|Etapa|Transición a la adultez","PALEONTOLOGO|Ciencia|Estudia los fósiles","BACTERIOLOGO|Ciencia|Estudia las bacterias","MICROBIOLOGO|Ciencia|Estudia los microbios","EPIDEMIOLOGO|Medicina|Experto en epidemias","METEOROLOGOS|Clima|Expertos en clima","CLIMATOLOGIA|Estudio|Ciencia del clima","OCEANOGRAFIA|Ciencia|Estudio de los mares","VULCANOLOGIA|Ciencia|Estudio de los volcanes","SISMOLOGICOS|Geología|Relativo a temblores","AEROESPACIAL|Tecnología|Ciencia del espacio","POLARIZACION|Física|Efecto magnético o visual","ELECTRICIDAD|Energía|Energía de corriente","FLUORESCENTE|Luz|Luz que brilla intensamente","CRISTALIZADO|Química|Convertido en cristal","METAMORFOSIS|Biología|Transformación biológica","FOTOSINTESIS|Plantas|Proceso verde de plantas","REPRODUCCION|Biología|Creación de vida","RESPIRATORIO|Cuerpo|Sistema para respirar","CIRCULATORIO|Cuerpo|Sistema de la sangre","NEUROLOGICOS|Medicina|De los nervios","PSICOLOGICOS|Mente|Relativo a la mente","PSIQUIATRICO|Salud|Hospital mental","TERAPEUTICOS|Curación|Tratamientos de cura","REHABILITADO|Salud|Persona que se ha curado","FARMACEUTICO|Medicina|Químico de medicinas","ODONTOLOGICO|Salud|Relativo aos dientes","OFTALMOLOGOS|Salud|Médicos de los ojos","DERMATOLOGOS|Salud|Médicos de la piel","TRAUMATOLOGO|Salud|Médicos de los huesos"
-        ];
-
-        const DICTIONARY = rawData.map(line => {
-            const [word, shortDesc, longDesc] = line.split('|');
-            return { word, shortDesc, longDesc };
-        });
-
-        document.getElementById('total-words-count').textContent = DICTIONARY.length;
-
-        // Game State Variables
-        let currentWordObj = null;
-        let targetWord = "";
-        let maxAttempts = 6;
-        let currentAttempt = 0;
-        let currentGuess = "";
-        let gameOver = false;
-        
-        // Stats
-        let userStats = { won: 0, lost: 0, played: 0, streak: 0 };
-        const LOCAL_STATS_KEY = 'palabra_secreta_stats';
-        
-        // Load Local Stats
-        function loadLocalStats() {
-            try {
-                const stored = localStorage.getItem(LOCAL_STATS_KEY);
-                if (stored) userStats = JSON.parse(stored);
-            } catch (e) { console.error("Error reading stats"); }
-            updateStatsUI();
-        }
-
-        function saveLocalStats() {
-            try {
-                localStorage.setItem(LOCAL_STATS_KEY, JSON.stringify(userStats));
-            } catch (e) { console.error("Error saving stats"); }
-            updateStatsUI();
-        }
-
-        function updateStatsUI() {
-            document.getElementById("stat-won").textContent = userStats.won;
-            document.getElementById("stat-lost").textContent = userStats.lost;
-            document.getElementById("stat-played").textContent = userStats.played;
-            
-            const winRate = userStats.played > 0 ? Math.round((userStats.won / userStats.played) * 100) : 0;
-            document.getElementById("stat-winrate").textContent = `${winRate}%`;
-            document.getElementById("stat-streak").textContent = userStats.streak;
-            
-            // Actualizar también la racha en el pie de página al lado del botón de TikTok
-            const footerStreakVal = document.getElementById("footer-streak-val");
-            if (footerStreakVal) {
-                footerStreakVal.textContent = userStats.streak;
-            }
-        }
-
-        // Función para activar la animación de fuego si la racha es múltiplo de 5 (ej. 5, 10, 15...)
-        function checkAndTriggerFireMilestone(streak) {
-            if (streak > 0 && streak % 5 === 0) {
-                const container = document.getElementById("fire-milestone-container");
-                const box = document.getElementById("fire-milestone-box");
-                const numSpan = document.getElementById("milestone-streak-num");
-                
-                numSpan.textContent = streak;
-                container.classList.remove("hidden");
-                box.classList.remove("fire-milestone-popup");
-                // Forzar reflow para reiniciar la animación CSS
-                void box.offsetWidth;
-                box.classList.add("fire-milestone-popup");
-
-                // Ocultar después de que termine la animación (2.5s)
-                setTimeout(() => {
-                    container.classList.add("hidden");
-                    box.classList.remove("fire-milestone-popup");
-                }, 2500);
-            }
-        }
-
-        const boardEl = document.getElementById("board");
-        const messageEl = document.getElementById("game-message");
-        const hintBox = document.getElementById("hint-box");
-        const clueText = document.getElementById("clue-text");
-        const restartBtn = document.getElementById("restart-btn");
-        const skipBtn = document.getElementById("skip-btn");
-        const keys = document.querySelectorAll(".key-btn");
-        const keyboardEl = document.getElementById("keyboard");
-
-        // Modals
-        const statsBtn = document.getElementById("stats-btn");
-        const statsModal = document.getElementById("stats-modal");
-        const closeStatsBtn = document.getElementById("close-stats-btn");
-        const modalCloseAction = document.getElementById("modal-close-action");
-
-        const helpBtn = document.getElementById("help-btn");
-        const helpModal = document.getElementById("help-modal");
-        const closeHelpBtn = document.getElementById("close-help-btn");
-        const modalHelpCloseAction = document.getElementById("modal-help-close-action");
-
-        const suggestBtn = document.getElementById("suggest-btn");
-        const suggestModal = document.getElementById("suggest-modal");
-        const closeSuggestBtn = document.getElementById("close-suggest-btn");
-        const suggestForm = document.getElementById("suggest-form");
-
-        const bugBtn = document.getElementById("bug-btn");
-        const bugModal = document.getElementById("bug-modal");
-        const closeBugBtn = document.getElementById("close-bug-btn");
-        const bugForm = document.getElementById("bug-form");
-
-        const wordsBtn = document.getElementById("words-btn");
-        const wordsModal = document.getElementById("words-modal");
-        const closeWordsBtn = document.getElementById("close-words-btn");
-        const wordsListContainer = document.getElementById("words-list-container");
-
-        const INSTAGRAM_URL = "https://www.instagram.com/marcenaroc64";
-
-        // Estado del diccionario
-        let dictionaryUnlocked = false; 
-
-        function initGame() {
-            // Filtrar palabras por longitud
-            const shortWords = DICTIONARY.filter(item => item.word.length < 9);
-            const longWords = DICTIONARY.filter(item => item.word.length >= 9);
-
-            // Generar probabilidad (número entre 0 y 1)
-            const randomProb = Math.random();
-            
-            // 5% de probabilidad para palabras largas (9+ letras)
-            if (randomProb <= 0.05 && longWords.length > 0) {
-                currentWordObj = longWords[Math.floor(Math.random() * longWords.length)];
-            } 
-            // 95% de probabilidad para palabras cortas (3 a 8 letras)
-            else if (shortWords.length > 0) {
-                currentWordObj = shortWords[Math.floor(Math.random() * shortWords.length)];
-            } 
-            // Respaldo
-            else {
-                currentWordObj = DICTIONARY[Math.floor(Math.random() * DICTIONARY.length)];
-            }
-
-            targetWord = currentWordObj.word.toUpperCase();
-            currentAttempt = 0;
-            currentGuess = "";
-            gameOver = false;
-            
-            // Update length indicator
-            document.getElementById('word-length-count').textContent = targetWord.length;
-            
-            if (targetWord.length >= 7) {
-                skipBtn.classList.remove("hidden");
-            } else {
-                skipBtn.classList.add("hidden");
-            }
-            
-            // Reset UI
-            boardEl.innerHTML = "";
-            hintBox.classList.add("hidden", "opacity-0", "scale-95");
-            hintBox.classList.remove("pulse-glow");
-            restartBtn.classList.add("hidden");
-            
-            // Reset Keyboard colors
-            keys.forEach(key => {
-                key.classList.remove("tile-correct", "tile-present", "tile-absent", "bg-indigo-600", "bg-rose-600", "text-white");
-                // Restore default styles for letters
-                if (key.dataset.key !== "ENTER" && key.dataset.key !== "BACK") {
-                    key.className = "key-btn flex-1 bg-white/20 hover:bg-white/30 active:scale-90 transition-all font-bold py-3 rounded-lg text-xs md:text-sm shadow-md text-white";
-                }
-            });
-
-            // Re-apply specific colors for Enter/Back
-            document.querySelector('[data-key="ENTER"]').classList.add("bg-indigo-600", "hover:bg-indigo-500");
-            document.querySelector('[data-key="BACK"]').classList.add("bg-rose-600", "hover:bg-rose-500");
-
-            // Build grid based on word length
-            for (let i = 0; i < maxAttempts; i++) {
-                const row = document.createElement("div");
-                const gapClass = targetWord.length > 10 ? "gap-0.5" : targetWord.length > 7 ? "gap-1" : "gap-1.5"; 
-                row.className = `flex ${gapClass} w-full justify-center`;
-                row.id = `row-${i}`;
-                
-                for (let j = 0; j < targetWord.length; j++) {
-                    const cell = document.createElement("div");
-                    
-                    let sizeClass = "w-10 h-10 md:w-12 md:h-12 text-xl";
-                    if (targetWord.length > 10) sizeClass = "w-5 h-5 md:w-7 md:h-7 text-[10px] md:text-sm";
-                    else if (targetWord.length > 8) sizeClass = "w-6 h-6 md:w-8 md:h-8 text-xs md:text-sm";
-                    else if (targetWord.length > 6) sizeClass = "w-7 h-7 md:w-9 md:h-9 text-sm md:text-base";
-                    else if (targetWord.length > 4) sizeClass = "w-8 h-8 md:w-10 md:h-10 text-lg";
-
-                    cell.className = `${sizeClass} bg-white/5 border-2 border-white/10 rounded-lg flex items-center justify-center font-bold uppercase transition-all duration-300 shadow-sm`;
-                    cell.id = `cell-${i}-${j}`;
-                    row.appendChild(cell);
-                }
-                boardEl.appendChild(row);
-            }
-        }
-
-        function showMessage(msg, duration = 2500) {
-            messageEl.textContent = msg;
-            messageEl.classList.remove("opacity-0");
-            setTimeout(() => {
-                messageEl.classList.add("opacity-0");
-            }, duration);
-        }
-
-        function updateBoardUI() {
-            const row = document.getElementById(`row-${currentAttempt}`);
-            if(!row) return;
-            const cells = row.children;
-            
-            for (let i = 0; i < targetWord.length; i++) {
-                const cell = cells[i];
-                if (i < currentGuess.length) {
-                    cell.textContent = currentGuess[i];
-                    cell.classList.add("border-white/40", "pop-animation");
-                    setTimeout(() => cell.classList.remove("pop-animation"), 200);
-                } else {
-                    cell.textContent = "";
-                    cell.classList.remove("border-white/40");
-                }
-            }
-        }
-
-        function handleInput(key) {
-            if (gameOver) return;
-
-            if (key === "ENTER") {
-                submitGuess();
-            } else if (key === "BACK" || key === "BACKSPACE") {
-                if (currentGuess.length > 0) {
-                    currentGuess = currentGuess.slice(0, -1);
-                    updateBoardUI();
-                }
-            } else if (/^[A-ZÑ]$/.test(key)) {
-                if (currentGuess.length < targetWord.length) {
-                    currentGuess += key;
-                    updateBoardUI();
-                }
-            }
-        }
-
-        function submitGuess() {
-            if (currentGuess.length !== targetWord.length) {
-                showMessage("Faltan letras");
-                const row = document.getElementById(`row-${currentAttempt}`);
-                row.classList.add("shake-animation");
-                setTimeout(() => row.classList.remove("shake-animation"), 400);
-                return;
-            }
-
-            // Wordle logic for coloring
-            let targetChars = targetWord.split('');
-            let guessChars = currentGuess.split('');
-            let result = Array(targetWord.length).fill('absent');
-
-            // Pass 1: Find greens (correct position)
-            for (let i = 0; i < targetWord.length; i++) {
-                if (guessChars[i] === targetChars[i]) {
-                    result[i] = 'correct';
-                    targetChars[i] = null;
-                    guessChars[i] = null;
-                }
-            }
-
-            // Pass 2: Find yellows (wrong position)
-            for (let i = 0; i < targetWord.length; i++) {
-                if (guessChars[i] !== null && targetChars.includes(guessChars[i])) {
-                    result[i] = 'present';
-                    targetChars[targetChars.indexOf(guessChars[i])] = null;
-                }
-            }
-
-            animateRow(result);
-        }
-
-        function animateRow(result) {
-            const row = document.getElementById(`row-${currentAttempt}`);
-            const cells = row.children;
-            let delay = 0;
-
-            for (let i = 0; i < cells.length; i++) {
-                setTimeout(() => {
-                    cells[i].classList.add("flip-tile");
-                    
-                    setTimeout(() => {
-                        cells[i].classList.remove("bg-white/5", "border-white/10", "border-white/40");
-                        if (result[i] === 'correct') {
-                            cells[i].classList.add("tile-correct", "border-transparent");
-                            updateKeyboardColor(currentGuess[i], 'correct');
-                        } else if (result[i] === 'present') {
-                            cells[i].classList.add("tile-present", "border-transparent");
-                            updateKeyboardColor(currentGuess[i], 'present');
-                        } else {
-                            cells[i].classList.add("tile-absent", "border-transparent");
-                            updateKeyboardColor(currentGuess[i], 'absent');
-                        }
-                    }, 300);
-
-                }, delay);
-                delay += 150;
-            }
-
-            setTimeout(() => {
-                checkGameState();
-            }, delay + 300);
-        }
-
-        function updateKeyboardColor(letter, status) {
-            const keyBtn = document.querySelector(`.key-btn[data-key="${letter}"]`);
-            if (!keyBtn) return;
-
-            if (keyBtn.classList.contains("tile-correct")) return; 
-            
-            if (status === 'correct') {
-                keyBtn.classList.remove("tile-present", "tile-absent", "bg-white/20");
-                keyBtn.classList.add("tile-correct");
-            } else if (status === 'present' && !keyBtn.classList.contains("tile-correct")) {
-                keyBtn.classList.remove("tile-absent", "bg-white/20");
-                keyBtn.classList.add("tile-present");
-            } else if (status === 'absent' && !keyBtn.classList.contains("tile-correct") && !keyBtn.classList.contains("tile-present")) {
-                keyBtn.classList.remove("bg-white/20");
-                keyBtn.classList.add("tile-absent");
-            }
-        }
-
-        function checkGameState() {
-            if (currentGuess === targetWord) {
-                gameOver = true;
-                skipBtn.classList.add("hidden");
-                showMessage("¡Magnífico! 🎉", 4000);
-                
-                clueText.textContent = currentWordObj.longDesc;
-                hintBox.classList.remove("hidden", "opacity-0", "scale-95");
-                hintBox.classList.add("pulse-glow");
-
-                // Update Stats
-                userStats.won++;
-                userStats.played++;
-                userStats.streak++;
-                
-                // Verificar hito de racha de fuego cada 5 niveles
-                checkAndTriggerFireMilestone(userStats.streak);
-
-                saveLocalStats();
-                if (typeof saveCloudStats === 'function') saveCloudStats();
-                
-                restartBtn.classList.remove("hidden");
-                keyboardEl.classList.add("opacity-50", "pointer-events-none");
-                return;
-            }
-
-            currentAttempt++;
-
-            if (currentAttempt >= maxAttempts) {
-                gameOver = true;
-                skipBtn.classList.add("hidden");
-                showMessage(`La palabra era: ${targetWord}`, 5000);
-                
-                clueText.textContent = currentWordObj.longDesc;
-                hintBox.classList.remove("hidden", "opacity-0", "scale-95");
-                hintBox.classList.remove("pulse-glow");
-
-                // Update Stats
-                userStats.lost++;
-                userStats.played++;
-                userStats.streak = 0;
-                saveLocalStats();
-                if (typeof saveCloudStats === 'function') saveCloudStats();
-
-                restartBtn.classList.remove("hidden");
-                keyboardEl.classList.add("opacity-50", "pointer-events-none");
-            } else {
-                currentGuess = "";
-                
-                if (currentAttempt === maxAttempts - 2) {
-                    clueText.textContent = currentWordObj.shortDesc;
-                    hintBox.classList.remove("hidden", "opacity-0", "scale-95");
-                }
-                else if (currentAttempt === maxAttempts - 1) {
-                    clueText.textContent = currentWordObj.longDesc;
-                    hintBox.classList.remove("hidden", "opacity-0", "scale-95");
-                }
-            }
-        }
-
-        keys.forEach(btn => {
-            btn.addEventListener("click", () => {
-                handleInput(btn.dataset.key);
-                if (navigator.vibrate) navigator.vibrate(10);
-            });
-        });
-
-        document.addEventListener("keydown", (e) => {
-            if(gameOver) return;
-            if (document.activeElement.tagName === "INPUT" || document.activeElement.tagName === "TEXTAREA") return;
-            
-            const key = e.key.toUpperCase();
-            if (key === "ENTER" || key === "BACKSPACE" || /^[A-ZÑ]$/.test(key)) {
-                e.preventDefault();
-                handleInput(key === "BACKSPACE" ? "BACK" : key);
-            }
-        });
-
-        restartBtn.addEventListener("click", () => {
-            keyboardEl.classList.remove("opacity-50", "pointer-events-none");
-            initGame();
-        });
-
-        skipBtn.addEventListener("click", () => {
-            keyboardEl.classList.remove("opacity-50", "pointer-events-none");
-            initGame();
-            showMessage("Palabra cambiada ⏭️", 2000);
-        });
-
-        function toggleModal(modal, content, show) {
-            if (show) {
-                modal.classList.remove("opacity-0", "pointer-events-none");
-                content.classList.remove("scale-90");
-                content.classList.add("scale-100");
-            } else {
-                modal.classList.add("opacity-0", "pointer-events-none");
-                content.classList.remove("scale-100");
-                content.classList.add("scale-90");
-            }
-        }
-
-        const openStats = () => { updateStatsUI(); toggleModal(statsModal, document.getElementById("stats-modal-content"), true); };
-        const closeStats = () => toggleModal(statsModal, document.getElementById("stats-modal-content"), false);
-        statsBtn.addEventListener("click", openStats);
-        closeStatsBtn.addEventListener("click", closeStats);
-        modalCloseAction.addEventListener("click", closeStats);
-
-        const openHelp = () => toggleModal(helpModal, document.getElementById("help-modal-content"), true);
-        const closeHelp = () => toggleModal(helpModal, document.getElementById("help-modal-content"), false);
-        helpBtn.addEventListener("click", openHelp);
-        closeHelpBtn.addEventListener("click", closeHelp);
-        modalHelpCloseAction.addEventListener("click", closeHelp);
-
-        const openSuggest = () => toggleModal(suggestModal, document.getElementById("suggest-modal-content"), true);
-        const closeSuggest = () => toggleModal(suggestModal, document.getElementById("suggest-modal-content"), false);
-        suggestBtn.addEventListener("click", openSuggest);
-        closeSuggestBtn.addEventListener("click", closeSuggest);
-
-        const openBug = () => toggleModal(bugModal, document.getElementById("bug-modal-content"), true);
-        const closeBug = () => toggleModal(bugModal, document.getElementById("bug-modal-content"), false);
-        bugBtn.addEventListener("click", openBug);
-        closeBugBtn.addEventListener("click", closeBug);
-
-        function renderWordsList() {
-            const grouped = {};
-            DICTIONARY.forEach(item => {
-                const len = item.word.length;
-                if (!grouped[len]) grouped[len] = [];
-                grouped[len].push(item);
-            });
-
-            wordsListContainer.innerHTML = '';
-            
-            Object.keys(grouped).sort((a,b) => a - b).forEach(len => {
-                const groupDiv = document.createElement('div');
-                groupDiv.className = "mb-4";
-                
-                const title = document.createElement('h3');
-                title.className = "text-sm font-bold text-teal-400 border-b border-teal-500/20 pb-1 mb-2 sticky top-0 bg-slate-900/95 backdrop-blur-sm z-10 flex justify-between items-center";
-                title.innerHTML = `<span>${len} Letras</span> <span class="text-[10px] text-teal-300 bg-teal-900/50 px-2 py-0.5 rounded-full">${grouped[len].length} palabras</span>`;
-                groupDiv.appendChild(title);
-
-                const grid = document.createElement('div');
-                grid.className = "grid grid-cols-2 gap-2";
-                
-                grouped[len].forEach(item => {
-                    const wordBadge = document.createElement('div');
-                    wordBadge.className = "bg-white/5 border border-white/10 rounded p-1.5 text-center text-xs font-bold text-slate-300 hover:bg-teal-500/20 hover:text-teal-200 hover:border-teal-500/50 transition-all cursor-pointer flex items-center justify-center min-h-[40px] select-none";
-                    
-                    if (dictionaryUnlocked) {
-                        wordBadge.title = `Pista: ${item.shortDesc} | Final: ${item.longDesc}`;
-                        wordBadge.textContent = item.word;
-                    } else {
-                        wordBadge.title = "Bloqueado";
-                        wordBadge.textContent = '*'.repeat(item.word.length);
-                        wordBadge.classList.add("blur-[2px]", "opacity-50");
-                    }
-                    
-                    let showingDesc = false;
-                    wordBadge.addEventListener('click', () => {
-                        if (!dictionaryUnlocked) {
-                            showMessage("¡Ingresa el PIN para desbloquear el diccionario!", 2500);
-                            const unlockContainer = document.getElementById('dic-unlock-container');
-                            unlockContainer.classList.add("shake-animation");
-                            setTimeout(() => unlockContainer.classList.remove("shake-animation"), 400);
-                            return;
-                        }
-
-                        if (!showingDesc) {
-                            wordBadge.innerHTML = `<span class="text-[10px] font-normal leading-tight">${item.shortDesc}</span>`;
-                            wordBadge.classList.add("text-teal-300", "bg-teal-900/40", "border-teal-500/50");
-                            wordBadge.classList.remove("text-slate-300", "bg-white/5", "border-white/10");
-                            showingDesc = true;
-                            setTimeout(() => {
-                                wordBadge.textContent = item.word;
-                                wordBadge.classList.remove("text-teal-300", "bg-teal-900/40", "border-teal-500/50");
-                                wordBadge.classList.add("text-slate-300", "bg-white/5", "border-white/10");
-                                showingDesc = false;
-                            }, 3000);
-                        }
-                    });
-                    
-                    grid.appendChild(wordBadge);
-                });
-                
-                groupDiv.appendChild(grid);
-                wordsListContainer.appendChild(groupDiv);
-            });
-        }
-
-        const openWords = () => { 
-            if (!dictionaryUnlocked) {
-                document.getElementById('dic-unlock-container').classList.remove('hidden');
-                document.getElementById('dic-pin').value = '';
-            } else {
-                document.getElementById('dic-unlock-container').classList.add('hidden');
-            }
-            renderWordsList(); 
-            toggleModal(wordsModal, document.getElementById("words-modal-content"), true); 
-        };
-        const closeWords = () => toggleModal(wordsModal, document.getElementById("words-modal-content"), false);
-        
-        wordsBtn.addEventListener("click", openWords);
-        closeWordsBtn.addEventListener("click", closeWords);
-
-        document.getElementById('dic-unlock-btn').addEventListener('click', () => {
-            const pin = document.getElementById('dic-pin').value;
-            if (pin === '140703') {
-                dictionaryUnlocked = true;
-                document.getElementById('dic-unlock-container').classList.add('hidden');
-                showMessage("Diccionario Desbloqueado 🔓", 2000);
-                renderWordsList();
-            } else {
-                showMessage("PIN incorrecto ❌", 2000);
-                const unlockContainer = document.getElementById('dic-unlock-container');
-                unlockContainer.classList.add('shake-animation');
-                setTimeout(() => unlockContainer.classList.remove('shake-animation'), 400);
-            }
-        });
-
-        function copyToClipboard(text) {
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-            } catch (err) {
-                console.error('Error al copiar', err);
-            }
-            document.body.removeChild(textArea);
-            return Promise.resolve();
-        }
-
-        suggestForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const word = document.getElementById("suggest-word").value.trim().toUpperCase();
-            const shortDesc = document.getElementById("suggest-short").value.trim();
-            const longDesc = document.getElementById("suggest-long").value.trim();
-
-            const msg = `💡 *NUEVA PALABRA*\n\n• Palabra: ${word}\n• Pista: ${shortDesc}\n• Final: ${longDesc}\n\nEnviado desde App`;
-
-            await copyToClipboard(msg);
-            closeSuggest();
-            showMessage("Texto copiado. Abriendo Instagram...", 3000);
-            setTimeout(() => {
-                window.open(INSTAGRAM_URL, '_blank');
-                suggestForm.reset();
-            }, 1000);
-        });
-
-        bugForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const desc = document.getElementById("bug-desc").value.trim();
-
-            const msg = `🐛 *REPORTE DE BUG*\n\nDescripción: ${desc}\n\nEnviado desde App`;
-
-            await copyToClipboard(msg);
-            closeBug();
-            showMessage("Reporte copiado. Abriendo Instagram...", 3000);
-            setTimeout(() => {
-                window.open(INSTAGRAM_URL, '_blank');
-                bugForm.reset();
-            }, 1000);
-        });
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'palabra-secreta';
-        let db, auth, provider;
-        let currentUser = null;
-
-        try {
-            const firebaseConfig = {
-                apiKey: "AIzaSyC7hjuWiRx3uBdfKAS3mj9na6zqO6xtQUY",
-                authDomain: "palabra-secre.firebaseapp.com",
-                projectId: "palabra-secre",
-                storageBucket: "palabra-secre.firebasestorage.app",
-                messagingSenderId: "1057501011597",
-                appId: "1:1057501011597:web:ab2dd815a8ad9a293cccc4"
-                };
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-                provider = new GoogleAuthProvider();
-
-                onAuthStateChanged(auth, async (user) => {
-                    currentUser = user;
-                    const authBtn = document.getElementById('auth-btn');
-                    const userNameEl = document.getElementById('user-name');
-                    const userStatusEl = document.getElementById('user-status');
-                    const userAvatarEl = document.getElementById('user-avatar');
-                    const statsLabelEl = document.getElementById('stats-user-label');
-
-                    if (user) {
-                        userNameEl.textContent = user.displayName || 'Jugador';
-                        userStatusEl.textContent = 'Guardado en Nube ☁️';
-                        statsLabelEl.textContent = 'Guardado en Nube ☁️';
-                        authBtn.innerHTML = '<span>Salir</span>';
-                        authBtn.classList.replace('from-indigo-500', 'from-rose-500');
-                        authBtn.classList.replace('to-purple-600', 'to-pink-600');
-                        authBtn.classList.replace('hover:from-indigo-400', 'hover:from-rose-400');
-                        authBtn.classList.replace('hover:to-purple-500', 'hover:to-pink-500');
-                        
-                        if (user.photoURL) {
-                            userAvatarEl.innerHTML = `<img src="${user.photoURL}" class="w-full h-full rounded-full" alt="Avatar" referrerpolicy="no-referrer">`;
-                            userAvatarEl.classList.remove('p-1', 'flex', 'items-center', 'justify-center', 'text-xs', 'font-bold', 'text-white', 'uppercase');
-                        } else {
-                            userAvatarEl.innerHTML = '👤';
-                        }
-
-                        await syncCloudStats(user.uid);
-                    } else {
-                        userNameEl.textContent = 'Invitado';
-                        userStatusEl.textContent = 'Progreso Local';
-                        statsLabelEl.textContent = 'Progreso Local';
-                        authBtn.innerHTML = '<span>Acceder</span>';
-                        authBtn.classList.replace('from-rose-500', 'from-indigo-500');
-                        authBtn.classList.replace('to-pink-600', 'to-purple-600');
-                        authBtn.classList.replace('hover:from-rose-400', 'hover:from-indigo-400');
-                        authBtn.classList.replace('hover:to-pink-500', 'hover:to-purple-500');
-                        userAvatarEl.innerHTML = '👤';
-                        userAvatarEl.classList.add('flex', 'items-center', 'justify-center', 'text-xs', 'font-bold', 'text-white', 'uppercase');
-                        loadLocalStats();
-                    }
-                });
-            }
-         catch (e) {
-            console.error("Firebase no configurado o falló al iniciar", e);
-        }
-
-        document.getElementById("auth-btn").addEventListener("click", () => {
-            if (!auth) {
-                showMessage("Servicio en la nube no disponible");
-                return;
-            }
-            if (currentUser) {
-                signOut(auth).then(() => showMessage("Sesión cerrada", 2000));
-            } else {
-                signInWithPopup(auth, provider).then(() => {
-                    showMessage("¡Bienvenido!", 2000);
-                }).catch(error => {
-                    console.error("Error signing in:", error);
-                    showMessage("Error al conectar con Google");
-                });
-            }
-        });
-
-        async function syncCloudStats(userId) {
-            if (!db) return;
-            const statsRef = doc(db, 'artifacts', appId, 'users', userId, 'gameData', 'stats');
-            try {
-                const docSnap = await getDoc(statsRef);
-                if (docSnap.exists()) {
-                    userStats = docSnap.data();
-                    saveLocalStats();
-                    updateStatsUI();
-                } else {
-                    await setDoc(statsRef, userStats);
-                }
-            } catch (e) {
-                console.error("Error syncing stats", e);
-            }
-        }
-
-        async function saveCloudStats() {
-            if (!currentUser || !db) return;
-            const statsRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'gameData', 'stats');
-            try {
-                await setDoc(statsRef, userStats);
-            } catch (e) {
-                console.error("Error saving to cloud", e);
-            }
-        }
-
-        loadLocalStats();
-        initGame();
-
+    <script>
+        // Ocultar la pantalla de carga después de 1.2 segundos con efecto suave de desvanecimiento
         window.addEventListener('load', () => {
-            const splashScreen = document.getElementById('splash-screen');
+            const splash = document.getElementById('splash-screen');
             setTimeout(() => {
-                splashScreen.classList.add('opacity-0', 'scale-110');
-                splashScreen.style.pointerEvents = 'none';
-                setTimeout(() => {
-                    splashScreen.remove();
-                }, 700);
-            }, 2000);
+                splash.style.opacity = '0';
+                splash.style.visibility = 'hidden';
+            }, 1000);
         });
-
-        if (userStats.played === 0 && !localStorage.getItem('palabra_secreta_help_seen')) {
-            setTimeout(() => {
-                openHelp();
-                localStorage.setItem('palabra_secreta_help_seen', 'true');
-            }, 3000);
-        }
-
     </script>
+
 </body>
 </html>
