@@ -43,14 +43,32 @@
             background-size: 60px 100%;
             animation: conveyorMove 1s linear infinite;
         }
-        /* Floating animations */
+        /* Floating animations & pulse effects */
         @keyframes floatSlow {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
+            50% { transform: translateY(-5px); }
         }
         .animate-float {
-            animation: floatSlow 2.5s ease-in-out infinite;
+            animation: floatSlow 2s ease-in-out infinite;
         }
+
+        @keyframes slotPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.8), inset 0 0 10px rgba(236, 72, 153, 0.3); }
+        }
+        .slot-active-glow {
+            animation: slotPulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes dropIn {
+            0% { transform: scale(0.3) translateY(-20px); opacity: 0; }
+            70% { transform: scale(1.08) translateY(5px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .animate-drop {
+            animation: dropIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
         /* Glassmorphism panel */
         .glass-panel {
             background: rgba(30, 41, 59, 0.88);
@@ -89,73 +107,78 @@
 
     <main class="w-full max-w-5xl flex-1 flex flex-col gap-3">
         
-        <!-- Target Order Panel -->
+        <!-- Target Orders Panel (2 simultaneous active orders with rich recipe variation) -->
         <section class="glass-panel rounded-3xl p-4 flex flex-col shadow-xl">
             <div class="flex justify-between items-center mb-2">
                 <h2 class="title-font text-sm md:text-base text-pink-300 flex items-center gap-2">
-                    <span>📋</span> Pedido Objetivo (¡Cúmplelo en la estación 5!)
+                    <span>📋</span> Pedidos Activos (¡Elige cuál cumplir en la estación 5!)
                 </h2>
                 <div class="flex items-center gap-3">
-                    <span id="day-timer" class="text-xs font-bold bg-pink-950/80 text-pink-300 px-4 py-1.5 rounded-full border border-pink-700 shadow animate-pulse">⏰ Turno Activo</span>
+                    <span id="day-timer" class="text-xs font-bold bg-pink-950/80 text-pink-300 px-4 py-1.5 rounded-full border border-pink-700 shadow animate-pulse">⏰ Tiempo: 60s</span>
                     <button onclick="openRecipeBook()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
                 </div>
             </div>
-            <div id="target-order-container" class="flex justify-center items-center min-h-[110px] bg-slate-950/70 rounded-2xl border border-slate-800 p-3">
-                <div class="text-slate-400 text-sm italic">¡Elige tu velocidad en el menú inicial para comenzar!</div>
+            <!-- Container for 2 Target Orders -->
+            <div id="target-orders-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[110px]">
+                <div class="text-slate-400 text-sm italic flex items-center justify-center bg-slate-950/70 rounded-2xl border border-slate-800 p-3">¡Cargando pedidos...</div>
+                <div class="text-slate-400 text-sm italic flex items-center justify-center bg-slate-950/70 rounded-2xl border border-slate-800 p-3">¡Cargando pedidos...</div>
             </div>
         </section>
 
-        <!-- Factory Line & Overhead Dispensers -->
         <section class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
             
             <!-- Overhead Machinery Dispensers (Strict Station Requirements) -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-                <!-- Pan Dispenser (Station 1) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-pink-500 transition">
+                <!-- Pan Dispenser (Station 1) - 3 shapes -->
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-pink-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-slate-300 font-bold mb-1">1. Molde (Est. 1)</span>
-                    <button onclick="dispensePan()" class="w-11 h-11 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-xl text-xl flex items-center justify-center transition active:scale-95 shadow-lg">🥣</button>
+                    <div class="flex gap-1 mt-1">
+                        <button onclick="dispensePan('Redondo', 'rounded-b-xl')" title="Redondo" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-full text-xs flex items-center justify-center transition active:scale-95 shadow">⚪</button>
+                        <button onclick="dispensePan('Cuadrado', 'rounded-none')" title="Cuadrado" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-sm text-xs flex items-center justify-center transition active:scale-95 shadow">⬛</button>
+                        <button onclick="dispensePan('Corazón', 'rounded-b-2xl rounded-t-sm')" title="Corazón" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-xl text-xs flex items-center justify-center transition active:scale-95 shadow">💖</button>
+                    </div>
                     <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 1</span>
                 </div>
 
                 <!-- Sponge Layer Dispenser (Station 2) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-yellow-500 transition">
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-yellow-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-slate-300 font-bold mb-1">2. Bizcocho (Est. 2)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseSponge('Vainilla', '#fef08a')" title="Vainilla" class="w-7 h-7 rounded-lg bg-yellow-200 border-2 border-yellow-400 text-xs font-bold hover:scale-110 transition shadow">🟡</button>
-                        <button onclick="dispenseSponge('Chocolate', '#78350f')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-900 border-2 border-amber-700 text-xs font-bold hover:scale-110 transition shadow">🟤</button>
-                        <button onclick="dispenseSponge('Fresa', '#fbcfe8')" title="Fresa" class="w-7 h-7 rounded-lg bg-pink-300 border-2 border-pink-400 text-xs font-bold hover:scale-110 transition shadow">🌸</button>
+                        <button onclick="dispenseSponge('Vainilla', '#fef08a')" title="Vainilla" class="w-7 h-7 rounded-lg bg-yellow-200 border-2 border-yellow-400 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟡</button>
+                        <button onclick="dispenseSponge('Chocolate', '#78350f')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-900 border-2 border-amber-700 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟤</button>
+                        <button onclick="dispenseSponge('Fresa', '#fbcfe8')" title="Fresa" class="w-7 h-7 rounded-lg bg-pink-300 border-2 border-pink-400 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🌸</button>
                     </div>
                     <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 2</span>
                 </div>
 
                 <!-- Frosting Dispenser (Station 3) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-amber-500 transition">
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-amber-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-slate-300 font-bold mb-1">3. Glaseado (Est. 3)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff')" title="Blanco" class="w-7 h-7 rounded-lg bg-white border-2 border-slate-300 hover:scale-110 transition shadow">🥛</button>
-                        <button onclick="dispenseFrosting('Chocolate', '#451a03')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-950 border-2 border-amber-800 hover:scale-110 transition shadow">🍫</button>
-                        <button onclick="dispenseFrosting('Fresa', '#fda4af')" title="Fresa" class="w-7 h-7 rounded-lg bg-rose-300 border-2 border-rose-400 hover:scale-110 transition shadow">🍓</button>
+                        <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff')" title="Blanco" class="w-7 h-7 rounded-lg bg-white border-2 border-slate-300 hover:scale-110 transition shadow active:scale-90">🥛</button>
+                        <button onclick="dispenseFrosting('Chocolate', '#451a03')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-950 border-2 border-amber-800 hover:scale-110 transition shadow active:scale-90">🍫</button>
+                        <button onclick="dispenseFrosting('Fresa', '#fda4af')" title="Fresa" class="w-7 h-7 rounded-lg bg-rose-300 border-2 border-rose-400 hover:scale-110 transition shadow active:scale-90">🍓</button>
                     </div>
                     <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 3</span>
                 </div>
 
                 <!-- Decoration Topping Dispenser (Station 4) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-rose-500 transition">
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-rose-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-slate-300 font-bold mb-1">4. Topping (Est. 4)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-lg bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">🍓</button>
-                        <button onclick="dispenseTopping('Vela')" title="Velas" class="w-7 h-7 rounded-lg bg-blue-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">🕯️</button>
-                        <button onclick="dispenseTopping('Estrellas')" title="Estrellas" class="w-7 h-7 rounded-lg bg-amber-500 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">⭐</button>
+                        <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-lg bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🍓</button>
+                        <button onclick="dispenseTopping('Vela')" title="Velas" class="w-7 h-7 rounded-lg bg-blue-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🕯️</button>
+                        <button onclick="dispenseTopping('Estrellas')" title="Estrellas" class="w-7 h-7 rounded-lg bg-amber-500 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">⭐</button>
                     </div>
                     <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 4</span>
                 </div>
 
                 <!-- Action Controls (Send / Trash at Station 5) -->
-                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg">
+                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg hover:scale-[1.02] transition">
                     <span class="text-[11px] text-emerald-300 font-bold mb-1">5. Envío (Est. 5)</span>
                     <div class="flex gap-2 mt-1">
-                        <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">✅ Enviar</button>
-                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">🗑️</button>
+                        <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">✅ Enviar</button>
+                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">🗑️</button>
                     </div>
                     <span class="text-[9px] text-emerald-400 mt-1">¡Solo en Estación 5!</span>
                 </div>
@@ -185,7 +208,7 @@
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">4</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-5" class="w-16 sm:w-20 h-24 border-2 border-dashed border-emerald-600/60 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/30 relative transition-all duration-300">
+                    <div id="slot-5" class="w-16 sm:w-20 h-24 border-2 border-dashed border-emerald-600/60 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/30 relative transition-all duration-300 slot-active-glow">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-emerald-400">5 🚀</span>
                         <div class="slot-content"></div>
                     </div>
@@ -213,13 +236,13 @@
     </main>
 
     <div id="speed-menu-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 text-center">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 text-center animate-drop">
             <div class="text-5xl mb-3 animate-bounce">🎂</div>
             <h3 class="title-font text-2xl text-pink-400 mb-1">Pastel Mania Pro</h3>
             <p class="text-xs text-slate-300 mb-6 leading-relaxed">Selecciona la velocidad inicial de la cinta transportadora para tu turno de fábrica:</p>
             
             <div class="space-y-3 mb-6">
-                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-slate-800 hover:bg-emerald-700/50 border border-slate-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-slate-800 hover:bg-emerald-700/50 border border-slate-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-emerald-400 group-hover:text-white">🐢 Modo Lento (Relajado)</h4>
                         <p class="text-xs text-slate-400">9 segundos por estación. Ideal para principiantes.</p>
@@ -227,7 +250,7 @@
                     <span class="text-xl">🟢</span>
                 </button>
 
-                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-slate-800 hover:bg-amber-700/50 border border-slate-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-slate-800 hover:bg-amber-700/50 border border-slate-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-amber-400 group-hover:text-white">⭐ Modo Normal (Clásico)</h4>
                         <p class="text-xs text-slate-400">6.5 segundos por estación. Ritmo equilibrado.</p>
@@ -235,7 +258,7 @@
                     <span class="text-xl">🟡</span>
                 </button>
 
-                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-slate-800 hover:bg-red-700/50 border border-slate-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-slate-800 hover:bg-red-700/50 border border-slate-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-red-400 group-hover:text-white">🔥 Modo Rápido (Experto)</h4>
                         <p class="text-xs text-slate-400">4.5 segundos por estación. ¡Alta adrenalina!</p>
@@ -247,44 +270,30 @@
     </div>
 
     <div id="recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 animate-drop">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="title-font text-lg text-pink-400 flex items-center gap-2"><span>📖</span> Recetario de Fábrica</h3>
+                <h3 class="title-font text-lg text-pink-400 flex items-center gap-2"><span>📖</span> Recetario Dinámico</h3>
                 <button onclick="closeRecipeBook()" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
             </div>
             <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
                 <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
                     <div>
-                        <h4 class="font-bold text-sm text-yellow-300">Clásico Vainilla</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Vainilla + Glaseado Blanco + Fresas</p>
+                        <h4 class="font-bold text-sm text-yellow-300">Variaciones Infinita de Recetas</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">El sistema genera combinaciones aleatorias de moldes (Redondo, Cuadrado, Corazón), bizcochos (Vainilla, Chocolate, Fresa), glaseados y toppings.</p>
                     </div>
-                    <span class="text-2xl">🎂</span>
-                </div>
-                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold text-sm text-amber-400">Bomba de Chocolate</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Chocolate + Glaseado Choco + Vela</p>
-                    </div>
-                    <span class="text-2xl">🍫</span>
-                </div>
-                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold text-sm text-pink-300">Pastel Rosa de Fresa</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Fresa + Glaseado Fresa + Estrellas</p>
-                    </div>
-                    <span class="text-2xl">🌸</span>
+                    <span class="text-2xl">🍰</span>
                 </div>
             </div>
-            <button onclick="closeRecipeBook()" class="w-full mt-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg">Cerrar Recetario</button>
+            <button onclick="closeRecipeBook()" class="w-full mt-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Cerrar Recetario</button>
         </div>
     </div>
 
     <div id="message-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 text-center">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 text-center animate-drop">
             <div id="modal-icon" class="text-5xl mb-3 animate-bounce">🎉</div>
             <h3 id="modal-title" class="title-font text-xl text-pink-400 mb-2">¡Resultado!</h3>
             <p id="modal-text" class="text-xs text-slate-300 mb-6 leading-relaxed">Has completado la acción correctamente.</p>
-            <button onclick="closeMessageModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg">Continuar</button>
+            <button onclick="closeMessageModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Continuar</button>
         </div>
     </div>
 
@@ -295,50 +304,69 @@
         let wastedCakes = 0;
         let gameActive = false;
         let advanceInterval = null;
-        let baseIntervalTime = 6500; // Selected by user in menu
+        let dayTimerInterval = null;
+        let remainingSeconds = 60;
+        let baseIntervalTime = 6500;
         let currentIntervalTime = 6500; 
 
-        // Conveyor belt state: 5 stations (index 0 to 4 corresponding to slots 1 to 5)
+        // Conveyor belt state: 5 stations (index 0 to 4)
         let conveyorStations = [null, null, null, null, null];
 
-        // Target Recipe Order
-        let targetRecipe = null;
+        // Target Recipe Orders (2 active orders)
+        let targetRecipes = [null, null];
 
-        const recipes = [
-            {
-                id: 'vanilla_classic',
-                name: 'Clásico Vainilla',
-                layers: ['Vainilla', 'Vainilla'],
-                frosting: 'Glaseado Blanco',
-                topping: 'Fresas',
-                reward: 45,
-                icon: '🎂'
-            },
-            {
-                id: 'choco_bomb',
-                name: 'Bomba de Chocolate',
-                layers: ['Chocolate', 'Chocolate'],
-                frosting: 'Chocolate',
-                topping: 'Vela',
-                reward: 55,
-                icon: '🍫'
-            },
-            {
-                id: 'pink_strawberry',
-                name: 'Pastel Rosa de Fresa',
-                layers: ['Fresa', 'Fresa'],
-                frosting: 'Fresa',
-                topping: 'Estrellas',
-                reward: 50,
-                icon: '🌸'
-            }
+        // Available Ingredients for Dynamic Procedural Generation
+        const panTypes = [
+            { shape: 'Redondo', class: 'rounded-b-xl' },
+            { shape: 'Cuadrado', class: 'rounded-none' },
+            { shape: 'Corazón', class: 'rounded-b-2xl rounded-t-sm' }
         ];
+
+        const spongeOptions = [
+            { name: 'Vainilla', color: '#fef08a' },
+            { name: 'Chocolate', color: '#78350f' },
+            { name: 'Fresa', color: '#fbcfe8' }
+        ];
+
+        const frostingOptions = [
+            { name: 'Glaseado Blanco', color: '#ffffff' },
+            { name: 'Chocolate', color: '#451a03' },
+            { name: 'Fresa', color: '#fda4af' }
+        ];
+
+        const toppingOptions = ['Fresas', 'Vela', 'Estrellas'];
+
+        function getRandomRecipe() {
+            let pan = panTypes[Math.floor(Math.random() * panTypes.length)];
+            let s1 = spongeOptions[Math.floor(Math.random() * spongeOptions.length)];
+            let s2 = spongeOptions[Math.floor(Math.random() * spongeOptions.length)];
+            let frosting = frostingOptions[Math.floor(Math.random() * frostingOptions.length)];
+            let topping = toppingOptions[Math.floor(Math.random() * toppingOptions.length)];
+
+            let icons = { 'Redondo': '🎂', 'Cuadrado': '🍫', 'Corazón': '💖' };
+            let name = `${pan.shape} de ${s1.name} & ${s2.name}`;
+            let reward = 40 + Math.floor(Math.random() * 30);
+
+            return {
+                name: name,
+                panShape: pan.shape,
+                panClass: pan.class,
+                layers: [s1.name, s2.name],
+                layerObjects: [s1, s2],
+                frosting: frosting.name,
+                frostingObj: frosting,
+                topping: topping,
+                reward: reward,
+                icon: icons[pan.shape]
+            };
+        }
 
         // DOM Elements
         const scoreDisplay = document.getElementById('score-display');
         const moneyDisplay = document.getElementById('money-display');
         const wastedDisplay = document.getElementById('wasted-display');
-        const targetOrderContainer = document.getElementById('target-order-container');
+        const dayTimerElement = document.getElementById('day-timer');
+        const targetOrdersContainer = document.getElementById('target-orders-container');
         const speedMenuModal = document.getElementById('speed-menu-modal');
         const conveyorTrackBg = document.getElementById('conveyor-track-bg');
         const speedStatusText = document.getElementById('speed-status-text');
@@ -368,12 +396,12 @@
 
         function openSpeedMenu() {
             if (advanceInterval) clearTimeout(advanceInterval);
+            if (dayTimerInterval) clearInterval(dayTimerInterval);
             gameActive = false;
             speedMenuModal.classList.remove('hidden');
             speedMenuModal.classList.add('flex');
         }
 
-        // Select Speed from Start Menu
         function selectSpeed(speedMs, modeName) {
             baseIntervalTime = speedMs;
             currentIntervalTime = speedMs;
@@ -383,24 +411,51 @@
             startDay(modeName);
         }
 
-        // Start Daily Shift
         function startDay(modeName = 'Normal') {
             gameActive = true;
             score = 0;
             wastedCakes = 0;
+            remainingSeconds = 60;
             scoreDisplay.innerText = score;
             wastedDisplay.innerText = `${wastedCakes} / 3`;
+            dayTimerElement.innerText = `⏰ Tiempo: ${remainingSeconds}s`;
 
-            generateNewTarget();
+            // Initialize 2 dynamic procedural recipes
+            targetRecipes = [getRandomRecipe(), getRandomRecipe()];
+            renderTargetOrders();
+
             conveyorStations = [null, null, null, null, null];
             updateConveyorVisuals();
             updateConveyorSpeed();
             scheduleNextAdvance();
+            startShiftTimer();
 
-            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. ¡Prepara los pasteles exactamente en cada estación!`, '✨');
+            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. ¡Variaciones de recetas infinitas!`, '✨');
         }
 
-        // Dynamic Speed Scheduling based on Score
+        function startShiftTimer() {
+            if (dayTimerInterval) clearInterval(dayTimerInterval);
+
+            dayTimerInterval = setInterval(() => {
+                if (!gameActive) return;
+                remainingSeconds--;
+                dayTimerElement.innerText = `⏰ Tiempo: ${remainingSeconds}s`;
+
+                if (remainingSeconds <= 0) {
+                    endShiftByTime();
+                }
+            }, 1000);
+        }
+
+        function endShiftByTime() {
+            gameActive = false;
+            if (advanceInterval) clearTimeout(advanceInterval);
+            if (dayTimerInterval) clearInterval(dayTimerInterval);
+
+            showNotification('⏰ ¡Tiempo Concluido!', `¡Se acabó el tiempo! Puntuación final: ${score} puntos y $${money} acumulados.`, '🏆');
+            openSpeedMenu();
+        }
+
         function scheduleNextAdvance() {
             if (!gameActive) return;
             if (advanceInterval) clearTimeout(advanceInterval);
@@ -414,40 +469,40 @@
         }
 
         function updateConveyorSpeed() {
-            let speedLevel = Math.floor(score / 100);
-            currentIntervalTime = Math.max(2000, baseIntervalTime - (speedLevel * 800));
+            let speedLevel = Math.floor(score / 50);
+            currentIntervalTime = Math.max(1200, baseIntervalTime - (speedLevel * 600));
             
             let trackAnimSeconds = (currentIntervalTime / 1000).toFixed(1);
             conveyorTrackBg.style.animationDuration = `${trackAnimSeconds}s`;
             speedStatusText.innerText = `⚡ Velocidad de Banda (${(currentIntervalTime/1000).toFixed(1)}s por estación) | Puntos: ${score}`;
         }
 
-        function generateNewTarget() {
-            targetRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-            renderTargetOrder();
+        function generateNewTarget(orderIndex) {
+            targetRecipes[orderIndex] = getRandomRecipe();
+            renderTargetOrders();
         }
 
-        function renderTargetOrder() {
-            targetOrderContainer.innerHTML = `
-                <div class="flex items-center gap-5 bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-inner w-full justify-center">
-                    <div class="text-4xl animate-pulse">${targetRecipe.icon}</div>
-                    <div>
-                        <h4 class="title-font text-base text-pink-300">${targetRecipe.name}</h4>
-                        <p class="text-xs text-slate-300 mt-1">
-                            • Bizcochos: <span class="font-bold text-yellow-300">${targetRecipe.layers.join(' + ')}</span> | 
-                            Glaseado: <span class="font-bold text-amber-300">${targetRecipe.frosting}</span> | 
-                            Decoración: <span class="font-bold text-rose-300">${targetRecipe.topping}</span>
+        function renderTargetOrders() {
+            targetOrdersContainer.innerHTML = targetRecipes.map((recipe, index) => `
+                <div class="flex items-center gap-4 bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-inner w-full justify-between animate-drop relative overflow-hidden">
+                    <span class="absolute top-1 right-2 text-[9px] font-bold text-pink-400 bg-pink-950/80 px-2 py-0.5 rounded-full border border-pink-800">Pedido #${index + 1}</span>
+                    <div class="text-3xl animate-pulse">${recipe.icon}</div>
+                    <div class="flex-1">
+                        <h4 class="title-font text-sm text-pink-300">${recipe.name}</h4>
+                        <p class="text-[11px] text-slate-300 mt-0.5">
+                            • Molde: <span class="font-bold text-pink-300">${recipe.panShape}</span> | 
+                            Bizcochos: <span class="font-bold text-yellow-300">${recipe.layers.join(' + ')}</span><br>
+                            • Glaseado: <span class="font-bold text-amber-300">${recipe.frosting}</span> | 
+                            Topping: <span class="font-bold text-rose-300">${recipe.topping}</span>
                         </p>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        // Conveyor Belt Automatic Advance
         function advanceConveyor() {
             if (!gameActive) return;
 
-            // Check if station 5 (index 4) has an unsubmitted cake falling off!
             if (conveyorStations[4] !== null) {
                 wastedCakes++;
                 score = Math.max(0, score - 25);
@@ -459,22 +514,20 @@
                     gameOver();
                     return;
                 } else {
-                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel incompleto se cayó al final de la cinta en la Estación 5 y perdiste 25 puntos! (${wastedCakes}/3 caídos)`, '❌');
+                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel se cayó al final de la cinta en la Estación 5 (-25 pts)! (${wastedCakes}/3 caídos)`, '❌');
                 }
             }
 
-            // Shift stations: 4 <- 3, 3 <- 2, 2 <- 1, 1 <- 0, 0 <- null
             conveyorStations[4] = conveyorStations[3];
             conveyorStations[3] = conveyorStations[2];
             conveyorStations[2] = conveyorStations[1];
             conveyorStations[1] = conveyorStations[0];
-            conveyorStations[0] = null; // Station 1 opens up for a new pan
+            conveyorStations[0] = null;
 
             updateConveyorVisuals();
         }
 
-        // Dispenser Actions strictly tied to exact stations (0 = Slot 1, 1 = Slot 2, 2 = Slot 3, 3 = Slot 4)
-        function dispensePan() {
+        function dispensePan(shapeName, shapeClass) {
             if (!gameActive) {
                 showNotification('Aviso', '¡Elige tu velocidad en el menú inicial para comenzar!', '⚠️');
                 return;
@@ -485,6 +538,8 @@
             }
             conveyorStations[0] = {
                 hasPan: true,
+                panShape: shapeName,
+                panClass: shapeClass,
                 layers: [],
                 frosting: null,
                 topping: null
@@ -493,9 +548,9 @@
         }
 
         function dispenseSponge(name, color) {
-            let cake = conveyorStations[1]; // Must be in Station 2 (index 1)
+            let cake = conveyorStations[1];
             if (!cake || !cake.hasPan) {
-                showNotification('¡Posición Incorrecta!', 'El molde debe estar exactamente en la Estación 2 (Bizcocho) para agregar capas de pastel.', '🟡');
+                showNotification('¡Posición Incorrecta!', 'El molde debe estar exactamente en la Estación 2 (Bizcocho).', '🟡');
                 return;
             }
             if (cake.layers.length >= 2) {
@@ -507,9 +562,9 @@
         }
 
         function dispenseFrosting(name, color) {
-            let cake = conveyorStations[2]; // Must be in Station 3 (index 2)
+            let cake = conveyorStations[2];
             if (!cake || cake.layers.length === 0) {
-                showNotification('¡Posición Incorrecta!', 'El bizcocho debe estar exactamente en la Estación 3 (Glaseado) para agregar cobertura.', '🥛');
+                showNotification('¡Posición Incorrecta!', 'El bizcocho debe estar exactamente en la Estación 3 (Glaseado).', '🥛');
                 return;
             }
             cake.frosting = { name, color };
@@ -517,9 +572,9 @@
         }
 
         function dispenseTopping(toppingName) {
-            let cake = conveyorStations[3]; // Must be in Station 4 (index 3)
+            let cake = conveyorStations[3];
             if (!cake || !cake.frosting) {
-                showNotification('¡Posición Incorrecta!', 'El bizcocho debe haber llegado a la Estación 4 (Topping) y tener glaseado.', '🍓');
+                showNotification('¡Posición Incorrecta!', 'El bizcocho debe estar en la Estación 4 y tener glaseado.', '🍓');
                 return;
             }
             cake.topping = toppingName;
@@ -544,31 +599,48 @@
         }
 
         function sendCake() {
-            let cake = conveyorStations[4]; // Must be in Station 5 (index 4)
+            let cake = conveyorStations[4];
             if (!cake || !cake.hasPan) {
-                showNotification('Sin Pastel en Estación 5', 'Debes esperar a que el pastel llegue a la Estación 5 (final de la cinta) para enviarlo.', '⚠️');
+                showNotification('Sin Pastel en Estación 5', 'Debes esperar a que el pastel llegue a la Estación 5 para enviarlo.', '⚠️');
                 return;
             }
 
-            let correctLayers = cake.layers.length === targetRecipe.layers.length &&
-                cake.layers.every((l, idx) => l.name === targetRecipe.layers[idx]);
-            let correctFrosting = cake.frosting && cake.frosting.name === targetRecipe.frosting;
-            let correctTopping = cake.topping === targetRecipe.topping;
+            let matchedIndex = -1;
+            let matchedRecipe = null;
 
-            if (correctLayers && correctFrosting && correctTopping) {
+            for (let i = 0; i < targetRecipes.length; i++) {
+                let rec = targetRecipes[i];
+                let correctPan = cake.panShape === rec.panShape;
+                let correctLayers = cake.layers.length === rec.layers.length &&
+                    cake.layers.every((l, idx) => l.name === rec.layers[idx]);
+                let correctFrosting = cake.frosting && cake.frosting.name === rec.frosting;
+                let correctTopping = cake.topping === rec.topping;
+
+                if (correctPan && correctLayers && correctFrosting && correctTopping) {
+                    matchedIndex = i;
+                    matchedRecipe = rec;
+                    break;
+                }
+            }
+
+            if (matchedIndex !== -1) {
                 score += 60;
-                money += targetRecipe.reward;
+                money += matchedRecipe.reward;
                 scoreDisplay.innerText = score;
                 moneyDisplay.innerText = `$${money}`;
                 updateConveyorSpeed();
-                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado desde la Estación 5! Recibiste +$${targetRecipe.reward} monedas y +60 puntos.`, '🎉');
+                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado a Pedido #${matchedIndex + 1}! +$${matchedRecipe.reward} y +60 pts.`, '🎉');
                 conveyorStations[4] = null;
-                generateNewTarget();
+                generateNewTarget(matchedIndex);
             } else {
                 score = Math.max(0, score - 20);
                 scoreDisplay.innerText = score;
                 updateConveyorSpeed();
-                showNotification('❌ ¡Error en la Receta!', 'El pastel enviado no coincide exactamente con el pedido (-20 pts).', '💥');
+                
+                // If incorrect, replace the 1st recipe order
+                generateNewTarget(0);
+
+                showNotification('❌ ¡Error en la Receta!', 'El pastel no coincide con ningún pedido activo. ¡El Pedido #1 fue reemplazado y perdiste 20 pts!', '💥');
                 conveyorStations[4] = null;
             }
             updateConveyorVisuals();
@@ -582,16 +654,16 @@
 
                 if (!cake) {
                     contentElem.innerHTML = `<span class="text-slate-600 text-[10px]">Vacío</span>`;
-                    slotElem.classList.remove('border-pink-500', 'bg-slate-900', 'border-emerald-500');
+                    slotElem.classList.remove('border-pink-500', 'bg-slate-900', 'border-emerald-500', 'slot-active-glow');
                     if (i === 4) {
-                        slotElem.classList.add('border-dashed', 'border-emerald-600/60');
+                        slotElem.classList.add('border-dashed', 'border-emerald-600/60', 'slot-active-glow');
                     } else {
                         slotElem.classList.add('border-dashed', 'border-slate-600');
                     }
                 } else {
-                    slotElem.classList.remove('border-dashed', 'border-slate-600', 'border-emerald-600/60');
+                    slotElem.classList.remove('border-dashed', 'border-slate-600', 'border-emerald-600/60', 'slot-active-glow');
                     if (i === 4) {
-                        slotElem.classList.add('border-emerald-500', 'bg-slate-900');
+                        slotElem.classList.add('border-emerald-500', 'bg-slate-900', 'slot-active-glow');
                     } else {
                         slotElem.classList.add('border-pink-500', 'bg-slate-900');
                     }
@@ -601,7 +673,7 @@
         }
 
         function renderCakeHtml(cake) {
-            let html = `<div class="relative flex flex-col items-center justify-end h-20 scale-75 origin-bottom">`;
+            let html = `<div class="relative flex flex-col items-center justify-end h-20 scale-75 origin-bottom animate-drop">`;
             
             if (cake.topping) {
                 let emoji = cake.topping === 'Fresas' ? '🍓' : cake.topping === 'Vela' ? '🕯️' : '⭐';
@@ -609,16 +681,16 @@
             }
 
             if (cake.frosting) {
-                html += `<div class="w-24 h-3.5 rounded-t-lg border border-black/20 flex items-center justify-center text-[8px] font-bold shadow-sm" style="background-color: ${cake.frosting.color}; color: #1e293b">${cake.frosting.name}</div>`;
+                html += `<div class="w-24 h-3.5 ${cake.panClass} border border-black/20 flex items-center justify-center text-[8px] font-bold shadow-sm" style="background-color: ${cake.frosting.color}; color: #1e293b">${cake.frosting.name}</div>`;
             }
 
             for (let j = cake.layers.length - 1; j >= 0; j--) {
                 let layer = cake.layers[j];
                 let textColor = layer.color === '#78350f' ? '#fff' : '#1e293b';
-                html += `<div class="w-22 h-6 rounded-lg border border-black/20 flex items-center justify-center text-[10px] font-bold shadow my-0.5 px-1" style="background-color: ${layer.color}; color: ${textColor}">${layer.name}</div>`;
+                html += `<div class="w-22 h-6 ${cake.panClass} border border-black/20 flex items-center justify-center text-[10px] font-bold shadow my-0.5 px-1" style="background-color: ${layer.color}; color: ${textColor}">${layer.name}</div>`;
             }
 
-            html += `<div class="w-24 h-3 bg-pink-200 rounded-b-lg border border-pink-400 shadow flex items-center justify-center text-[7px] text-slate-700 font-bold">Molde</div>`;
+            html += `<div class="w-24 h-3 bg-pink-200 ${cake.panClass} border border-pink-400 shadow flex items-center justify-center text-[7px] text-slate-700 font-bold">${cake.panShape}</div>`;
             html += `</div>`;
             return html;
         }
@@ -626,8 +698,9 @@
         function gameOver() {
             gameActive = false;
             if (advanceInterval) clearTimeout(advanceInterval);
+            if (dayTimerInterval) clearInterval(dayTimerInterval);
 
-            showNotification('💀 ¡Turno Terminado por Desperdicios!', `Se te cayeron 3 pasteles de la cinta transportadora. Puntuación final: ${score} puntos.`, '📉');
+            showNotification('💀 ¡Turno Terminado!', `Se cayeron 3 pasteles de la cinta. Puntuación final: ${score} puntos.`, '📉');
             openSpeedMenu();
         }
     </script>
