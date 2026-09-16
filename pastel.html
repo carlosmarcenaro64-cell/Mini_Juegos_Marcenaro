@@ -93,7 +93,7 @@
         <section class="glass-panel rounded-3xl p-4 flex flex-col shadow-xl">
             <div class="flex justify-between items-center mb-2">
                 <h2 class="title-font text-sm md:text-base text-pink-300 flex items-center gap-2">
-                    <span>📋</span> Pedido Objetivo (¡Cúmplelo en la estación final!)
+                    <span>📋</span> Pedido Objetivo (¡Cúmplelo en la estación 5!)
                 </h2>
                 <div class="flex items-center gap-3">
                     <span id="day-timer" class="text-xs font-bold bg-pink-950/80 text-pink-300 px-4 py-1.5 rounded-full border border-pink-700 shadow animate-pulse">⏰ Turno Activo</span>
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div id="target-order-container" class="flex justify-center items-center min-h-[110px] bg-slate-950/70 rounded-2xl border border-slate-800 p-3">
-                <div class="text-slate-400 text-sm italic">¡Presiona "🚀 ¡Iniciar Turno de Fábrica!" para recibir tu primer pedido!</div>
+                <div class="text-slate-400 text-sm italic">¡Elige tu velocidad en el menú inicial para comenzar!</div>
             </div>
         </section>
 
@@ -150,47 +150,51 @@
                     <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 4</span>
                 </div>
 
-                <!-- Action Controls (Send / Trash) -->
-                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700">
-                    <span class="text-[11px] text-slate-300 font-bold mb-1">5. Salida / Basura</span>
+                <!-- Action Controls (Send / Trash at Station 5) -->
+                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg">
+                    <span class="text-[11px] text-emerald-300 font-bold mb-1">5. Envío (Est. 5)</span>
                     <div class="flex gap-2 mt-1">
                         <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">✅ Enviar</button>
-                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">🗑️ Tirar</button>
+                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">🗑️</button>
                     </div>
-                    <span class="text-[9px] text-slate-400 mt-1">En Estación 4 / Basura</span>
+                    <span class="text-[9px] text-emerald-400 mt-1">¡Solo en Estación 5!</span>
                 </div>
             </div>
 
-            <!-- Conveyor Belt Animation Track with 4 Stations -->
+            <!-- Conveyor Belt Animation Track with 5 Stations -->
             <div class="relative w-full h-52 bg-slate-950 rounded-3xl border-4 border-slate-800 flex items-center overflow-hidden shadow-inner">
                 
                 <!-- Moving Track Background -->
                 <div id="conveyor-track-bg" class="absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-slate-700" style="animation-duration: 7s;"></div>
 
-                <!-- 4 Fixed Station Slots on Belt -->
-                <div class="w-full flex justify-around px-4 md:px-12 relative z-10">
-                    <div id="slot-1" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                <!-- 5 Fixed Station Slots on Belt -->
+                <div class="w-full flex justify-around px-2 md:px-6 relative z-10">
+                    <div id="slot-1" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">1</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-2" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                    <div id="slot-2" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">2</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-3" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                    <div id="slot-3" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">3</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-4" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                    <div id="slot-4" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">4</span>
+                        <div class="slot-content"></div>
+                    </div>
+                    <div id="slot-5" class="w-16 sm:w-20 h-24 border-2 border-dashed border-emerald-600/60 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/30 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-emerald-400">5 🚀</span>
                         <div class="slot-content"></div>
                     </div>
                 </div>
 
-                <!-- Trash Bin Drop-off Zone at End of Belt -->
+                <!-- Trash Bin Drop-off Zone at End of Belt (Station 5 overflow) -->
                 <div class="absolute right-3 bottom-4 flex flex-col items-center z-20 bg-slate-900/90 px-3 py-1.5 rounded-2xl border border-red-900/50 shadow-xl">
                     <span class="text-2xl animate-bounce">🗑️</span>
-                    <span class="text-[9px] text-red-400 font-bold">Zona de Caída</span>
+                    <span class="text-[9px] text-red-400 font-bold">Zona de Caída (Est. 5)</span>
                 </div>
             </div>
 
@@ -198,15 +202,49 @@
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <div class="text-xs text-slate-400 flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
-                    <span id="speed-status-text">¡Velocidad Dinámica! A mayor puntuación, más rápido avanza la cinta.</span>
+                    <span id="speed-status-text">¡Selecciona velocidad y comienza tu turno!</span>
                 </div>
-                <button id="start-day-btn" onclick="startDay()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm">
-                    🚀 ¡Iniciar Turno de Fábrica!
+                <button onclick="openSpeedMenu()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm">
+                    ⚙️ Cambiar Velocidad / Iniciar
                 </button>
             </div>
         </section>
 
     </main>
+
+    <div id="speed-menu-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 text-center">
+            <div class="text-5xl mb-3 animate-bounce">🎂</div>
+            <h3 class="title-font text-2xl text-pink-400 mb-1">Pastel Mania Pro</h3>
+            <p class="text-xs text-slate-300 mb-6 leading-relaxed">Selecciona la velocidad inicial de la cinta transportadora para tu turno de fábrica:</p>
+            
+            <div class="space-y-3 mb-6">
+                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-slate-800 hover:bg-emerald-700/50 border border-slate-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                    <div class="text-left">
+                        <h4 class="title-font text-base text-emerald-400 group-hover:text-white">🐢 Modo Lento (Relajado)</h4>
+                        <p class="text-xs text-slate-400">9 segundos por estación. Ideal para principiantes.</p>
+                    </div>
+                    <span class="text-xl">🟢</span>
+                </button>
+
+                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-slate-800 hover:bg-amber-700/50 border border-slate-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                    <div class="text-left">
+                        <h4 class="title-font text-base text-amber-400 group-hover:text-white">⭐ Modo Normal (Clásico)</h4>
+                        <p class="text-xs text-slate-400">6.5 segundos por estación. Ritmo equilibrado.</p>
+                    </div>
+                    <span class="text-xl">🟡</span>
+                </button>
+
+                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-slate-800 hover:bg-red-700/50 border border-slate-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group">
+                    <div class="text-left">
+                        <h4 class="title-font text-base text-red-400 group-hover:text-white">🔥 Modo Rápido (Experto)</h4>
+                        <p class="text-xs text-slate-400">4.5 segundos por estación. ¡Alta adrenalina!</p>
+                    </div>
+                    <span class="text-xl">🔴</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div id="recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
         <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700">
@@ -257,10 +295,11 @@
         let wastedCakes = 0;
         let gameActive = false;
         let advanceInterval = null;
-        let currentIntervalTime = 7000; // Starts at 7 seconds per station
+        let baseIntervalTime = 6500; // Selected by user in menu
+        let currentIntervalTime = 6500; 
 
-        // Conveyor belt state: 4 stations (index 0 to 3 corresponding to slots 1 to 4)
-        let conveyorStations = [null, null, null, null];
+        // Conveyor belt state: 5 stations (index 0 to 4 corresponding to slots 1 to 5)
+        let conveyorStations = [null, null, null, null, null];
 
         // Target Recipe Order
         let targetRecipe = null;
@@ -300,7 +339,7 @@
         const moneyDisplay = document.getElementById('money-display');
         const wastedDisplay = document.getElementById('wasted-display');
         const targetOrderContainer = document.getElementById('target-order-container');
-        const startDayBtn = document.getElementById('start-day-btn');
+        const speedMenuModal = document.getElementById('speed-menu-modal');
         const conveyorTrackBg = document.getElementById('conveyor-track-bg');
         const speedStatusText = document.getElementById('speed-status-text');
 
@@ -327,22 +366,38 @@
             document.getElementById('recipe-modal').classList.add('hidden');
         }
 
+        function openSpeedMenu() {
+            if (advanceInterval) clearTimeout(advanceInterval);
+            gameActive = false;
+            speedMenuModal.classList.remove('hidden');
+            speedMenuModal.classList.add('flex');
+        }
+
+        // Select Speed from Start Menu
+        function selectSpeed(speedMs, modeName) {
+            baseIntervalTime = speedMs;
+            currentIntervalTime = speedMs;
+            speedMenuModal.classList.remove('flex');
+            speedMenuModal.classList.add('hidden');
+
+            startDay(modeName);
+        }
+
         // Start Daily Shift
-        function startDay() {
-            if (gameActive) return;
+        function startDay(modeName = 'Normal') {
             gameActive = true;
             score = 0;
             wastedCakes = 0;
-            currentIntervalTime = 7000;
             scoreDisplay.innerText = score;
             wastedDisplay.innerText = `${wastedCakes} / 3`;
-            startDayBtn.disabled = true;
-            startDayBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             generateNewTarget();
-            conveyorStations = [null, null, null, null];
+            conveyorStations = [null, null, null, null, null];
             updateConveyorVisuals();
+            updateConveyorSpeed();
             scheduleNextAdvance();
+
+            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. ¡Prepara los pasteles exactamente en cada estación!`, '✨');
         }
 
         // Dynamic Speed Scheduling based on Score
@@ -360,11 +415,11 @@
 
         function updateConveyorSpeed() {
             let speedLevel = Math.floor(score / 100);
-            currentIntervalTime = Math.max(2200, 7000 - (speedLevel * 900));
+            currentIntervalTime = Math.max(2000, baseIntervalTime - (speedLevel * 800));
             
             let trackAnimSeconds = (currentIntervalTime / 1000).toFixed(1);
             conveyorTrackBg.style.animationDuration = `${trackAnimSeconds}s`;
-            speedStatusText.innerText = `⚡ Velocidad de Banda: Nivel ${speedLevel + 1} (${(currentIntervalTime/1000).toFixed(1)}s por estación)`;
+            speedStatusText.innerText = `⚡ Velocidad de Banda (${(currentIntervalTime/1000).toFixed(1)}s por estación) | Puntos: ${score}`;
         }
 
         function generateNewTarget() {
@@ -392,8 +447,8 @@
         function advanceConveyor() {
             if (!gameActive) return;
 
-            // Check if station 4 (index 3) has an unsubmitted cake falling off!
-            if (conveyorStations[3] !== null) {
+            // Check if station 5 (index 4) has an unsubmitted cake falling off!
+            if (conveyorStations[4] !== null) {
                 wastedCakes++;
                 score = Math.max(0, score - 25);
                 scoreDisplay.innerText = score;
@@ -404,11 +459,12 @@
                     gameOver();
                     return;
                 } else {
-                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel incompleto se cayó al final de la cinta y perdiste 25 puntos! (${wastedCakes}/3 caídos)`, '❌');
+                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel incompleto se cayó al final de la cinta en la Estación 5 y perdiste 25 puntos! (${wastedCakes}/3 caídos)`, '❌');
                 }
             }
 
-            // Shift stations: 3 <- 2, 2 <- 1, 1 <- 0, 0 <- null
+            // Shift stations: 4 <- 3, 3 <- 2, 2 <- 1, 1 <- 0, 0 <- null
+            conveyorStations[4] = conveyorStations[3];
             conveyorStations[3] = conveyorStations[2];
             conveyorStations[2] = conveyorStations[1];
             conveyorStations[1] = conveyorStations[0];
@@ -420,7 +476,7 @@
         // Dispenser Actions strictly tied to exact stations (0 = Slot 1, 1 = Slot 2, 2 = Slot 3, 3 = Slot 4)
         function dispensePan() {
             if (!gameActive) {
-                showNotification('Aviso', '¡Inicia el turno de fábrica primero con el botón inferior!', '⚠️');
+                showNotification('Aviso', '¡Elige tu velocidad en el menú inicial para comenzar!', '⚠️');
                 return;
             }
             if (conveyorStations[0] !== null) {
@@ -463,7 +519,7 @@
         function dispenseTopping(toppingName) {
             let cake = conveyorStations[3]; // Must be in Station 4 (index 3)
             if (!cake || !cake.frosting) {
-                showNotification('¡Posición Incorrecta!', 'El pastel debe haber llegado a la Estación 4 (Decoración) y tener glaseado.', '🍓');
+                showNotification('¡Posición Incorrecta!', 'El bizcocho debe haber llegado a la Estación 4 (Topping) y tener glaseado.', '🍓');
                 return;
             }
             cake.topping = toppingName;
@@ -472,7 +528,7 @@
 
         function trashCake() {
             let activeIdx = -1;
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 if (conveyorStations[i] !== null) {
                     activeIdx = i;
                     break;
@@ -488,9 +544,9 @@
         }
 
         function sendCake() {
-            let cake = conveyorStations[3];
+            let cake = conveyorStations[4]; // Must be in Station 5 (index 4)
             if (!cake || !cake.hasPan) {
-                showNotification('Sin Pastel en Salida', 'Debes esperar a que el pastel llegue a la estación 4 (final de la cinta) para enviarlo.', '⚠️');
+                showNotification('Sin Pastel en Estación 5', 'Debes esperar a que el pastel llegue a la Estación 5 (final de la cinta) para enviarlo.', '⚠️');
                 return;
             }
 
@@ -505,32 +561,40 @@
                 scoreDisplay.innerText = score;
                 moneyDisplay.innerText = `$${money}`;
                 updateConveyorSpeed();
-                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado a tiempo! Recibiste +$${targetRecipe.reward} monedas y +60 puntos.`, '🎉');
-                conveyorStations[3] = null;
+                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado desde la Estación 5! Recibiste +$${targetRecipe.reward} monedas y +60 puntos.`, '🎉');
+                conveyorStations[4] = null;
                 generateNewTarget();
             } else {
                 score = Math.max(0, score - 20);
                 scoreDisplay.innerText = score;
                 updateConveyorSpeed();
                 showNotification('❌ ¡Error en la Receta!', 'El pastel enviado no coincide exactamente con el pedido (-20 pts).', '💥');
-                conveyorStations[3] = null;
+                conveyorStations[4] = null;
             }
             updateConveyorVisuals();
         }
 
         function updateConveyorVisuals() {
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 let slotElem = document.getElementById(`slot-${i+1}`);
                 let contentElem = slotElem.querySelector('.slot-content');
                 let cake = conveyorStations[i];
 
                 if (!cake) {
                     contentElem.innerHTML = `<span class="text-slate-600 text-[10px]">Vacío</span>`;
-                    slotElem.classList.remove('border-pink-500', 'bg-slate-900');
-                    slotElem.classList.add('border-dashed', 'border-slate-600');
+                    slotElem.classList.remove('border-pink-500', 'bg-slate-900', 'border-emerald-500');
+                    if (i === 4) {
+                        slotElem.classList.add('border-dashed', 'border-emerald-600/60');
+                    } else {
+                        slotElem.classList.add('border-dashed', 'border-slate-600');
+                    }
                 } else {
-                    slotElem.classList.remove('border-dashed', 'border-slate-600');
-                    slotElem.classList.add('border-pink-500', 'bg-slate-900');
+                    slotElem.classList.remove('border-dashed', 'border-slate-600', 'border-emerald-600/60');
+                    if (i === 4) {
+                        slotElem.classList.add('border-emerald-500', 'bg-slate-900');
+                    } else {
+                        slotElem.classList.add('border-pink-500', 'bg-slate-900');
+                    }
                     contentElem.innerHTML = renderCakeHtml(cake);
                 }
             }
@@ -562,10 +626,9 @@
         function gameOver() {
             gameActive = false;
             if (advanceInterval) clearTimeout(advanceInterval);
-            startDayBtn.disabled = false;
-            startDayBtn.classList.remove('opacity-50', 'cursor-not-allowed');
 
             showNotification('💀 ¡Turno Terminado por Desperdicios!', `Se te cayeron 3 pasteles de la cinta transportadora. Puntuación final: ${score} puntos.`, '📉');
+            openSpeedMenu();
         }
     </script>
 </body>
