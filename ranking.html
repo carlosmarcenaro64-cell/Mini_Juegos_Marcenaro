@@ -57,12 +57,14 @@
                             <th class="py-3 px-4 sm:px-6">Jugador</th>
                             <th class="py-3 px-4 sm:px-6 text-center">Victorias</th>
                             <th class="py-3 px-4 sm:px-6 text-center">Partidas</th>
+                            <th class="py-3 px-4 sm:px-6 text-center">🔥 Racha</th>
+                            <th class="py-3 px-4 sm:px-6 text-center">⭐ Puntos</th>
                             <th class="py-3 px-4 sm:px-6 text-right">Efectividad</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-body" class="divide-y divide-slate-800/50 text-sm">
                         <tr>
-                            <td colspan="5" class="py-8 text-center text-slate-500">Cargando jugadores...</td>
+                            <td colspan="7" class="py-8 text-center text-slate-500">Cargando jugadores...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -97,9 +99,12 @@
         
         // Use real production configuration if deployed on GitHub Pages or custom domain, with fallback
         const firebaseConfig = (typeof __firebase_config !== 'undefined' && __firebase_config) ? JSON.parse(__firebase_config) : {
-            apiKey: "TU_API_KEY_REAL_DE_FIREBASE",
+            apiKey: "AIzaSyC7hjuWiRx3uBdfKAS3mj9na6zqO6xtQUY",
             authDomain: "palabra-secre.firebaseapp.com",
-            projectId: "palabra-secre"
+            projectId: "palabra-secre",
+            storageBucket: "palabra-secre.firebasestorage.app",
+            messagingSenderId: "1057501011597",
+            appId: "1:1057501011597:web:ab2dd815a8ad9a293cccc4"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -169,10 +174,11 @@
                         let playerName = data.displayName || data.name || data.username || "Jugador Anónimo";
                         let won = Number(data.won || data.wins || data.ganadas || 0);
                         let played = Number(data.played || data.gamesPlayed || data.jugadas || 0);
+                        let streak = Number(data.streak || 0);
+                        let score = Number(data.score || 0);
                         let userId = data.userId || data.uid || docSnap.id;
-
-                        if (played > 0 || won > 0) {
-                            playersMap.set(userId, { name: playerName, won, played });
+                        if (played > 0 || won > 0 || score > 0 || streak > 0) {
+                            playersMap.set(userId, { name: playerName, won, played, streak, score });
                         }
                     });
                 } catch (e1) {
@@ -196,9 +202,10 @@
                             let playerName = data.displayName || data.name || data.username || `Usuario ${userId.substring(0,6)}`;
                             let won = Number(data.won || data.wins || data.ganadas || 0);
                             let played = Number(data.played || data.gamesPlayed || data.jugadas || 0);
-
-                            if (played > 0 || won > 0) {
-                                playersMap.set(userId, { name: playerName, won, played });
+                            let streak = Number(data.streak || 0);
+                            let score = Number(data.score || 0);
+                            if (played > 0 || won > 0 || score > 0 || streak > 0) {
+                                playersMap.set(userId, { name: playerName, won, played, streak, score });
                             }
                         });
                     }
@@ -213,7 +220,7 @@
                 diagnosticContent.textContent = diagnosticLog;
 
                 if (players.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Aún no hay partidas registradas en la base de datos. ¡Juega una partida para aparecer aquí!</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Aún no hay partidas registradas en la base de datos. ¡Juega una partida para aparecer aquí!</td></tr>`;
                     return;
                 }
 
@@ -232,6 +239,8 @@
                         <td class="py-4 px-4 sm:px-6 font-semibold text-slate-200">${escapeHtml(player.name)}</td>
                         <td class="py-4 px-4 sm:px-6 text-center text-emerald-400 font-bold">${player.won}</td>
                         <td class="py-4 px-4 sm:px-6 text-center text-slate-300">${player.played}</td>
+                        <td class="py-4 px-4 sm:px-6 text-center text-amber-300 font-bold">🔥 ${player.streak}</td>
+                        <td class="py-4 px-4 sm:px-6 text-center text-yellow-300 font-extrabold">⭐ ${player.score.toLocaleString('es-ES')}</td>
                         <td class="py-4 px-4 sm:px-6 text-right font-mono text-indigo-400">${winrate}%</td>
                     `;
                     tbody.appendChild(row);
@@ -240,7 +249,7 @@
             } catch (err) {
                 console.error(err);
                 diagnosticContent.textContent = `❌ Error general de conexión: ${err.message}`;
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-red-400 text-center px-4">Error al conectar con Firebase (Posible API Key incorrecta o bloqueada en GitHub Pages).</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-red-400 text-center px-4">Error al conectar con Firebase (Posible API Key incorrecta o bloqueada en GitHub Pages).</td></tr>`;
             }
         }
 
