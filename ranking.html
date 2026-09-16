@@ -154,13 +154,29 @@
             const tbody = document.getElementById('leaderboard-body');
 
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
                 let diagnosticLog = "";
+
+                // El ranking es público. No hacemos que toda la página dependa
+                // del inicio de sesión anónimo, porque en Firebase puede estar
+                // desactivado y producir auth/admin-restricted-operation.
+                // Si existe un token del entorno, sí lo usamos. Si el anónimo
+                // está habilitado también puede usarse, pero un fallo aquí NO
+                // debe impedir que intentemos leer Firestore.
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    try {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                        diagnosticLog += `• Autenticación por token: OK\n`;
+                    } catch (authError) {
+                        diagnosticLog += `• Token de autenticación no disponible: ${authError.code || authError.message}\n`;
+                    }
+                } else {
+                    try {
+                        await signInAnonymously(auth);
+                        diagnosticLog += `• Acceso anónimo: OK\n`;
+                    } catch (authError) {
+                        diagnosticLog += `• Acceso anónimo no disponible (se continúa sin login): ${authError.code || authError.message}\n`;
+                    }
+                }
                 let playersMap = new Map();
 
                 // Intento 1: Colección Group 'stats'
@@ -185,36 +201,13 @@
                     diagnosticLog += `  ⚠️ collectionGroup error: ${e1.message}\n`;
                 }
 
-                // Intento 2: Ruta directa artifacts/{appId}/users
-                try {
-                    diagnosticLog += `• Buscando en ruta directa: artifacts/${appId}/users...\n`;
-                    const usersCol = collection(db, 'artifacts', appId, 'users');
-                    const usersSnapshot = await getDocs(usersCol);
-                    diagnosticLog += `  → Usuarios raíz encontrados: ${usersSnapshot.size}\n`;
-
-                    for (const userDoc of usersSnapshot.docs) {
-                        const userId = userDoc.id;
-                        const userStatsCol = collection(db, 'artifacts', appId, 'users', userId, 'stats');
-                        const userStatsSnap = await getDocs(userStatsCol);
-                        
-                        userStatsSnap.forEach(statDoc => {
-                            const data = statDoc.data();
-                            let playerName = data.displayName || data.name || data.username || `Usuario ${userId.substring(0,6)}`;
-                            let won = Number(data.won || data.wins || data.ganadas || 0);
-                            let played = Number(data.played || data.gamesPlayed || data.jugadas || 0);
-                            let streak = Number(data.streak || 0);
-                            let score = Number(data.score || 0);
-                            if (played > 0 || won > 0 || score > 0 || streak > 0) {
-                                playersMap.set(userId, { name: playerName, won, played, streak, score });
-                            }
-                        });
-                    }
-                } catch (e2) {
-                    diagnosticLog += `  ⚠️ Búsqueda directa error: ${e2.message}\n`;
-                }
+                // Las estadísticas del juego están realmente en:
+                // artifacts/{appId}/users/{uid}/gameData/stats
+                // Por eso collectionGroup('stats') es la consulta correcta.
 
                 const players = Array.from(playersMap.values());
-                players.sort((a, b) => b.won - a.won || b.played - a.played);
+                // El ranking principal se ordena por puntos; luego por racha y victorias.
+                players.sort((a, b) => b.score - a.score || b.streak - a.streak || b.won - a.won);
 
                 diagnosticLog += `• Total jugadores válidos en ranking: ${players.length}`;
                 diagnosticContent.textContent = diagnosticLog;
