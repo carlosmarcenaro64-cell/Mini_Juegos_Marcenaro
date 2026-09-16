@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel Mania Pro - Fábrica de Pasteles en Movimiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            user-select: none;
+            overflow-x: hidden;
+        }
+        .title-font {
+            font-family: 'Fredoka One', cursive;
+        }
+        /* Classic checkered floor pattern */
+        .checkered-floor {
+            background-image: 
+                linear-gradient(45deg, #334155 25%, transparent 25%), 
+                linear-gradient(-45deg, #334155 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #334155 75%), 
+                linear-gradient(-45deg, transparent 75%, #334155 75%);
+            background-size: 50px 50px;
+            background-position: 0 0, 0 25px, 25px -25px, -25px 0px;
+            background-color: #0f172a;
+        }
+        /* Animated conveyor belt track */
+        @keyframes conveyorMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 60px 0; }
+        }
+        .conveyor-track {
+            background: repeating-linear-gradient(
+                90deg,
+                #1e293b,
+                #1e293b 25px,
+                #475569 25px,
+                #475569 35px
+            );
+            background-size: 60px 100%;
+            animation: conveyorMove 1s linear infinite;
+        }
+        /* Floating animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-float {
+            animation: floatSlow 2.5s ease-in-out infinite;
+        }
+        /* Glassmorphism panel */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col items-center justify-between p-2 md:p-6 checkered-floor">
+
+    <header class="w-full max-w-5xl glass-panel rounded-3xl p-4 mb-3 flex flex-wrap items-center justify-between border-t-4 border-pink-500 shadow-2xl">
+        <div class="flex items-center space-x-3">
+            <span class="text-4xl animate-bounce">🎂</span>
+            <div>
+                <h1 class="title-font text-2xl md:text-3xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Pastel Mania Pro</h1>
+                <p class="text-xs text-slate-400 font-bold">¡Línea de ensamblaje en movimiento estilo Purble Place!</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 sm:space-x-3 mt-3 sm:mt-0">
+            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">Puntuación</span>
+                <span id="score-display" class="title-font text-xl text-white">0</span>
+            </div>
+            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-amber-400 uppercase tracking-wider">Monedas 💰</span>
+                <span id="money-display" class="title-font text-xl text-amber-300">$150</span>
+            </div>
+            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-red-400 uppercase tracking-wider">Desperdicios ❌</span>
+                <span id="wasted-display" class="title-font text-xl text-red-400">0 / 3</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-5xl flex-1 flex flex-col gap-3">
+        
+        <!-- Target Order Panel -->
+        <section class="glass-panel rounded-3xl p-4 flex flex-col shadow-xl">
+            <div class="flex justify-between items-center mb-2">
+                <h2 class="title-font text-sm md:text-base text-pink-300 flex items-center gap-2">
+                    <span>📋</span> Pedido Objetivo (¡Cúmplelo en la estación final!)
+                </h2>
+                <div class="flex items-center gap-3">
+                    <span id="day-timer" class="text-xs font-bold bg-pink-950/80 text-pink-300 px-4 py-1.5 rounded-full border border-pink-700 shadow animate-pulse">⏰ Turno Activo</span>
+                    <button onclick="openRecipeBook()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
+                </div>
+            </div>
+            <div id="target-order-container" class="flex justify-center items-center min-h-[110px] bg-slate-950/70 rounded-2xl border border-slate-800 p-3">
+                <div class="text-slate-400 text-sm italic">¡Presiona "🚀 ¡Iniciar Turno de Fábrica!" para recibir tu primer pedido!</div>
+            </div>
+        </section>
+
+        <!-- Factory Line & Overhead Dispensers -->
+        <section class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
+            
+            <!-- Overhead Machinery Dispensers (Strict Station Requirements) -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+                <!-- Pan Dispenser (Station 1) -->
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-pink-500 transition">
+                    <span class="text-[11px] text-slate-300 font-bold mb-1">1. Molde (Est. 1)</span>
+                    <button onclick="dispensePan()" class="w-11 h-11 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-xl text-xl flex items-center justify-center transition active:scale-95 shadow-lg">🥣</button>
+                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 1</span>
+                </div>
+
+                <!-- Sponge Layer Dispenser (Station 2) -->
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-yellow-500 transition">
+                    <span class="text-[11px] text-slate-300 font-bold mb-1">2. Bizcocho (Est. 2)</span>
+                    <div class="flex gap-1.5 mt-1">
+                        <button onclick="dispenseSponge('Vainilla', '#fef08a')" title="Vainilla" class="w-7 h-7 rounded-lg bg-yellow-200 border-2 border-yellow-400 text-xs font-bold hover:scale-110 transition shadow">🟡</button>
+                        <button onclick="dispenseSponge('Chocolate', '#78350f')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-900 border-2 border-amber-700 text-xs font-bold hover:scale-110 transition shadow">🟤</button>
+                        <button onclick="dispenseSponge('Fresa', '#fbcfe8')" title="Fresa" class="w-7 h-7 rounded-lg bg-pink-300 border-2 border-pink-400 text-xs font-bold hover:scale-110 transition shadow">🌸</button>
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 2</span>
+                </div>
+
+                <!-- Frosting Dispenser (Station 3) -->
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-amber-500 transition">
+                    <span class="text-[11px] text-slate-300 font-bold mb-1">3. Glaseado (Est. 3)</span>
+                    <div class="flex gap-1.5 mt-1">
+                        <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff')" title="Blanco" class="w-7 h-7 rounded-lg bg-white border-2 border-slate-300 hover:scale-110 transition shadow">🥛</button>
+                        <button onclick="dispenseFrosting('Chocolate', '#451a03')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-950 border-2 border-amber-800 hover:scale-110 transition shadow">🍫</button>
+                        <button onclick="dispenseFrosting('Fresa', '#fda4af')" title="Fresa" class="w-7 h-7 rounded-lg bg-rose-300 border-2 border-rose-400 hover:scale-110 transition shadow">🍓</button>
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 3</span>
+                </div>
+
+                <!-- Decoration Topping Dispenser (Station 4) -->
+                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-rose-500 transition">
+                    <span class="text-[11px] text-slate-300 font-bold mb-1">4. Topping (Est. 4)</span>
+                    <div class="flex gap-1.5 mt-1">
+                        <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-lg bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">🍓</button>
+                        <button onclick="dispenseTopping('Vela')" title="Velas" class="w-7 h-7 rounded-lg bg-blue-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">🕯️</button>
+                        <button onclick="dispenseTopping('Estrellas')" title="Estrellas" class="w-7 h-7 rounded-lg bg-amber-500 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow">⭐</button>
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 4</span>
+                </div>
+
+                <!-- Action Controls (Send / Trash) -->
+                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700">
+                    <span class="text-[11px] text-slate-300 font-bold mb-1">5. Salida / Basura</span>
+                    <div class="flex gap-2 mt-1">
+                        <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">✅ Enviar</button>
+                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-95 flex items-center gap-1">🗑️ Tirar</button>
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1">En Estación 4 / Basura</span>
+                </div>
+            </div>
+
+            <!-- Conveyor Belt Animation Track with 4 Stations -->
+            <div class="relative w-full h-52 bg-slate-950 rounded-3xl border-4 border-slate-800 flex items-center overflow-hidden shadow-inner">
+                
+                <!-- Moving Track Background -->
+                <div id="conveyor-track-bg" class="absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-slate-700" style="animation-duration: 7s;"></div>
+
+                <!-- 4 Fixed Station Slots on Belt -->
+                <div class="w-full flex justify-around px-4 md:px-12 relative z-10">
+                    <div id="slot-1" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">1</span>
+                        <div class="slot-content"></div>
+                    </div>
+                    <div id="slot-2" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">2</span>
+                        <div class="slot-content"></div>
+                    </div>
+                    <div id="slot-3" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">3</span>
+                        <div class="slot-content"></div>
+                    </div>
+                    <div id="slot-4" class="w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">4</span>
+                        <div class="slot-content"></div>
+                    </div>
+                </div>
+
+                <!-- Trash Bin Drop-off Zone at End of Belt -->
+                <div class="absolute right-3 bottom-4 flex flex-col items-center z-20 bg-slate-900/90 px-3 py-1.5 rounded-2xl border border-red-900/50 shadow-xl">
+                    <span class="text-2xl animate-bounce">🗑️</span>
+                    <span class="text-[9px] text-red-400 font-bold">Zona de Caída</span>
+                </div>
+            </div>
+
+            <!-- Bottom Start Shift Control Bar -->
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="text-xs text-slate-400 flex items-center gap-2">
+                    <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
+                    <span id="speed-status-text">¡Velocidad Dinámica! A mayor puntuación, más rápido avanza la cinta.</span>
+                </div>
+                <button id="start-day-btn" onclick="startDay()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm">
+                    🚀 ¡Iniciar Turno de Fábrica!
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="title-font text-lg text-pink-400 flex items-center gap-2"><span>📖</span> Recetario de Fábrica</h3>
+                <button onclick="closeRecipeBook()" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
+            </div>
+            <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
+                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-sm text-yellow-300">Clásico Vainilla</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Vainilla + Glaseado Blanco + Fresas</p>
+                    </div>
+                    <span class="text-2xl">🎂</span>
+                </div>
+                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-sm text-amber-400">Bomba de Chocolate</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Chocolate + Glaseado Choco + Vela</p>
+                    </div>
+                    <span class="text-2xl">🍫</span>
+                </div>
+                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-sm text-pink-300">Pastel Rosa de Fresa</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">2x Bizcocho Fresa + Glaseado Fresa + Estrellas</p>
+                    </div>
+                    <span class="text-2xl">🌸</span>
+                </div>
+            </div>
+            <button onclick="closeRecipeBook()" class="w-full mt-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg">Cerrar Recetario</button>
+        </div>
+    </div>
+
+    <div id="message-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+        <div class="glass-panel text-slate-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 text-center">
+            <div id="modal-icon" class="text-5xl mb-3 animate-bounce">🎉</div>
+            <h3 id="modal-title" class="title-font text-xl text-pink-400 mb-2">¡Resultado!</h3>
+            <p id="modal-text" class="text-xs text-slate-300 mb-6 leading-relaxed">Has completado la acción correctamente.</p>
+            <button onclick="closeMessageModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg">Continuar</button>
+        </div>
+    </div>
+
+    <script>
+        // Game State Variables
+        let score = 0;
+        let money = 150;
+        let wastedCakes = 0;
+        let gameActive = false;
+        let advanceInterval = null;
+        let currentIntervalTime = 7000; // Starts at 7 seconds per station
+
+        // Conveyor belt state: 4 stations (index 0 to 3 corresponding to slots 1 to 4)
+        let conveyorStations = [null, null, null, null];
+
+        // Target Recipe Order
+        let targetRecipe = null;
+
+        const recipes = [
+            {
+                id: 'vanilla_classic',
+                name: 'Clásico Vainilla',
+                layers: ['Vainilla', 'Vainilla'],
+                frosting: 'Glaseado Blanco',
+                topping: 'Fresas',
+                reward: 45,
+                icon: '🎂'
+            },
+            {
+                id: 'choco_bomb',
+                name: 'Bomba de Chocolate',
+                layers: ['Chocolate', 'Chocolate'],
+                frosting: 'Chocolate',
+                topping: 'Vela',
+                reward: 55,
+                icon: '🍫'
+            },
+            {
+                id: 'pink_strawberry',
+                name: 'Pastel Rosa de Fresa',
+                layers: ['Fresa', 'Fresa'],
+                frosting: 'Fresa',
+                topping: 'Estrellas',
+                reward: 50,
+                icon: '🌸'
+            }
+        ];
+
+        // DOM Elements
+        const scoreDisplay = document.getElementById('score-display');
+        const moneyDisplay = document.getElementById('money-display');
+        const wastedDisplay = document.getElementById('wasted-display');
+        const targetOrderContainer = document.getElementById('target-order-container');
+        const startDayBtn = document.getElementById('start-day-btn');
+        const conveyorTrackBg = document.getElementById('conveyor-track-bg');
+        const speedStatusText = document.getElementById('speed-status-text');
+
+        function showNotification(title, text, icon = '🎉') {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal-icon').innerText = icon;
+            document.getElementById('message-modal').classList.remove('hidden');
+            document.getElementById('message-modal').classList.add('flex');
+        }
+
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.remove('flex');
+            document.getElementById('message-modal').classList.add('hidden');
+        }
+
+        function openRecipeBook() {
+            document.getElementById('recipe-modal').classList.remove('hidden');
+            document.getElementById('recipe-modal').classList.add('flex');
+        }
+
+        function closeRecipeBook() {
+            document.getElementById('recipe-modal').classList.remove('flex');
+            document.getElementById('recipe-modal').classList.add('hidden');
+        }
+
+        // Start Daily Shift
+        function startDay() {
+            if (gameActive) return;
+            gameActive = true;
+            score = 0;
+            wastedCakes = 0;
+            currentIntervalTime = 7000;
+            scoreDisplay.innerText = score;
+            wastedDisplay.innerText = `${wastedCakes} / 3`;
+            startDayBtn.disabled = true;
+            startDayBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            generateNewTarget();
+            conveyorStations = [null, null, null, null];
+            updateConveyorVisuals();
+            scheduleNextAdvance();
+        }
+
+        // Dynamic Speed Scheduling based on Score
+        function scheduleNextAdvance() {
+            if (!gameActive) return;
+            if (advanceInterval) clearTimeout(advanceInterval);
+
+            advanceInterval = setTimeout(() => {
+                advanceConveyor();
+                if (gameActive) {
+                    scheduleNextAdvance();
+                }
+            }, currentIntervalTime);
+        }
+
+        function updateConveyorSpeed() {
+            let speedLevel = Math.floor(score / 100);
+            currentIntervalTime = Math.max(2200, 7000 - (speedLevel * 900));
+            
+            let trackAnimSeconds = (currentIntervalTime / 1000).toFixed(1);
+            conveyorTrackBg.style.animationDuration = `${trackAnimSeconds}s`;
+            speedStatusText.innerText = `⚡ Velocidad de Banda: Nivel ${speedLevel + 1} (${(currentIntervalTime/1000).toFixed(1)}s por estación)`;
+        }
+
+        function generateNewTarget() {
+            targetRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            renderTargetOrder();
+        }
+
+        function renderTargetOrder() {
+            targetOrderContainer.innerHTML = `
+                <div class="flex items-center gap-5 bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-inner w-full justify-center">
+                    <div class="text-4xl animate-pulse">${targetRecipe.icon}</div>
+                    <div>
+                        <h4 class="title-font text-base text-pink-300">${targetRecipe.name}</h4>
+                        <p class="text-xs text-slate-300 mt-1">
+                            • Bizcochos: <span class="font-bold text-yellow-300">${targetRecipe.layers.join(' + ')}</span> | 
+                            Glaseado: <span class="font-bold text-amber-300">${targetRecipe.frosting}</span> | 
+                            Decoración: <span class="font-bold text-rose-300">${targetRecipe.topping}</span>
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Conveyor Belt Automatic Advance
+        function advanceConveyor() {
+            if (!gameActive) return;
+
+            // Check if station 4 (index 3) has an unsubmitted cake falling off!
+            if (conveyorStations[3] !== null) {
+                wastedCakes++;
+                score = Math.max(0, score - 25);
+                scoreDisplay.innerText = score;
+                wastedDisplay.innerText = `${wastedCakes} / 3`;
+                updateConveyorSpeed();
+
+                if (wastedCakes >= 3) {
+                    gameOver();
+                    return;
+                } else {
+                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel incompleto se cayó al final de la cinta y perdiste 25 puntos! (${wastedCakes}/3 caídos)`, '❌');
+                }
+            }
+
+            // Shift stations: 3 <- 2, 2 <- 1, 1 <- 0, 0 <- null
+            conveyorStations[3] = conveyorStations[2];
+            conveyorStations[2] = conveyorStations[1];
+            conveyorStations[1] = conveyorStations[0];
+            conveyorStations[0] = null; // Station 1 opens up for a new pan
+
+            updateConveyorVisuals();
+        }
+
+        // Dispenser Actions strictly tied to exact stations (0 = Slot 1, 1 = Slot 2, 2 = Slot 3, 3 = Slot 4)
+        function dispensePan() {
+            if (!gameActive) {
+                showNotification('Aviso', '¡Inicia el turno de fábrica primero con el botón inferior!', '⚠️');
+                return;
+            }
+            if (conveyorStations[0] !== null) {
+                showNotification('Estación 1 Ocupada', 'Ya hay un molde en la primera estación de la cinta.', '⚠️');
+                return;
+            }
+            conveyorStations[0] = {
+                hasPan: true,
+                layers: [],
+                frosting: null,
+                topping: null
+            };
+            updateConveyorVisuals();
+        }
+
+        function dispenseSponge(name, color) {
+            let cake = conveyorStations[1]; // Must be in Station 2 (index 1)
+            if (!cake || !cake.hasPan) {
+                showNotification('¡Posición Incorrecta!', 'El molde debe estar exactamente en la Estación 2 (Bizcocho) para agregar capas de pastel.', '🟡');
+                return;
+            }
+            if (cake.layers.length >= 2) {
+                showNotification('¡Límite de Capas!', 'Un pastel solo puede tener 2 capas de bizcocho.', '⚠️');
+                return;
+            }
+            cake.layers.push({ name, color });
+            updateConveyorVisuals();
+        }
+
+        function dispenseFrosting(name, color) {
+            let cake = conveyorStations[2]; // Must be in Station 3 (index 2)
+            if (!cake || cake.layers.length === 0) {
+                showNotification('¡Posición Incorrecta!', 'El bizcocho debe estar exactamente en la Estación 3 (Glaseado) para agregar cobertura.', '🥛');
+                return;
+            }
+            cake.frosting = { name, color };
+            updateConveyorVisuals();
+        }
+
+        function dispenseTopping(toppingName) {
+            let cake = conveyorStations[3]; // Must be in Station 4 (index 3)
+            if (!cake || !cake.frosting) {
+                showNotification('¡Posición Incorrecta!', 'El pastel debe haber llegado a la Estación 4 (Decoración) y tener glaseado.', '🍓');
+                return;
+            }
+            cake.topping = toppingName;
+            updateConveyorVisuals();
+        }
+
+        function trashCake() {
+            let activeIdx = -1;
+            for (let i = 0; i < 4; i++) {
+                if (conveyorStations[i] !== null) {
+                    activeIdx = i;
+                    break;
+                }
+            }
+            if (activeIdx === -1) {
+                showNotification('Aviso', 'No hay ningún pastel en la cinta para tirar.', '⚠️');
+                return;
+            }
+            conveyorStations[activeIdx] = null;
+            updateConveyorVisuals();
+            showNotification('Basurero', 'Has descartado el pastel de la línea.', '🗑️');
+        }
+
+        function sendCake() {
+            let cake = conveyorStations[3];
+            if (!cake || !cake.hasPan) {
+                showNotification('Sin Pastel en Salida', 'Debes esperar a que el pastel llegue a la estación 4 (final de la cinta) para enviarlo.', '⚠️');
+                return;
+            }
+
+            let correctLayers = cake.layers.length === targetRecipe.layers.length &&
+                cake.layers.every((l, idx) => l.name === targetRecipe.layers[idx]);
+            let correctFrosting = cake.frosting && cake.frosting.name === targetRecipe.frosting;
+            let correctTopping = cake.topping === targetRecipe.topping;
+
+            if (correctLayers && correctFrosting && correctTopping) {
+                score += 60;
+                money += targetRecipe.reward;
+                scoreDisplay.innerText = score;
+                moneyDisplay.innerText = `$${money}`;
+                updateConveyorSpeed();
+                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado a tiempo! Recibiste +$${targetRecipe.reward} monedas y +60 puntos.`, '🎉');
+                conveyorStations[3] = null;
+                generateNewTarget();
+            } else {
+                score = Math.max(0, score - 20);
+                scoreDisplay.innerText = score;
+                updateConveyorSpeed();
+                showNotification('❌ ¡Error en la Receta!', 'El pastel enviado no coincide exactamente con el pedido (-20 pts).', '💥');
+                conveyorStations[3] = null;
+            }
+            updateConveyorVisuals();
+        }
+
+        function updateConveyorVisuals() {
+            for (let i = 0; i < 4; i++) {
+                let slotElem = document.getElementById(`slot-${i+1}`);
+                let contentElem = slotElem.querySelector('.slot-content');
+                let cake = conveyorStations[i];
+
+                if (!cake) {
+                    contentElem.innerHTML = `<span class="text-slate-600 text-[10px]">Vacío</span>`;
+                    slotElem.classList.remove('border-pink-500', 'bg-slate-900');
+                    slotElem.classList.add('border-dashed', 'border-slate-600');
+                } else {
+                    slotElem.classList.remove('border-dashed', 'border-slate-600');
+                    slotElem.classList.add('border-pink-500', 'bg-slate-900');
+                    contentElem.innerHTML = renderCakeHtml(cake);
+                }
+            }
+        }
+
+        function renderCakeHtml(cake) {
+            let html = `<div class="relative flex flex-col items-center justify-end h-20 scale-75 origin-bottom">`;
+            
+            if (cake.topping) {
+                let emoji = cake.topping === 'Fresas' ? '🍓' : cake.topping === 'Vela' ? '🕯️' : '⭐';
+                html += `<div class="text-lg mb-0.5 animate-bounce">${emoji}</div>`;
+            }
+
+            if (cake.frosting) {
+                html += `<div class="w-24 h-3.5 rounded-t-lg border border-black/20 flex items-center justify-center text-[8px] font-bold shadow-sm" style="background-color: ${cake.frosting.color}; color: #1e293b">${cake.frosting.name}</div>`;
+            }
+
+            for (let j = cake.layers.length - 1; j >= 0; j--) {
+                let layer = cake.layers[j];
+                let textColor = layer.color === '#78350f' ? '#fff' : '#1e293b';
+                html += `<div class="w-22 h-6 rounded-lg border border-black/20 flex items-center justify-center text-[10px] font-bold shadow my-0.5 px-1" style="background-color: ${layer.color}; color: ${textColor}">${layer.name}</div>`;
+            }
+
+            html += `<div class="w-24 h-3 bg-pink-200 rounded-b-lg border border-pink-400 shadow flex items-center justify-center text-[7px] text-slate-700 font-bold">Molde</div>`;
+            html += `</div>`;
+            return html;
+        }
+
+        function gameOver() {
+            gameActive = false;
+            if (advanceInterval) clearTimeout(advanceInterval);
+            startDayBtn.disabled = false;
+            startDayBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            showNotification('💀 ¡Turno Terminado por Desperdicios!', `Se te cayeron 3 pasteles de la cinta transportadora. Puntuación final: ${score} puntos.`, '📉');
+        }
+    </script>
+</body>
+</html>
