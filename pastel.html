@@ -3,102 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pastel Mania Pro - Fábrica de Pasteles en Movimiento</title>
+    <title>Pastel Mania - Purble Edition Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            background: radial-gradient(circle at center, #3b2314 0%, #1a100a 100%);
             user-select: none;
             overflow-x: hidden;
         }
         .title-font {
             font-family: 'Fredoka One', cursive;
         }
-        /* Classic checkered floor pattern */
-        .checkered-floor {
+        /* Classic Purble Bakery Wall & Floor */
+        .bakery-bg {
+            background-color: #2c1810;
             background-image: 
-                linear-gradient(45deg, #334155 25%, transparent 25%), 
-                linear-gradient(-45deg, #334155 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #334155 75%), 
-                linear-gradient(-45deg, transparent 75%, #334155 75%);
-            background-size: 50px 50px;
-            background-position: 0 0, 0 25px, 25px -25px, -25px 0px;
-            background-color: #0f172a;
+                radial-gradient(#4a2818 15%, transparent 16%),
+                radial-gradient(#4a2818 15%, transparent 16%);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
         }
-        /* Animated conveyor belt track */
+        /* Purble Conveyor Belt */
         @keyframes conveyorMove {
             0% { background-position: 0 0; }
-            100% { background-position: 60px 0; }
+            100% { background-position: 50px 0; }
         }
         .conveyor-track {
-            background: repeating-linear-gradient(
-                90deg,
-                #1e293b,
-                #1e293b 25px,
-                #475569 25px,
-                #475569 35px
-            );
-            background-size: 60px 100%;
-            animation: conveyorMove 1s linear infinite;
+            background: linear-gradient(180deg, #111 0%, #333 50%, #111 100%),
+                        repeating-linear-gradient(
+                            90deg,
+                            #222,
+                            #222 20px,
+                            #444 20px,
+                            #444 35px
+                        );
+            background-blend-mode: overlay;
+            background-size: 100% 100%, 35px 100%;
+            animation: conveyorMove 1.2s linear infinite;
         }
-        /* Floating animations & pulse effects */
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        /* Purble 3D Cylinder Cake Styling */
+        .cake-cylinder {
+            position: relative;
+            transform-style: preserve-3d;
         }
-        .animate-float {
-            animation: floatSlow 2s ease-in-out infinite;
+        .cake-layer {
+            position: relative;
+            border-radius: 50% / 20px;
+            box-shadow: inset 0 -6px 10px rgba(0,0,0,0.3), 0 6px 12px rgba(0,0,0,0.4);
+            border: 2px solid rgba(0,0,0,0.25);
         }
-
-        @keyframes slotPulse {
-            0%, 100% { box-shadow: 0 0 10px rgba(236, 72, 153, 0.4); }
-            50% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.8), inset 0 0 10px rgba(236, 72, 153, 0.3); }
+        /* Ruffled edge texture mimicking Purble Place sponge tiers */
+        .ruffle-edge {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.4) 30%, transparent 31%);
+            background-size: 12px 12px;
         }
-        .slot-active-glow {
-            animation: slotPulse 1.5s infinite ease-in-out;
+        /* Purble Pan Base Style */
+        .purble-pan {
+            border-radius: 50% / 15px;
+            background: linear-gradient(90deg, #cbd5e1, #f8fafc, #94a3b8);
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.8), 0 8px 15px rgba(0,0,0,0.5);
+            border: 2px solid #64748b;
         }
-
         @keyframes dropIn {
-            0% { transform: scale(0.3) translateY(-20px); opacity: 0; }
-            70% { transform: scale(1.08) translateY(5px); opacity: 1; }
+            0% { transform: scale(0.3) translateY(-30px); opacity: 0; }
+            70% { transform: scale(1.05) translateY(5px); opacity: 1; }
             100% { transform: scale(1) translateY(0); opacity: 1; }
         }
         .animate-drop {
             animation: dropIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-
-        /* Glassmorphism panel */
         .glass-panel {
-            background: rgba(30, 41, 59, 0.88);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(44, 24, 16, 0.88);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(217, 119, 6, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
     </style>
 </head>
-<body class="min-h-screen text-slate-100 flex flex-col items-center justify-between p-2 md:p-6 checkered-floor">
+<body class="min-h-screen text-amber-100 flex flex-col items-center justify-between p-2 md:p-5 bakery-bg">
 
-    <header class="w-full max-w-5xl glass-panel rounded-3xl p-4 mb-3 flex flex-wrap items-center justify-between border-t-4 border-pink-500 shadow-2xl">
+    <header class="w-full max-w-5xl glass-panel rounded-3xl p-4 mb-3 flex flex-wrap items-center justify-between border-t-4 border-amber-500 shadow-2xl">
         <div class="flex items-center space-x-3">
             <span class="text-4xl animate-bounce">🎂</span>
             <div>
-                <h1 class="title-font text-2xl md:text-3xl bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">Pastel Mania Pro</h1>
-                <p class="text-xs text-slate-400 font-bold">¡Línea de ensamblaje en movimiento estilo Purble Place!</p>
+                <h1 class="title-font text-2xl md:text-3xl bg-gradient-to-r from-amber-300 to-pink-400 bg-clip-text text-transparent">Pastel Mania - Purble Pro</h1>
+                <p class="text-xs text-amber-300/80 font-bold">¡Línea de ensamblaje estilo Purble Place Clásico!</p>
             </div>
         </div>
 
         <div class="flex items-center space-x-2 sm:space-x-3 mt-3 sm:mt-0">
-            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
                 <span class="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">Puntuación</span>
                 <span id="score-display" class="title-font text-xl text-white">0</span>
             </div>
-            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
                 <span class="block text-[10px] font-bold text-amber-400 uppercase tracking-wider">Monedas 💰</span>
                 <span id="money-display" class="title-font text-xl text-amber-300">$150</span>
             </div>
-            <div class="bg-slate-900/90 px-3.5 py-1.5 rounded-2xl border border-slate-700 text-center shadow-inner">
+            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
                 <span class="block text-[10px] font-bold text-red-400 uppercase tracking-wider">Desperdicios ❌</span>
                 <span id="wasted-display" class="title-font text-xl text-red-400">0 / 3</span>
             </div>
@@ -107,127 +111,125 @@
 
     <main class="w-full max-w-5xl flex-1 flex flex-col gap-3">
         
-        <!-- Target Orders Panel (2 simultaneous active orders with rich recipe variation) -->
+        <!-- Target Orders Panel (2 active orders) -->
         <section class="glass-panel rounded-3xl p-4 flex flex-col shadow-xl">
             <div class="flex justify-between items-center mb-2">
-                <h2 class="title-font text-sm md:text-base text-pink-300 flex items-center gap-2">
+                <h2 class="title-font text-sm md:text-base text-amber-300 flex items-center gap-2">
                     <span>📋</span> Pedidos Activos (¡Elige cuál cumplir en la estación 5!)
                 </h2>
                 <div class="flex items-center gap-3">
-                    <span id="day-timer" class="text-xs font-bold bg-pink-950/80 text-pink-300 px-4 py-1.5 rounded-full border border-pink-700 shadow animate-pulse">⏰ Tiempo: 60s</span>
-                    <button onclick="openRecipeBook()" class="text-xs bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
+                    <span id="day-timer" class="text-xs font-bold bg-amber-950/90 text-amber-300 px-4 py-1.5 rounded-full border border-amber-700 shadow animate-pulse">⏰ Tiempo: 60s</span>
+                    <button onclick="openRecipeBook()" class="text-xs bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
                 </div>
             </div>
-            <!-- Container for 2 Target Orders -->
             <div id="target-orders-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[110px]">
-                <div class="text-slate-400 text-sm italic flex items-center justify-center bg-slate-950/70 rounded-2xl border border-slate-800 p-3">¡Cargando pedidos...</div>
-                <div class="text-slate-400 text-sm italic flex items-center justify-center bg-slate-950/70 rounded-2xl border border-slate-800 p-3">¡Cargando pedidos...</div>
+                <div class="text-amber-300/60 text-sm italic flex items-center justify-center bg-stone-950/70 rounded-2xl border border-amber-900/30 p-3">¡Cargando pedidos...</div>
+                <div class="text-amber-300/60 text-sm italic flex items-center justify-center bg-stone-950/70 rounded-2xl border border-amber-900/30 p-3">¡Cargando pedidos...</div>
             </div>
         </section>
 
         <section class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
             
-            <!-- Overhead Machinery Dispensers (Strict Station Requirements) -->
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
-                <!-- Pan Dispenser (Station 1) - 3 shapes -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-pink-500 transition hover:scale-[1.02]">
-                    <span class="text-[11px] text-slate-300 font-bold mb-1">1. Molde (Est. 1)</span>
+            <!-- Purble Industrial Dispensers (Station-locked) -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-stone-950/90 p-3 rounded-2xl border border-amber-900/40">
+                <!-- Pan Dispenser (Station 1) -->
+                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
+                    <span class="text-[11px] text-amber-300 font-bold mb-1">1. Molde (Est. 1)</span>
                     <div class="flex gap-1 mt-1">
-                        <button onclick="dispensePan('Redondo', 'rounded-b-xl')" title="Redondo" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-full text-xs flex items-center justify-center transition active:scale-95 shadow">⚪</button>
-                        <button onclick="dispensePan('Cuadrado', 'rounded-none')" title="Cuadrado" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-sm text-xs flex items-center justify-center transition active:scale-95 shadow">⬛</button>
-                        <button onclick="dispensePan('Corazón', 'rounded-b-2xl rounded-t-sm')" title="Corazón" class="w-7 h-7 bg-pink-500/20 hover:bg-pink-500/40 border border-pink-400/50 rounded-xl text-xs flex items-center justify-center transition active:scale-95 shadow">💖</button>
+                        <button onclick="dispensePan('Redondo', 'rounded-[50%_/_15px]')" title="Redondo" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/50 rounded-full text-xs flex items-center justify-center transition active:scale-95 shadow">⚪</button>
+                        <button onclick="dispensePan('Cuadrado', 'rounded-lg')" title="Cuadrado" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/50 rounded-md text-xs flex items-center justify-center transition active:scale-95 shadow">⬛</button>
+                        <button onclick="dispensePan('Corazón', 'rounded-[0_0_50%_50%_/_0_0_30px_30px]')" title="Corazón" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/50 rounded-xl text-xs flex items-center justify-center transition active:scale-95 shadow">💖</button>
                     </div>
-                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 1</span>
+                    <span class="text-[9px] text-amber-400/70 mt-1">Solo Estación 1</span>
                 </div>
 
                 <!-- Sponge Layer Dispenser (Station 2) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-yellow-500 transition hover:scale-[1.02]">
-                    <span class="text-[11px] text-slate-300 font-bold mb-1">2. Bizcocho (Est. 2)</span>
+                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-yellow-500 transition hover:scale-[1.02]">
+                    <span class="text-[11px] text-amber-300 font-bold mb-1">2. Bizcocho (Est. 2)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseSponge('Vainilla', '#fef08a')" title="Vainilla" class="w-7 h-7 rounded-lg bg-yellow-200 border-2 border-yellow-400 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟡</button>
-                        <button onclick="dispenseSponge('Chocolate', '#78350f')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-900 border-2 border-amber-700 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟤</button>
-                        <button onclick="dispenseSponge('Fresa', '#fbcfe8')" title="Fresa" class="w-7 h-7 rounded-lg bg-pink-300 border-2 border-pink-400 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🌸</button>
+                        <button onclick="dispenseSponge('Vainilla', '#fef08a', '#ca8a04')" title="Vainilla" class="w-7 h-7 rounded-full bg-yellow-200 border-2 border-yellow-500 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟡</button>
+                        <button onclick="dispenseSponge('Chocolate', '#78350f', '#451a03')" title="Chocolate" class="w-7 h-7 rounded-full bg-amber-900 border-2 border-amber-700 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟤</button>
+                        <button onclick="dispenseSponge('Fresa', '#fbcfe8', '#db2777')" title="Fresa" class="w-7 h-7 rounded-full bg-pink-300 border-2 border-pink-400 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🌸</button>
                     </div>
-                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 2</span>
+                    <span class="text-[9px] text-amber-400/70 mt-1">Solo Estación 2</span>
                 </div>
 
                 <!-- Frosting Dispenser (Station 3) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-amber-500 transition hover:scale-[1.02]">
-                    <span class="text-[11px] text-slate-300 font-bold mb-1">3. Glaseado (Est. 3)</span>
+                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
+                    <span class="text-[11px] text-amber-300 font-bold mb-1">3. Glaseado (Est. 3)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff')" title="Blanco" class="w-7 h-7 rounded-lg bg-white border-2 border-slate-300 hover:scale-110 transition shadow active:scale-90">🥛</button>
-                        <button onclick="dispenseFrosting('Chocolate', '#451a03')" title="Chocolate" class="w-7 h-7 rounded-lg bg-amber-950 border-2 border-amber-800 hover:scale-110 transition shadow active:scale-90">🍫</button>
-                        <button onclick="dispenseFrosting('Fresa', '#fda4af')" title="Fresa" class="w-7 h-7 rounded-lg bg-rose-300 border-2 border-rose-400 hover:scale-110 transition shadow active:scale-90">🍓</button>
+                        <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff', '#e2e8f0')" title="Blanco" class="w-7 h-7 rounded-full bg-white border-2 border-slate-300 hover:scale-110 transition shadow active:scale-90">🥛</button>
+                        <button onclick="dispenseFrosting('Chocolate', '#451a03', '#291102')" title="Chocolate" class="w-7 h-7 rounded-full bg-amber-950 border-2 border-amber-800 hover:scale-110 transition shadow active:scale-90">🍫</button>
+                        <button onclick="dispenseFrosting('Fresa', '#f472b6', '#db2777')" title="Fresa" class="w-7 h-7 rounded-full bg-pink-400 border-2 border-pink-500 hover:scale-110 transition shadow active:scale-90">🍓</button>
                     </div>
-                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 3</span>
+                    <span class="text-[9px] text-amber-400/70 mt-1">Solo Estación 3</span>
                 </div>
 
-                <!-- Decoration Topping Dispenser (Station 4) -->
-                <div class="flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-slate-700 hover:border-rose-500 transition hover:scale-[1.02]">
-                    <span class="text-[11px] text-slate-300 font-bold mb-1">4. Topping (Est. 4)</span>
+                <!-- Topping Dispenser (Station 4) -->
+                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-rose-500 transition hover:scale-[1.02]">
+                    <span class="text-[11px] text-amber-300 font-bold mb-1">4. Topping (Est. 4)</span>
                     <div class="flex gap-1.5 mt-1">
-                        <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-lg bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🍓</button>
-                        <button onclick="dispenseTopping('Vela')" title="Velas" class="w-7 h-7 rounded-lg bg-blue-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🕯️</button>
-                        <button onclick="dispenseTopping('Estrellas')" title="Estrellas" class="w-7 h-7 rounded-lg bg-amber-500 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">⭐</button>
+                        <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-full bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🍓</button>
+                        <button onclick="dispenseTopping('Vela')" title="Velas" class="w-7 h-7 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🕯️</button>
+                        <button onclick="dispenseTopping('Estrellas')" title="Estrellas" class="w-7 h-7 rounded-full bg-amber-500 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">⭐</button>
                     </div>
-                    <span class="text-[9px] text-slate-400 mt-1">Solo en Estación 4</span>
+                    <span class="text-[9px] text-amber-400/70 mt-1">Solo Estación 4</span>
                 </div>
 
-                <!-- Action Controls (Send / Trash at Station 5) -->
-                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-slate-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg hover:scale-[1.02] transition">
+                <!-- Dispatch / Submit (Station 5) -->
+                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg hover:scale-[1.02] transition">
                     <span class="text-[11px] text-emerald-300 font-bold mb-1">5. Envío (Est. 5)</span>
                     <div class="flex gap-2 mt-1">
                         <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">✅ Enviar</button>
-                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">🗑️</button>
+                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90">🗑️</button>
                     </div>
-                    <span class="text-[9px] text-emerald-400 mt-1">¡Solo en Estación 5!</span>
+                    <span class="text-[9px] text-emerald-400 mt-1">¡Solo Estación 5!</span>
                 </div>
             </div>
 
-            <!-- Conveyor Belt Animation Track with 5 Stations -->
-            <div class="relative w-full h-52 bg-slate-950 rounded-3xl border-4 border-slate-800 flex items-center overflow-hidden shadow-inner">
+            <div class="relative w-full h-56 bg-stone-950 rounded-3xl border-4 border-amber-900/60 flex items-center overflow-hidden shadow-inner">
                 
-                <!-- Moving Track Background -->
-                <div id="conveyor-track-bg" class="absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-slate-700" style="animation-duration: 7s;"></div>
+                <!-- Conveyor Track Background -->
+                <div id="conveyor-track-bg" class="absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-amber-900/80" style="animation-duration: 7s;"></div>
 
-                <!-- 5 Fixed Station Slots on Belt -->
+                <!-- 5 Fixed Station Slots -->
                 <div class="w-full flex justify-around px-2 md:px-6 relative z-10">
-                    <div id="slot-1" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
-                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">1</span>
+                    <div id="slot-1" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">1</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-2" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
-                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">2</span>
+                    <div id="slot-2" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">2</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-3" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
-                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">3</span>
+                    <div id="slot-3" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">3</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-4" class="w-16 sm:w-20 h-24 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center bg-slate-900/70 relative transition-all duration-300">
-                        <span class="absolute top-1 left-2 text-[10px] font-bold text-slate-500">4</span>
+                    <div id="slot-4" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                        <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">4</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-5" class="w-16 sm:w-20 h-24 border-2 border-dashed border-emerald-600/60 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/30 relative transition-all duration-300 slot-active-glow">
+                    <div id="slot-5" class="w-16 sm:w-20 h-28 border-2 border-dashed border-emerald-600/80 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/40 relative transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-emerald-400">5 🚀</span>
                         <div class="slot-content"></div>
                     </div>
                 </div>
 
-                <!-- Trash Bin Drop-off Zone at End of Belt (Station 5 overflow) -->
-                <div class="absolute right-3 bottom-4 flex flex-col items-center z-20 bg-slate-900/90 px-3 py-1.5 rounded-2xl border border-red-900/50 shadow-xl">
+                <!-- Trash Zone Indicator -->
+                <div class="absolute right-3 bottom-4 flex flex-col items-center z-20 bg-stone-900/90 px-3 py-1.5 rounded-2xl border border-red-900/50 shadow-xl">
                     <span class="text-2xl animate-bounce">🗑️</span>
-                    <span class="text-[9px] text-red-400 font-bold">Zona de Caída (Est. 5)</span>
+                    <span class="text-[9px] text-red-400 font-bold">Límite Est. 5</span>
                 </div>
             </div>
 
-            <!-- Bottom Start Shift Control Bar -->
+            <!-- Bottom Controls -->
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
-                <div class="text-xs text-slate-400 flex items-center gap-2">
+                <div class="text-xs text-amber-300/80 flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
                     <span id="speed-status-text">¡Selecciona velocidad y comienza tu turno!</span>
                 </div>
-                <button onclick="openSpeedMenu()" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm">
+                <button onclick="openSpeedMenu()" class="bg-gradient-to-r from-amber-500 to-pink-600 hover:from-amber-400 hover:to-pink-500 text-stone-950 title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm font-bold">
                     ⚙️ Cambiar Velocidad / Iniciar
                 </button>
             </div>
@@ -236,32 +238,32 @@
     </main>
 
     <div id="speed-menu-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 text-center animate-drop">
+        <div class="glass-panel text-amber-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-700/50 text-center animate-drop">
             <div class="text-5xl mb-3 animate-bounce">🎂</div>
-            <h3 class="title-font text-2xl text-pink-400 mb-1">Pastel Mania Pro</h3>
-            <p class="text-xs text-slate-300 mb-6 leading-relaxed">Selecciona la velocidad inicial de la cinta transportadora para tu turno de fábrica:</p>
+            <h3 class="title-font text-2xl text-amber-400 mb-1">Pastel Mania - Purble Pro</h3>
+            <p class="text-xs text-amber-200/80 mb-6 leading-relaxed">Selecciona la velocidad de la cinta transportadora para tu turno:</p>
             
             <div class="space-y-3 mb-6">
-                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-slate-800 hover:bg-emerald-700/50 border border-slate-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
+                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-stone-900 hover:bg-emerald-950/60 border border-stone-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-emerald-400 group-hover:text-white">🐢 Modo Lento (Relajado)</h4>
-                        <p class="text-xs text-slate-400">9 segundos por estación. Ideal para principiantes.</p>
+                        <p class="text-xs text-amber-300/60">9 segundos por estación.</p>
                     </div>
                     <span class="text-xl">🟢</span>
                 </button>
 
-                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-slate-800 hover:bg-amber-700/50 border border-slate-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
+                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-stone-900 hover:bg-amber-950/60 border border-stone-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-amber-400 group-hover:text-white">⭐ Modo Normal (Clásico)</h4>
-                        <p class="text-xs text-slate-400">6.5 segundos por estación. Ritmo equilibrado.</p>
+                        <p class="text-xs text-amber-300/60">6.5 segundos por estación.</p>
                     </div>
                     <span class="text-xl">🟡</span>
                 </button>
 
-                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-slate-800 hover:bg-red-700/50 border border-slate-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
+                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-stone-900 hover:bg-red-950/60 border border-stone-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
                     <div class="text-left">
                         <h4 class="title-font text-base text-red-400 group-hover:text-white">🔥 Modo Rápido (Experto)</h4>
-                        <p class="text-xs text-slate-400">4.5 segundos por estación. ¡Alta adrenalina!</p>
+                        <p class="text-xs text-amber-300/60">Hasta 1.2s progresivos.</p>
                     </div>
                     <span class="text-xl">🔴</span>
                 </button>
@@ -270,30 +272,27 @@
     </div>
 
     <div id="recipe-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-700 animate-drop">
+        <div class="glass-panel text-amber-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-700/50 animate-drop">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="title-font text-lg text-pink-400 flex items-center gap-2"><span>📖</span> Recetario Dinámico</h3>
-                <button onclick="closeRecipeBook()" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
+                <h3 class="title-font text-lg text-amber-400 flex items-center gap-2"><span>📖</span> Recetario Dinámico</h3>
+                <button onclick="closeRecipeBook()" class="text-amber-400 hover:text-white text-xl font-bold">✕</button>
             </div>
-            <div class="space-y-3 max-h-80 overflow-y-auto pr-1">
-                <div class="p-3.5 bg-slate-900/80 rounded-2xl border border-slate-700 flex items-center justify-between">
-                    <div>
-                        <h4 class="font-bold text-sm text-yellow-300">Variaciones Infinita de Recetas</h4>
-                        <p class="text-xs text-slate-400 mt-0.5">El sistema genera combinaciones aleatorias de moldes (Redondo, Cuadrado, Corazón), bizcochos (Vainilla, Chocolate, Fresa), glaseados y toppings.</p>
-                    </div>
-                    <span class="text-2xl">🍰</span>
+            <div class="space-y-3 max-h-80 overflow-y-auto pr-1 text-xs text-amber-200/90">
+                <div class="p-3.5 bg-stone-900/90 rounded-2xl border border-amber-900/40">
+                    <h4 class="font-bold text-sm text-yellow-300 mb-1">Guía Purble Master</h4>
+                    <p>Sigue las instrucciones del pedido superior. Coloca el molde correcto en la Estación 1, bizcochos en Estación 2, glaseado en Estación 3, topping en Estación 4, y envía el pastel exactamente al llegar a la Estación 5.</p>
                 </div>
             </div>
-            <button onclick="closeRecipeBook()" class="w-full mt-5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Cerrar Recetario</button>
+            <button onclick="closeRecipeBook()" class="w-full mt-5 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Cerrar Recetario</button>
         </div>
     </div>
 
     <div id="message-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4 z-50">
-        <div class="glass-panel text-slate-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-700 text-center animate-drop">
+        <div class="glass-panel text-amber-100 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-amber-700/50 text-center animate-drop">
             <div id="modal-icon" class="text-5xl mb-3 animate-bounce">🎉</div>
-            <h3 id="modal-title" class="title-font text-xl text-pink-400 mb-2">¡Resultado!</h3>
-            <p id="modal-text" class="text-xs text-slate-300 mb-6 leading-relaxed">Has completado la acción correctamente.</p>
-            <button onclick="closeMessageModal()" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Continuar</button>
+            <h3 id="modal-title" class="title-font text-xl text-amber-400 mb-2">¡Resultado!</h3>
+            <p id="modal-text" class="text-xs text-amber-200/90 mb-6 leading-relaxed">Has completado la acción correctamente.</p>
+            <button onclick="closeMessageModal()" class="w-full bg-gradient-to-r from-amber-500 to-pink-600 hover:from-amber-400 hover:to-pink-500 text-stone-950 font-bold py-3 rounded-2xl text-sm transition shadow-lg active:scale-95">Continuar</button>
         </div>
     </div>
 
@@ -309,29 +308,25 @@
         let baseIntervalTime = 6500;
         let currentIntervalTime = 6500; 
 
-        // Conveyor belt state: 5 stations (index 0 to 4)
         let conveyorStations = [null, null, null, null, null];
-
-        // Target Recipe Orders (2 active orders)
         let targetRecipes = [null, null];
 
-        // Available Ingredients for Dynamic Procedural Generation
         const panTypes = [
-            { shape: 'Redondo', class: 'rounded-b-xl' },
-            { shape: 'Cuadrado', class: 'rounded-none' },
-            { shape: 'Corazón', class: 'rounded-b-2xl rounded-t-sm' }
+            { shape: 'Redondo', class: 'rounded-[50%_/_15px]' },
+            { shape: 'Cuadrado', class: 'rounded-lg' },
+            { shape: 'Corazón', class: 'rounded-[0_0_50%_50%_/_0_0_30px_30px]' }
         ];
 
         const spongeOptions = [
-            { name: 'Vainilla', color: '#fef08a' },
-            { name: 'Chocolate', color: '#78350f' },
-            { name: 'Fresa', color: '#fbcfe8' }
+            { name: 'Vainilla', color: '#fef08a', darkColor: '#ca8a04' },
+            { name: 'Chocolate', color: '#78350f', darkColor: '#451a03' },
+            { name: 'Fresa', color: '#fbcfe8', darkColor: '#db2777' }
         ];
 
         const frostingOptions = [
-            { name: 'Glaseado Blanco', color: '#ffffff' },
-            { name: 'Chocolate', color: '#451a03' },
-            { name: 'Fresa', color: '#fda4af' }
+            { name: 'Glaseado Blanco', color: '#ffffff', darkColor: '#cbd5e1' },
+            { name: 'Chocolate', color: '#451a03', darkColor: '#291102' },
+            { name: 'Fresa', color: '#f472b6', darkColor: '#db2777' }
         ];
 
         const toppingOptions = ['Fresas', 'Vela', 'Estrellas'];
@@ -361,7 +356,6 @@
             };
         }
 
-        // DOM Elements
         const scoreDisplay = document.getElementById('score-display');
         const moneyDisplay = document.getElementById('money-display');
         const wastedDisplay = document.getElementById('wasted-display');
@@ -420,7 +414,6 @@
             wastedDisplay.innerText = `${wastedCakes} / 3`;
             dayTimerElement.innerText = `⏰ Tiempo: ${remainingSeconds}s`;
 
-            // Initialize 2 dynamic procedural recipes
             targetRecipes = [getRandomRecipe(), getRandomRecipe()];
             renderTargetOrders();
 
@@ -430,7 +423,7 @@
             scheduleNextAdvance();
             startShiftTimer();
 
-            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. ¡Variaciones de recetas infinitas!`, '✨');
+            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. Estilo Purble Pro.`, '✨');
         }
 
         function startShiftTimer() {
@@ -452,7 +445,7 @@
             if (advanceInterval) clearTimeout(advanceInterval);
             if (dayTimerInterval) clearInterval(dayTimerInterval);
 
-            showNotification('⏰ ¡Tiempo Concluido!', `¡Se acabó el tiempo! Puntuación final: ${score} puntos y $${money} acumulados.`, '🏆');
+            showNotification('⏰ ¡Tiempo Concluido!', `¡Fin del turno! Puntuación final: ${score} pts y $${money}.`, '🏆');
             openSpeedMenu();
         }
 
@@ -470,7 +463,8 @@
 
         function updateConveyorSpeed() {
             let speedLevel = Math.floor(score / 50);
-            currentIntervalTime = Math.max(1200, baseIntervalTime - (speedLevel * 600));
+            // Allow speed to accelerate down to 1200ms (1.2 seconds) per station
+            currentIntervalTime = Math.max(1200, baseIntervalTime - (speedLevel * 500));
             
             let trackAnimSeconds = (currentIntervalTime / 1000).toFixed(1);
             conveyorTrackBg.style.animationDuration = `${trackAnimSeconds}s`;
@@ -484,16 +478,16 @@
 
         function renderTargetOrders() {
             targetOrdersContainer.innerHTML = targetRecipes.map((recipe, index) => `
-                <div class="flex items-center gap-4 bg-slate-900/90 p-3 rounded-2xl border border-slate-700 shadow-inner w-full justify-between animate-drop relative overflow-hidden">
-                    <span class="absolute top-1 right-2 text-[9px] font-bold text-pink-400 bg-pink-950/80 px-2 py-0.5 rounded-full border border-pink-800">Pedido #${index + 1}</span>
+                <div class="flex items-center gap-4 bg-stone-900/90 p-3 rounded-2xl border border-amber-900/50 shadow-inner w-full justify-between animate-drop relative overflow-hidden">
+                    <span class="absolute top-1 right-2 text-[9px] font-bold text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-800">Pedido #${index + 1}</span>
                     <div class="text-3xl animate-pulse">${recipe.icon}</div>
                     <div class="flex-1">
-                        <h4 class="title-font text-sm text-pink-300">${recipe.name}</h4>
-                        <p class="text-[11px] text-slate-300 mt-0.5">
-                            • Molde: <span class="font-bold text-pink-300">${recipe.panShape}</span> | 
+                        <h4 class="title-font text-sm text-amber-300">${recipe.name}</h4>
+                        <p class="text-[11px] text-amber-200/80 mt-0.5">
+                            • Molde: <span class="font-bold text-amber-300">${recipe.panShape}</span> | 
                             Bizcochos: <span class="font-bold text-yellow-300">${recipe.layers.join(' + ')}</span><br>
                             • Glaseado: <span class="font-bold text-amber-300">${recipe.frosting}</span> | 
-                            Topping: <span class="font-bold text-rose-300">${recipe.topping}</span>
+                            Topping: <span class="font-bold text-pink-300">${recipe.topping}</span>
                         </p>
                     </div>
                 </div>
@@ -529,7 +523,7 @@
 
         function dispensePan(shapeName, shapeClass) {
             if (!gameActive) {
-                showNotification('Aviso', '¡Elige tu velocidad en el menú inicial para comenzar!', '⚠️');
+                showNotification('Aviso', '¡Selecciona tu velocidad en el menú inicial para comenzar!', '⚠️');
                 return;
             }
             if (conveyorStations[0] !== null) {
@@ -547,7 +541,7 @@
             updateConveyorVisuals();
         }
 
-        function dispenseSponge(name, color) {
+        function dispenseSponge(name, color, darkColor) {
             let cake = conveyorStations[1];
             if (!cake || !cake.hasPan) {
                 showNotification('¡Posición Incorrecta!', 'El molde debe estar exactamente en la Estación 2 (Bizcocho).', '🟡');
@@ -557,17 +551,17 @@
                 showNotification('¡Límite de Capas!', 'Un pastel solo puede tener 2 capas de bizcocho.', '⚠️');
                 return;
             }
-            cake.layers.push({ name, color });
+            cake.layers.push({ name, color, darkColor });
             updateConveyorVisuals();
         }
 
-        function dispenseFrosting(name, color) {
+        function dispenseFrosting(name, color, darkColor) {
             let cake = conveyorStations[2];
             if (!cake || cake.layers.length === 0) {
                 showNotification('¡Posición Incorrecta!', 'El bizcocho debe estar exactamente en la Estación 3 (Glaseado).', '🥛');
                 return;
             }
-            cake.frosting = { name, color };
+            cake.frosting = { name, color, darkColor };
             updateConveyorVisuals();
         }
 
@@ -637,7 +631,6 @@
                 scoreDisplay.innerText = score;
                 updateConveyorSpeed();
                 
-                // If incorrect, replace the 1st recipe order
                 generateNewTarget(0);
 
                 showNotification('❌ ¡Error en la Receta!', 'El pastel no coincide con ningún pedido activo. ¡El Pedido #1 fue reemplazado y perdiste 20 pts!', '💥');
@@ -653,44 +646,62 @@
                 let cake = conveyorStations[i];
 
                 if (!cake) {
-                    contentElem.innerHTML = `<span class="text-slate-600 text-[10px]">Vacío</span>`;
-                    slotElem.classList.remove('border-pink-500', 'bg-slate-900', 'border-emerald-500', 'slot-active-glow');
+                    contentElem.innerHTML = `<span class="text-amber-700/60 text-[10px]">Vacío</span>`;
+                    slotElem.classList.remove('border-amber-500', 'bg-stone-900', 'border-emerald-500');
                     if (i === 4) {
-                        slotElem.classList.add('border-dashed', 'border-emerald-600/60', 'slot-active-glow');
+                        slotElem.classList.add('border-dashed', 'border-emerald-600/80');
                     } else {
-                        slotElem.classList.add('border-dashed', 'border-slate-600');
+                        slotElem.classList.add('border-dashed', 'border-amber-700/60');
                     }
                 } else {
-                    slotElem.classList.remove('border-dashed', 'border-slate-600', 'border-emerald-600/60', 'slot-active-glow');
+                    slotElem.classList.remove('border-dashed', 'border-amber-700/60', 'border-emerald-600/80');
                     if (i === 4) {
-                        slotElem.classList.add('border-emerald-500', 'bg-slate-900', 'slot-active-glow');
+                        slotElem.classList.add('border-emerald-500', 'bg-stone-900');
                     } else {
-                        slotElem.classList.add('border-pink-500', 'bg-slate-900');
+                        slotElem.classList.add('border-amber-500', 'bg-stone-900');
                     }
-                    contentElem.innerHTML = renderCakeHtml(cake);
+                    contentElem.innerHTML = renderPurbleCakeHtml(cake);
                 }
             }
         }
 
-        function renderCakeHtml(cake) {
-            let html = `<div class="relative flex flex-col items-center justify-end h-20 scale-75 origin-bottom animate-drop">`;
+        // Realistic Purble Place 3D Cylinder Cake Rendering
+        function renderPurbleCakeHtml(cake) {
+            let html = `<div class="relative flex flex-col items-center justify-end h-24 scale-[0.68] origin-bottom animate-drop">`;
             
+            // Topping
             if (cake.topping) {
                 let emoji = cake.topping === 'Fresas' ? '🍓' : cake.topping === 'Vela' ? '🕯️' : '⭐';
-                html += `<div class="text-lg mb-0.5 animate-bounce">${emoji}</div>`;
+                html += `<div class="text-2xl mb-1 animate-bounce z-30">${emoji}</div>`;
             }
 
+            // Frosting Layer with Glossy 3D Cylinder effect
             if (cake.frosting) {
-                html += `<div class="w-24 h-3.5 ${cake.panClass} border border-black/20 flex items-center justify-center text-[8px] font-bold shadow-sm" style="background-color: ${cake.frosting.color}; color: #1e293b">${cake.frosting.name}</div>`;
+                html += `
+                <div class="relative w-28 h-7 ${cake.panClass} cake-layer flex items-center justify-center text-[9px] font-bold z-20" 
+                     style="background: radial-gradient(circle at 30% 30%, ${cake.frosting.color}, ${cake.frosting.darkColor}); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">
+                    <div class="absolute inset-x-0 top-0 h-2 bg-white/30 rounded-t-full"></div>
+                    ${cake.frosting.name}
+                </div>`;
             }
 
+            // Sponge Layers with Purble Ruffle Texture
             for (let j = cake.layers.length - 1; j >= 0; j--) {
                 let layer = cake.layers[j];
-                let textColor = layer.color === '#78350f' ? '#fff' : '#1e293b';
-                html += `<div class="w-22 h-6 ${cake.panClass} border border-black/20 flex items-center justify-center text-[10px] font-bold shadow my-0.5 px-1" style="background-color: ${layer.color}; color: ${textColor}">${layer.name}</div>`;
+                html += `
+                <div class="relative w-26 h-8 ${cake.panClass} cake-layer ruffle-edge flex items-center justify-center text-[10px] font-bold my-[-3px] z-10" 
+                     style="background: radial-gradient(circle at 35% 30%, ${layer.color}, ${layer.darkColor}); color: #1a100a; text-shadow: 0 1px 1px rgba(255,255,255,0.4);">
+                    <div class="absolute inset-x-0 top-0 h-2 bg-white/20 rounded-t-full"></div>
+                    ${layer.name}
+                </div>`;
             }
 
-            html += `<div class="w-24 h-3 bg-pink-200 ${cake.panClass} border border-pink-400 shadow flex items-center justify-center text-[7px] text-slate-700 font-bold">${cake.panShape}</div>`;
+            // Metal Pan Base
+            html += `
+            <div class="w-28 h-5 purble-pan ${cake.panClass} flex items-center justify-center text-[8px] text-stone-700 font-extrabold z-0 shadow-lg">
+                ${cake.panShape}
+            </div>`;
+
             html += `</div>`;
             return html;
         }
@@ -700,7 +711,7 @@
             if (advanceInterval) clearTimeout(advanceInterval);
             if (dayTimerInterval) clearInterval(dayTimerInterval);
 
-            showNotification('💀 ¡Turno Terminado!', `Se cayeron 3 pasteles de la cinta. Puntuación final: ${score} puntos.`, '📉');
+            showNotification('💀 ¡Turno Terminado!', `Se cayeron 3 pasteles de la cinta. Puntuación final: ${score} pts.`, '📉');
             openSpeedMenu();
         }
     </script>
