@@ -32,6 +32,11 @@
                 🏆 RANKING GLOBAL
             </h1>
             <p class="text-slate-400 text-sm mt-2">Tabla de Líderes y Estadísticas de Jugadores</p>
+            <div class="mt-4 flex justify-center">
+                <button id="ranking-auth-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition">
+                    Iniciar sesión con Google para ver el ranking
+                </button>
+            </div>
         </div>
 
         <!-- Diagnostic Box (Hidden by default) -->
@@ -92,7 +97,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collectionGroup, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'palabra-secreta';
@@ -149,71 +154,73 @@
             }
         }
 
-        async function initApp() {
+        const rankingAuthBtn = document.getElementById('ranking-auth-btn');
+        const provider = new GoogleAuthProvider();
+        let currentUser = null;
+
+        rankingAuthBtn.addEventListener('click', async () => {
+            try {
+                if (currentUser) {
+                    await signOut(auth);
+                } else {
+                    await signInWithPopup(auth, provider);
+                }
+            } catch (e) {
+                console.error('Error de autenticación:', e);
+                document.getElementById('diagnostic-content').textContent =
+                    `❌ Error al iniciar sesión: ${e.code || e.message}`;
+                document.getElementById('diagnostic-box').classList.remove('hidden');
+            }
+        });
+
+        async function loadRanking() {
             const diagnosticContent = document.getElementById('diagnostic-content');
             const tbody = document.getElementById('leaderboard-body');
+            let diagnosticLog = '';
 
             try {
-                let diagnosticLog = "";
-
-                // El ranking es público. No hacemos que toda la página dependa
-                // del inicio de sesión anónimo, porque en Firebase puede estar
-                // desactivado y producir auth/admin-restricted-operation.
-                // Si existe un token del entorno, sí lo usamos. Si el anónimo
-                // está habilitado también puede usarse, pero un fallo aquí NO
-                // debe impedir que intentemos leer Firestore.
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                        diagnosticLog += `• Autenticación por token: OK\n`;
-                    } catch (authError) {
-                        diagnosticLog += `• Token de autenticación no disponible: ${authError.code || authError.message}\n`;
-                    }
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                        diagnosticLog += `• Acceso anónimo: OK\n`;
-                    } catch (authError) {
-                        diagnosticLog += `• Acceso anónimo no disponible (se continúa sin login): ${authError.code || authError.message}\n`;
-                    }
-                }
-                let playersMap = new Map();
-
-                // Intento 1: Colección Group 'stats'
-                try {
-                    diagnosticLog += `• Buscando con collectionGroup('stats')...\n`;
-                    const statsSnapshot = await getDocs(collectionGroup(db, "stats"));
-                    diagnosticLog += `  → Documentos encontrados: ${statsSnapshot.size}\n`;
-
-                    statsSnapshot.forEach((docSnap) => {
-                        const data = docSnap.data();
-                        let playerName = data.displayName || data.name || data.username || "Jugador Anónimo";
-                        let won = Number(data.won || data.wins || data.ganadas || 0);
-                        let played = Number(data.played || data.gamesPlayed || data.jugadas || 0);
-                        let streak = Number(data.streak || 0);
-                        let score = Number(data.score || 0);
-                        let userId = data.userId || data.uid || docSnap.id;
-                        if (played > 0 || won > 0 || score > 0 || streak > 0) {
-                            playersMap.set(userId, { name: playerName, won, played, streak, score });
-                        }
-                    });
-                } catch (e1) {
-                    diagnosticLog += `  ⚠️ collectionGroup error: ${e1.message}\n`;
+                // IMPORTANTE: no usamos acceso anónimo. El mismo sistema de cuentas
+                // del juego utiliza Google, y así evitamos auth/admin-restricted-operation.
+                if (!currentUser) {
+                    rankingAuthBtn.textContent = 'Iniciar sesión con Google para ver el ranking';
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Inicia sesión con Google para cargar las estadísticas de las cuentas.</td></tr>`;
+                    diagnosticContent.textContent = '• Esperando inicio de sesión con Google...';
+                    return;
                 }
 
-                // Las estadísticas del juego están realmente en:
-                // artifacts/{appId}/users/{uid}/gameData/stats
-                // Por eso collectionGroup('stats') es la consulta correcta.
+                rankingAuthBtn.textContent = `Cerrar sesión (${currentUser.displayName || 'Jugador'})`;
+                diagnosticLog += `• Cuenta conectada: ${currentUser.displayName || 'Jugador'}\n`;
+                diagnosticLog += `• UID: ${currentUser.uid}\n`;
+                diagnosticLog += `• Consultando colección global 'stats'...\n`;
+
+                const statsSnapshot = await getDocs(collectionGroup(db, 'stats'));
+                diagnosticLog += `  → Documentos encontrados: ${statsSnapshot.size}\n`;
+
+                const playersMap = new Map();
+                statsSnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const pathParts = docSnap.ref.path.split('/');
+                    const pathUid = pathParts.includes('users') ? pathParts[pathParts.indexOf('users') + 1] : null;
+                    const userId = data.userId || data.uid || pathUid || docSnap.id;
+                    const playerName = data.displayName || data.name || data.username || `Usuario ${String(userId).substring(0, 6)}`;
+                    const won = Number(data.won || data.wins || data.ganadas || 0);
+                    const played = Number(data.played || data.gamesPlayed || data.jugadas || 0);
+                    const streak = Number(data.streak || 0);
+                    const score = Number(data.score || 0);
+
+                    if (played > 0 || won > 0 || score > 0 || streak > 0) {
+                        playersMap.set(userId, { name: playerName, won, played, streak, score });
+                    }
+                });
 
                 const players = Array.from(playersMap.values());
-                // El ranking principal se ordena por puntos; luego por racha y victorias.
-                players.sort((a, b) => b.score - a.score || b.streak - a.streak || b.won - a.won);
+                players.sort((a, b) => b.score - a.score || b.streak - a.streak || b.won - a.won || b.played - a.played);
 
-                diagnosticLog += `• Total jugadores válidos en ranking: ${players.length}`;
+                diagnosticLog += `• Jugadores válidos: ${players.length}`;
                 diagnosticContent.textContent = diagnosticLog;
 
                 if (players.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Aún no hay partidas registradas en la base de datos. ¡Juega una partida para aparecer aquí!</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">No hay estadísticas accesibles todavía. Si ya jugaste, revisa las reglas de lectura de Firestore.</td></tr>`;
                     return;
                 }
 
@@ -226,7 +233,7 @@
                     if (index === 2) medalBadge = `<span class="text-xl">🥉</span>`;
 
                     const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-900/80 transition-colors";
+                    row.className = 'hover:bg-slate-900/80 transition-colors';
                     row.innerHTML = `
                         <td class="py-4 px-4 sm:px-6 font-medium">${medalBadge}</td>
                         <td class="py-4 px-4 sm:px-6 font-semibold text-slate-200">${escapeHtml(player.name)}</td>
@@ -238,14 +245,18 @@
                     `;
                     tbody.appendChild(row);
                 });
-
             } catch (err) {
                 console.error(err);
-                diagnosticContent.textContent = `❌ Error general de conexión: ${err.message}`;
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-red-400 text-center px-4">Error al conectar con Firebase (Posible API Key incorrecta o bloqueada en GitHub Pages).</td></tr>`;
+                diagnosticContent.textContent = `❌ Error Firestore: ${err.code || err.message}`;
+                document.getElementById('diagnostic-box').classList.remove('hidden');
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-red-400 text-center px-4">Firestore no permite leer el ranking con las reglas actuales.</td></tr>`;
             }
         }
 
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            loadRanking();
+        });
         function escapeHtml(text) {
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
