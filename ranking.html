@@ -247,7 +247,9 @@
                 });
             } catch (err) {
                 console.error(err);
-                diagnosticContent.textContent = `❌ Error Firestore: ${err.code || err.message}`;
+                diagnosticContent.textContent = `❌ Error Firestore: ${err.code || err.message}
+• Si aparece permission-denied, las reglas de Firestore deben permitir lectura a usuarios autenticados de:
+  artifacts/{appId}/users/{userId}/gameData/stats`;
                 document.getElementById('diagnostic-box').classList.remove('hidden');
                 tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-red-400 text-center px-4">Firestore no permite leer el ranking con las reglas actuales.</td></tr>`;
             }
@@ -261,7 +263,8 @@
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         }
 
-        window.addEventListener('DOMContentLoaded', initApp);
+        // loadRanking is triggered by onAuthStateChanged above.
+        // No undefined initApp call here.
     </script>
 </body>
 </html>
