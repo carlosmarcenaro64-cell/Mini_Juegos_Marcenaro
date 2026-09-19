@@ -705,10 +705,13 @@
         @media (max-width: 640px) {
             html, body { overscroll-behavior-y: none; }
             body {
-                padding: 6px 6px calc(282px + env(safe-area-inset-bottom)) !important;
+                padding: 6px 6px calc(12px + env(safe-area-inset-bottom)) !important;
                 min-height: 100dvh;
             }
-            body.mobile-dock-collapsed {
+            body.mobile-game-started {
+                padding-bottom: calc(282px + env(safe-area-inset-bottom)) !important;
+            }
+            body.mobile-game-started.mobile-dock-collapsed {
                 padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important;
             }
 
@@ -821,12 +824,12 @@
             .factory-stage > div.absolute.right-3 { display:none !important; }
 
             .mobile-game-controls {
-                display:block;
+                display:none;
                 position:fixed;
                 left:6px;
                 right:6px;
                 bottom:calc(6px + env(safe-area-inset-bottom));
-                z-index:55;
+                z-index:40;
                 padding:7px;
                 border-radius:20px;
                 background:
@@ -835,8 +838,10 @@
                 border:1px solid rgba(245,158,11,.28);
                 box-shadow:0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
                 backdrop-filter: blur(16px);
-                transition:transform .28s ease;
+                transition:transform .28s ease, opacity .2s ease;
             }
+            body.mobile-game-started .mobile-game-controls { display:block; }
+            body.mobile-overlay-open .mobile-game-controls { display:none !important; }
             body.mobile-dock-collapsed .mobile-game-controls {
                 transform:translateY(calc(100% - 48px));
             }
@@ -895,14 +900,19 @@
             }
 
             #speed-menu-modal, #recipe-modal, #message-modal, #pause-overlay {
-                align-items:flex-end !important;
+                align-items:center !important;
                 padding:8px !important;
+                z-index:100 !important;
+                overflow-y:auto;
+                overscroll-behavior:contain;
             }
             #speed-menu-modal .glass-panel, #recipe-modal .glass-panel, #message-modal .glass-panel, #pause-overlay .glass-panel {
-                max-height:92dvh;
+                max-height:calc(100dvh - 16px);
                 overflow-y:auto;
+                -webkit-overflow-scrolling:touch;
                 border-radius:22px !important;
                 padding:16px !important;
+                margin:auto 0;
             }
             .mode-card { padding:.8rem .9rem !important; }
             .mode-card h4 { font-size:15px !important; }
@@ -1447,7 +1457,17 @@
             scoreDisplay.classList.add('score-pop');
         }
 
+        function setMobileGameStarted(active) {
+            document.body.classList.toggle('mobile-game-started', !!active);
+            if (!active) document.body.classList.remove('mobile-dock-collapsed');
+        }
+
+        function setMobileOverlayOpen(open) {
+            document.body.classList.toggle('mobile-overlay-open', !!open);
+        }
+
         function toggleMobileDock() {
+            if (!gameActive) return;
             document.body.classList.toggle('mobile-dock-collapsed');
         }
 
@@ -1487,11 +1507,13 @@
             const overlay = document.getElementById('pause-overlay');
             const btn = document.getElementById('pause-btn');
             if (isPaused) {
+                setMobileOverlayOpen(true);
                 pausedAtTimestamp = Date.now();
                 if (advanceInterval) clearTimeout(advanceInterval);
                 overlay.classList.remove('hidden'); overlay.classList.add('flex');
                 btn.innerText = '▶️ Continuar';
             } else {
+                setMobileOverlayOpen(false);
                 if (pausedAtTimestamp) {
                     totalPausedDuration += Date.now() - pausedAtTimestamp;
                     pausedAtTimestamp = 0;
@@ -1525,6 +1547,7 @@
         }
 
         function showNotification(title, text, icon = '🎉') {
+            setMobileOverlayOpen(true);
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-text').innerText = text;
             document.getElementById('modal-icon').innerText = icon;
@@ -1535,6 +1558,7 @@
         function closeMessageModal() {
             document.getElementById('message-modal').classList.remove('flex');
             document.getElementById('message-modal').classList.add('hidden');
+            setMobileOverlayOpen(false);
             if (returnToMenuAfterMessage) {
                 returnToMenuAfterMessage = false;
                 openSpeedMenu();
@@ -1542,6 +1566,7 @@
         }
 
         function openRecipeBook() {
+            setMobileOverlayOpen(true);
             document.getElementById('recipe-modal').classList.remove('hidden');
             document.getElementById('recipe-modal').classList.add('flex');
         }
@@ -1549,9 +1574,16 @@
         function closeRecipeBook() {
             document.getElementById('recipe-modal').classList.remove('flex');
             document.getElementById('recipe-modal').classList.add('hidden');
+            if (!document.getElementById('message-modal').classList.contains('flex') &&
+                !document.getElementById('speed-menu-modal').classList.contains('flex') &&
+                !document.getElementById('pause-overlay').classList.contains('flex')) {
+                setMobileOverlayOpen(false);
+            }
         }
 
         function openSpeedMenu() {
+            setMobileOverlayOpen(true);
+            if (!gameActive) setMobileGameStarted(false);
             speedMenuFromActiveGame = gameActive;
 
             if (gameActive) {
@@ -1575,6 +1607,7 @@
             if (!gameActive) return;
             speedMenuModal.classList.remove('flex');
             speedMenuModal.classList.add('hidden');
+            setMobileOverlayOpen(false);
             isPaused = false;
             speedMenuFromActiveGame = false;
             if (pausedAtTimestamp) {
@@ -1587,6 +1620,7 @@
         }
 
         function selectSpeed(speedMs, modeName) {
+            setMobileOverlayOpen(false);
             baseIntervalTime = speedMs;
             currentIntervalTime = speedMs;
             selectedModeName = modeName;
@@ -1611,6 +1645,7 @@
 
         function startDay(modeName = 'Normal') {
             gameActive = true;
+            setMobileGameStarted(true);
             score = 0;
             wastedCakes = 0;
             combo = 0;
@@ -1957,6 +1992,7 @@
 
         function gameOver(lastFailure = 'Llegaste al límite de fallos.') {
             gameActive = false;
+            setMobileGameStarted(false);
             isPaused = false;
             speedMenuFromActiveGame = false;
             if (advanceInterval) clearTimeout(advanceInterval);
@@ -1979,6 +2015,8 @@
         });
 
         buildAmbientSparkles();
+        setMobileOverlayOpen(true);
+        setMobileGameStarted(false);
         updateMetaHud();
         document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
         musicBtn.innerText = musicEnabled ? '🎵 Música' : '🎵 Música off';
