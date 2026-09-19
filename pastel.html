@@ -80,11 +80,629 @@
             border: 2px solid rgba(217, 119, 6, 0.3);
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
         }
+
+
+        /* ===== Pastel Mania 2.0 enhancements ===== */
+        :root {
+            --pm-gold: #f59e0b;
+            --pm-pink: #ec4899;
+            --pm-green: #10b981;
+            --pm-red: #ef4444;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(245,158,11,.08), transparent 28%),
+                radial-gradient(circle at 85% 10%, rgba(236,72,153,.07), transparent 24%),
+                radial-gradient(circle at 50% 90%, rgba(16,185,129,.05), transparent 30%);
+            z-index: -1;
+        }
+
+        .hud-card { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+        .hud-card:hover { transform: translateY(-2px); border-color: rgba(245,158,11,.55); box-shadow: 0 8px 24px rgba(0,0,0,.28); }
+
+        @keyframes floatSoft { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+        @keyframes glowPulse { 0%,100%{box-shadow:0 0 0 rgba(245,158,11,0)} 50%{box-shadow:0 0 24px rgba(245,158,11,.28)} }
+        @keyframes stationFlash { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+        @keyframes scorePop { 0%{transform:scale(1)} 40%{transform:scale(1.3)} 100%{transform:scale(1)} }
+        @keyframes confettiFall { 0%{transform:translateY(-30px) rotate(0deg);opacity:0} 10%{opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+        .animate-float-soft { animation: floatSoft 2.8s ease-in-out infinite; }
+        .active-station { animation: glowPulse 1s ease-in-out infinite; border-color: var(--pm-gold) !important; }
+        .station-flash { animation: stationFlash .28s ease; }
+        .score-pop { animation: scorePop .32s ease; }
+
+        .progress-shell { background: rgba(28,25,23,.82); border: 1px solid rgba(245,158,11,.25); }
+        .progress-fill { background: linear-gradient(90deg, #f59e0b, #ec4899); transition: width .35s ease; }
+        .combo-badge { background: linear-gradient(135deg, rgba(236,72,153,.22), rgba(245,158,11,.18)); border: 1px solid rgba(236,72,153,.35); }
+
+        .control-btn:disabled { opacity:.35; cursor:not-allowed; filter:grayscale(.6); transform:none !important; }
+        .order-card { transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+        .order-card:hover { transform: translateY(-2px); border-color: rgba(245,158,11,.7); }
+        .order-card.hot-order { border-color: rgba(16,185,129,.7); background: rgba(6,78,59,.18); }
+
+        .tiny-kbd { border:1px solid rgba(255,255,255,.18); background:rgba(0,0,0,.25); padding:.08rem .35rem; border-radius:.4rem; font-size:.65rem; }
+
+        @media (max-width: 640px) {
+            .mobile-scroll { overflow-x:auto; scrollbar-width: thin; }
+            .mobile-scroll > div { min-width: 570px; }
+            header { align-items:flex-start !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+        }
+
+
+        /* ===== 3D visual overhaul ===== */
+        @keyframes heroSweep {
+            0% { transform: translateX(-130%) skewX(-24deg); }
+            100% { transform: translateX(220%) skewX(-24deg); }
+        }
+
+        .hero-panel {
+            position: relative;
+            overflow: hidden;
+            background:
+                linear-gradient(180deg, rgba(120,67,30,.28), rgba(31,18,11,.92)),
+                radial-gradient(circle at top left, rgba(255,227,163,.12), transparent 32%);
+            border: 1px solid rgba(255,207,138,.16);
+            box-shadow:
+                0 20px 45px rgba(0,0,0,.45),
+                inset 0 1px 0 rgba(255,255,255,.08),
+                inset 0 -16px 22px rgba(0,0,0,.28);
+        }
+        .hero-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 24%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+            animation: heroSweep 8s linear infinite;
+            pointer-events: none;
+        }
+
+        .metric-3d,
+        .order-board,
+        .machine-panel,
+        #session-summary,
+        #speed-menu-modal .glass-panel,
+        #recipe-modal .glass-panel,
+        #message-modal .glass-panel,
+        #pause-overlay .glass-panel {
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(75,47,28,.96), rgba(26,17,12,.95));
+            border: 1px solid rgba(255,196,111,.18);
+            box-shadow:
+                0 16px 35px rgba(0,0,0,.42),
+                inset 0 1px 0 rgba(255,255,255,.06),
+                inset 0 -12px 18px rgba(0,0,0,.33);
+        }
+        .metric-3d::before,
+        .order-board::before,
+        .machine-panel::before,
+        #session-summary::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 8px;
+            height: 18px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        .metric-3d {
+            transform-style: preserve-3d;
+            box-shadow:
+                0 10px 18px rgba(0,0,0,.35),
+                inset 0 1px 0 rgba(255,255,255,.05),
+                inset 0 -10px 14px rgba(0,0,0,.28);
+        }
+        .metric-3d:hover {
+            transform: translateY(-4px) rotateX(6deg);
+        }
+
+        .order-board, .machine-panel {
+            overflow: hidden;
+        }
+
+        .order-3d {
+            position: relative;
+            background:
+                linear-gradient(180deg, rgba(34,25,20,.94), rgba(15,11,10,.95));
+            box-shadow:
+                0 12px 22px rgba(0,0,0,.35),
+                inset 0 1px 0 rgba(255,255,255,.05),
+                inset 0 -8px 14px rgba(0,0,0,.35);
+        }
+        .order-3d::before {
+            content: '';
+            position: absolute;
+            inset: 8px 12px auto;
+            height: 16px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+            pointer-events: none;
+        }
+
+        .dispenser-card {
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            background:
+                linear-gradient(180deg, rgba(44,37,34,.96), rgba(17,14,13,.98));
+            box-shadow:
+                0 14px 22px rgba(0,0,0,.38),
+                inset 0 1px 0 rgba(255,255,255,.05),
+                inset 0 -12px 16px rgba(0,0,0,.42);
+            border: 1px solid rgba(255,255,255,.06);
+        }
+        .dispenser-card::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            top: 8px;
+            height: 34%;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+        .dispenser-card::after {
+            content: '';
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: -12px;
+            height: 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,.4), transparent 70%);
+            filter: blur(5px);
+            pointer-events: none;
+        }
+        .dispenser-card:hover {
+            transform: translateY(-4px) rotateX(5deg);
+        }
+
+        .machine-action-btn,
+        .ui-3d-btn {
+            position: relative;
+            box-shadow:
+                0 7px 0 rgba(0,0,0,.24),
+                0 15px 20px rgba(0,0,0,.28);
+            transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+        }
+        .machine-action-btn:hover,
+        .ui-3d-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+        .machine-action-btn:active,
+        .ui-3d-btn:active {
+            transform: translateY(4px);
+            box-shadow:
+                0 3px 0 rgba(0,0,0,.26),
+                0 8px 14px rgba(0,0,0,.2);
+        }
+
+        .factory-stage {
+            position: relative;
+            perspective: 1200px;
+            background:
+                linear-gradient(180deg, rgba(80,55,42,.92), rgba(19,13,11,.98) 55%),
+                radial-gradient(circle at top, rgba(255,255,255,.05), transparent 50%);
+            box-shadow:
+                inset 0 20px 35px rgba(255,255,255,.03),
+                inset 0 -20px 30px rgba(0,0,0,.45),
+                0 20px 35px rgba(0,0,0,.38);
+        }
+        .factory-stage::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            top: 12px;
+            height: 18px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+        .factory-stage::after {
+            content: '';
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 6px;
+            height: 36px;
+            border-radius: 12px;
+            background:
+                repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 18px, rgba(0,0,0,.05) 18px 36px),
+                linear-gradient(180deg, rgba(15,15,16,.4), rgba(0,0,0,.58));
+            transform: perspective(800px) rotateX(73deg);
+            pointer-events: none;
+        }
+
+        .track-3d {
+            height: 74px !important;
+            bottom: 20px !important;
+            border-top: 2px solid rgba(255,255,255,.08);
+            border-bottom: 2px solid rgba(0,0,0,.4);
+            border-radius: 18px;
+            background:
+                linear-gradient(180deg, #090909 0%, #303036 15%, #19191d 50%, #080809 100%),
+                repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 20px, rgba(0,0,0,.12) 20px 38px),
+                radial-gradient(circle at center, rgba(255,255,255,.05), transparent 55%);
+            box-shadow:
+                inset 0 4px 8px rgba(255,255,255,.08),
+                inset 0 -12px 16px rgba(0,0,0,.62),
+                0 14px 22px rgba(0,0,0,.44);
+            transform: perspective(900px) rotateX(62deg) translateY(16px);
+            transform-origin: center bottom;
+        }
+
+        .station-slot {
+            position: relative;
+            overflow: visible;
+            transform-style: preserve-3d;
+            background: linear-gradient(180deg, rgba(46,36,33,.96), rgba(22,18,17,.98)) !important;
+            box-shadow:
+                0 14px 22px rgba(0,0,0,.35),
+                inset 0 1px 0 rgba(255,255,255,.04),
+                inset 0 -12px 15px rgba(0,0,0,.33);
+        }
+        .station-slot::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: -12px;
+            height: 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,.44), transparent 72%);
+            filter: blur(4px);
+            pointer-events: none;
+        }
+        .station-slot::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            top: -6px;
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.01));
+            pointer-events: none;
+        }
+        .station-slot > .slot-content {
+            position: relative;
+            z-index: 2;
+            transform: translateZ(28px);
+        }
+
+        .conveyor-lights {
+            position: absolute;
+            inset: 14px 14px auto 14px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 12;
+            pointer-events: none;
+        }
+        .conveyor-lights span {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            box-shadow: 0 0 14px currentColor, 0 0 22px currentColor;
+            animation: glowPulse 1.8s ease-in-out infinite;
+        }
+        .conveyor-lights span:nth-child(1) { color: #f59e0b; background: #fbbf24; }
+        .conveyor-lights span:nth-child(2) { color: #ec4899; background: #f472b6; animation-delay: .25s; }
+        .conveyor-lights span:nth-child(3) { color: #10b981; background: #34d399; animation-delay: .5s; }
+        .conveyor-lights span:nth-child(4) { color: #60a5fa; background: #60a5fa; animation-delay: .75s; }
+
+        .cake-3d-wrap {
+            position: relative;
+            width: 116px;
+            height: 112px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            transform-style: preserve-3d;
+            transform: rotateX(8deg);
+        }
+        .cake-shadow {
+            position: absolute;
+            bottom: -6px;
+            width: 90px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,0,0,.46), transparent 68%);
+            filter: blur(4px);
+        }
+        .cake-topper {
+            position: relative;
+            z-index: 45;
+            transform: translateZ(42px);
+            text-shadow: 0 3px 8px rgba(0,0,0,.45);
+            margin-bottom: 2px;
+        }
+        .cake-tier-3d,
+        .cake-frosting-3d,
+        .cake-pan-3d {
+            position: relative;
+            width: 102px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50% / 18px;
+            transform-style: preserve-3d;
+            letter-spacing: .01em;
+            overflow: visible;
+        }
+        .cake-tier-3d {
+            min-height: 22px;
+            margin-top: -2px;
+            padding: 0 8px;
+            background:
+                linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 22%),
+                linear-gradient(180deg, var(--tierColor), var(--tierDark));
+            color: var(--tierText, #1a100a);
+            border: 1px solid rgba(105,60,24,.34);
+            box-shadow:
+                inset 0 2px 0 rgba(255,255,255,.16),
+                inset 0 -9px 10px rgba(0,0,0,.18),
+                0 7px 10px rgba(0,0,0,.16);
+        }
+        .cake-tier-3d::before,
+        .cake-frosting-3d::before,
+        .cake-pan-3d::before {
+            content: '';
+            position: absolute;
+            left: 1px;
+            right: 1px;
+            top: -6px;
+            height: 12px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 34% 30%, rgba(255,255,255,.45), transparent 24%),
+                linear-gradient(180deg, rgba(255,255,255,.24), rgba(255,255,255,0));
+            pointer-events: none;
+            z-index: 1;
+        }
+        .cake-tier-3d::after,
+        .cake-frosting-3d::after,
+        .cake-pan-3d::after {
+            content: '';
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: -7px;
+            height: 9px;
+            border-radius: 50%;
+            background: rgba(0,0,0,.12);
+            filter: blur(2px);
+            pointer-events: none;
+        }
+        .cake-tier-3d.ruffled {
+            background-image:
+                radial-gradient(circle at 6px 17px, rgba(255,255,255,.14) 1.3px, transparent 1.6px),
+                radial-gradient(circle at 2px 18px, rgba(139,92,41,.08) 1.5px, transparent 1.8px),
+                linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 22%),
+                linear-gradient(180deg, var(--tierColor), var(--tierDark));
+            background-size: 10px 10px, 11px 11px, 100% 100%, 100% 100%;
+        }
+        .cake-tier-crumb {
+            position: absolute;
+            inset: 4px 10px auto 10px;
+            height: 8px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0));
+            opacity: .7;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .cake-tier-filling {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 4px;
+            height: 4px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(255,248,220,.75), rgba(255,255,255,.4), rgba(255,248,220,.75));
+            opacity: .55;
+            z-index: 2;
+        }
+        .cake-frosting-3d {
+            min-height: 25px;
+            margin-top: -5px;
+            padding: 0 8px;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(255,255,255,.42), transparent 32%),
+                linear-gradient(180deg, var(--tierColor), var(--tierDark));
+            color: var(--tierText, #fff);
+            border: 1px solid rgba(0,0,0,.18);
+            box-shadow:
+                inset 0 4px 0 rgba(255,255,255,.22),
+                inset 0 -10px 12px rgba(0,0,0,.18),
+                0 9px 12px rgba(0,0,0,.16);
+        }
+        .frosting-top-swirl {
+            position: absolute;
+            top: -10px;
+            left: 14px;
+            right: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.35), transparent 60%);
+            opacity: .65;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .frosting-drips {
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: -6px;
+            height: 12px;
+            background:
+                radial-gradient(circle at 8% 30%, var(--tierDark) 0 5px, transparent 5.2px),
+                radial-gradient(circle at 30% 55%, var(--tierDark) 0 6px, transparent 6.2px),
+                radial-gradient(circle at 52% 35%, var(--tierDark) 0 5px, transparent 5.2px),
+                radial-gradient(circle at 74% 60%, var(--tierDark) 0 6px, transparent 6.2px),
+                radial-gradient(circle at 92% 30%, var(--tierDark) 0 5px, transparent 5.2px);
+            opacity: .9;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .cake-tier-label {
+            position: relative;
+            z-index: 4;
+            font-size: 10px;
+            font-weight: 800;
+            text-shadow: 0 1px 1px rgba(255,255,255,.22);
+        }
+        .cake-frosting-3d .cake-tier-label {
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,.55);
+            font-size: 9px;
+        }
+        .cake-pan-3d {
+            min-height: 20px;
+            width: 108px;
+            padding: 0 8px;
+            background:
+                linear-gradient(180deg, #f8fafc, #cbd5e1 28%, #94a3b8 78%);
+            color: #374151;
+            border: 1px solid rgba(71,85,105,.85);
+            box-shadow:
+                inset 0 3px 0 rgba(255,255,255,.48),
+                inset 0 -8px 10px rgba(0,0,0,.18),
+                0 9px 10px rgba(0,0,0,.24);
+        }
+        .cake-pan-rim {
+            position: absolute;
+            top: -4px;
+            left: 4px;
+            right: 4px;
+            height: 9px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,.7), rgba(226,232,240,.3));
+            border: 1px solid rgba(148,163,184,.55);
+            z-index: 3;
+            pointer-events: none;
+        }
+        .cake-pan-base {
+            position: absolute;
+            bottom: -5px;
+            left: 10px;
+            right: 10px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(71,85,105,.28);
+            filter: blur(1.2px);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .cake-pan-3d .cake-tier-label {
+            font-size: 8px;
+            color: #4b5563;
+            text-shadow: none;
+            z-index: 4;
+        }
+
+        .empty-slot-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px;
+            padding: .25rem .45rem;
+            border-radius: .75rem;
+            background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.16));
+            border: 1px solid rgba(245,158,11,.12);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+        }
+
+    
+        /* ===== visual + menu polish pack ===== */
+        @keyframes twinkleFloat { 0%,100%{ transform:translateY(0) scale(1); opacity:.35;} 50%{ transform:translateY(-12px) scale(1.12); opacity:.85;} }
+        @keyframes beltGlow { 0%,100%{ box-shadow: inset 0 4px 8px rgba(255,255,255,.08), inset 0 -12px 16px rgba(0,0,0,.62), 0 14px 22px rgba(0,0,0,.44);} 50%{ box-shadow: inset 0 4px 8px rgba(255,255,255,.12), inset 0 -12px 16px rgba(0,0,0,.62), 0 14px 26px rgba(245,158,11,.20);} }
+        @keyframes floatConfetti { 0%{ transform:translateY(0) scale(.8) rotate(0deg); opacity:0;} 10%{ opacity:1;} 100%{ transform:translateY(-110px) scale(1.15) rotate(190deg); opacity:0;} }
+        @keyframes modalOrb { 0%,100%{ transform:translateY(0px) scale(1); opacity:.35;} 50%{ transform:translateY(-10px) scale(1.08); opacity:.75;} }
+        .track-3d { animation: conveyorMove 1.2s linear infinite, beltGlow 2.8s ease-in-out infinite; }
+        .station-slot.active-station { transform: translateY(-2px) scale(1.02); }
+        .ambient-sparkles {
+            position: fixed; inset: 0; pointer-events:none; z-index:0; overflow:hidden;
+        }
+        .ambient-sparkles span {
+            position:absolute; display:block; width:10px; height:10px; border-radius:999px;
+            background: radial-gradient(circle, rgba(255,255,255,.85), rgba(255,255,255,0));
+            filter: blur(.2px); opacity:.4; animation: twinkleFloat 5s ease-in-out infinite;
+        }
+        .ambient-sparkles span:nth-child(3n) { background: radial-gradient(circle, rgba(251,191,36,.95), rgba(251,191,36,0)); }
+        .ambient-sparkles span:nth-child(4n) { background: radial-gradient(circle, rgba(244,114,182,.9), rgba(244,114,182,0)); }
+        .ambient-sparkles span:nth-child(5n) { background: radial-gradient(circle, rgba(52,211,153,.9), rgba(52,211,153,0)); }
+
+        .speed-modal-shell {
+            max-width: 720px !important;
+            background:
+                radial-gradient(circle at top center, rgba(255,228,160,.10), transparent 35%),
+                linear-gradient(180deg, rgba(85,49,24,.96), rgba(26,17,12,.97));
+            overflow: hidden;
+        }
+        .speed-modal-shell::after {
+            content:''; position:absolute; inset:auto -8% -28% auto; width:260px; height:260px; border-radius:999px;
+            background: radial-gradient(circle, rgba(244,114,182,.18), transparent 65%); filter: blur(8px); pointer-events:none;
+        }
+        .menu-hero-icon {
+            width:78px; height:78px; border-radius:999px; margin:0 auto 12px; display:grid; place-items:center;
+            background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.3), rgba(255,255,255,.05) 40%, rgba(245,158,11,.24));
+            box-shadow: 0 14px 26px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.16);
+            animation: floatSoft 2.8s ease-in-out infinite;
+        }
+        .menu-chip-row { display:flex; flex-wrap:wrap; gap:.5rem; justify-content:center; margin: 0 0 1rem; }
+        .menu-chip {
+            padding:.4rem .75rem; border-radius:999px; font-size:.72rem; font-weight:700;
+            background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+            border:1px solid rgba(255,255,255,.08); box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+        }
+        .mode-card {
+            position:relative; overflow:hidden; border-radius:1.25rem; padding:1rem 1.1rem; text-align:left; width:100%;
+            background: linear-gradient(180deg, rgba(25,20,18,.96), rgba(10,8,7,.96));
+            border:1px solid rgba(255,255,255,.08);
+            box-shadow: 0 12px 22px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.07), inset 0 -10px 14px rgba(0,0,0,.35);
+            transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+        }
+        .mode-card::before {
+            content:''; position:absolute; inset:0 auto 0 0; width:8px; background: linear-gradient(180deg, var(--modeColor), transparent 90%);
+        }
+        .mode-card:hover { transform: translateY(-3px) scale(1.01); border-color: color-mix(in srgb, var(--modeColor) 65%, white 10%); box-shadow: 0 16px 28px rgba(0,0,0,.30), 0 0 0 1px color-mix(in srgb, var(--modeColor) 18%, transparent); }
+        .mode-meta { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.45rem; }
+        .mode-pill { padding:.22rem .52rem; font-size:.68rem; font-weight:700; border-radius:999px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); }
+        .menu-note-panel {
+            margin-top:1rem; border-radius:1rem; padding:.9rem 1rem; text-align:left;
+            background: linear-gradient(180deg, rgba(16,24,39,.35), rgba(17,24,39,.18)); border:1px solid rgba(255,255,255,.08);
+        }
+        .celebration-layer { position: fixed; inset:0; pointer-events:none; z-index:70; overflow:hidden; }
+        .celebration-piece {
+            position:absolute; bottom:110px; font-size:1.15rem; animation: floatConfetti 1100ms ease-out forwards;
+            text-shadow:0 5px 8px rgba(0,0,0,.25);
+        }
+
     </style>
 </head>
 <body class="min-h-screen text-amber-100 flex flex-col items-center justify-between p-2 md:p-5 bakery-bg">
+    <div id="ambient-sparkles" class="ambient-sparkles"></div>
+    <div id="celebration-layer" class="celebration-layer"></div>
 
-    <header class="w-full max-w-5xl glass-panel rounded-3xl p-4 mb-3 flex flex-wrap items-center justify-between border-t-4 border-amber-500 shadow-2xl">
+    <header class="w-full max-w-5xl glass-panel hero-panel rounded-3xl p-4 mb-3 flex flex-wrap items-center justify-between border-t-4 border-amber-500 shadow-2xl">
         <div class="flex items-center space-x-3">
             <span class="text-4xl animate-bounce">🎂</span>
             <div>
@@ -93,18 +711,26 @@
             </div>
         </div>
 
-        <div class="flex items-center space-x-2 sm:space-x-3 mt-3 sm:mt-0">
-            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
+        <div class="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-0 flex-wrap justify-end">
+            <div class="hud-card metric-3d bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
                 <span class="block text-[10px] font-bold text-pink-400 uppercase tracking-wider">Puntuación</span>
                 <span id="score-display" class="title-font text-xl text-white">0</span>
             </div>
-            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
+            <div class="hud-card metric-3d bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
                 <span class="block text-[10px] font-bold text-amber-400 uppercase tracking-wider">Monedas 💰</span>
                 <span id="money-display" class="title-font text-xl text-amber-300">$150</span>
             </div>
-            <div class="bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
-                <span class="block text-[10px] font-bold text-red-400 uppercase tracking-wider">Desperdicios ❌</span>
+            <div class="hud-card metric-3d bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-amber-900/50 text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-red-400 uppercase tracking-wider">Fallos ❌</span>
                 <span id="wasted-display" class="title-font text-xl text-red-400">0 / 3</span>
+            </div>
+            <div class="hud-card metric-3d combo-badge px-3.5 py-1.5 rounded-2xl text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-pink-300 uppercase tracking-wider">Combo 🔥</span>
+                <span id="combo-display" class="title-font text-xl text-pink-200">x0</span>
+            </div>
+            <div class="hud-card bg-stone-900/90 px-3.5 py-1.5 rounded-2xl border border-emerald-900/50 text-center shadow-inner">
+                <span class="block text-[10px] font-bold text-emerald-300 uppercase tracking-wider">Récord 🏆</span>
+                <span id="best-score-display" class="title-font text-xl text-emerald-200">0</span>
             </div>
         </div>
     </header>
@@ -112,14 +738,14 @@
     <main class="w-full max-w-5xl flex-1 flex flex-col gap-3">
         
         <!-- Target Orders Panel (2 active orders) -->
-        <section class="glass-panel rounded-3xl p-4 flex flex-col shadow-xl">
+        <section class="glass-panel order-board rounded-3xl p-4 flex flex-col shadow-xl">
             <div class="flex justify-between items-center mb-2">
                 <h2 class="title-font text-sm md:text-base text-amber-300 flex items-center gap-2">
                     <span>📋</span> Pedidos Activos (¡Elige cuál cumplir en la estación 5!)
                 </h2>
                 <div class="flex items-center gap-3">
-                    <span id="day-timer" class="text-xs font-bold bg-amber-950/90 text-amber-300 px-4 py-1.5 rounded-full border border-amber-700 shadow animate-pulse">⏰ Tiempo: 60s</span>
-                    <button onclick="openRecipeBook()" class="text-xs bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
+                    <span class="text-xs font-bold bg-red-950/80 text-red-300 px-4 py-1.5 rounded-full border border-red-700/70 shadow">❤️ 3 fallos = fin</span>
+                    <button onclick="openRecipeBook()" class="ui-3d-btn text-xs bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4 py-1.5 rounded-xl transition shadow-lg active:scale-95">📖 Recetario</button>
                 </div>
             </div>
             <div id="target-orders-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[110px]">
@@ -128,12 +754,29 @@
             </div>
         </section>
 
-        <section class="glass-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
+        <section class="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 items-center">
+            <div class="progress-shell rounded-2xl p-3 shadow-inner">
+                <div class="flex justify-between text-[11px] mb-1.5 font-bold text-amber-200/90">
+                    <span id="level-text">Nivel 1 · Aprendiz</span>
+                    <span id="progress-label">0 / 200 pts</span>
+                </div>
+                <div class="h-2.5 bg-black/30 rounded-full overflow-hidden">
+                    <div id="level-progress" class="progress-fill h-full rounded-full" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="flex gap-2 justify-end">
+                <button id="pause-btn" onclick="togglePause()" class="control-btn ui-3d-btn bg-stone-900 hover:bg-stone-800 border border-amber-800/50 text-amber-200 px-4 py-2 rounded-xl text-xs font-bold transition active:scale-95">⏸️ Pausa</button>
+                <button onclick="toggleSound()" id="sound-btn" class="control-btn ui-3d-btn bg-stone-900 hover:bg-stone-800 border border-amber-800/50 text-amber-200 px-4 py-2 rounded-xl text-xs font-bold transition active:scale-95">🔊 Sonido</button>
+                <button onclick="toggleMusic()" id="music-btn" class="control-btn ui-3d-btn bg-stone-900 hover:bg-stone-800 border border-pink-800/50 text-pink-200 px-4 py-2 rounded-xl text-xs font-bold transition active:scale-95">🎵 Música</button>
+            </div>
+        </section>
+
+        <section class="glass-panel machine-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
             
             <!-- Purble Industrial Dispensers (Station-locked) -->
             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-stone-950/90 p-3 rounded-2xl border border-amber-900/40">
                 <!-- Pan Dispenser (Station 1) -->
-                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
+                <div class="dispenser-card flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-amber-300 font-bold mb-1">1. Molde (Est. 1)</span>
                     <div class="flex gap-1 mt-1">
                         <button onclick="dispensePan('Redondo', 'rounded-[50%_/_15px]')" title="Redondo" class="w-7 h-7 bg-amber-500/20 hover:bg-amber-500/40 border border-amber-400/50 rounded-full text-xs flex items-center justify-center transition active:scale-95 shadow">⚪</button>
@@ -144,7 +787,7 @@
                 </div>
 
                 <!-- Sponge Layer Dispenser (Station 2) -->
-                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-yellow-500 transition hover:scale-[1.02]">
+                <div class="dispenser-card flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-yellow-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-amber-300 font-bold mb-1">2. Bizcocho (Est. 2)</span>
                     <div class="flex gap-1.5 mt-1">
                         <button onclick="dispenseSponge('Vainilla', '#fef08a', '#ca8a04')" title="Vainilla" class="w-7 h-7 rounded-full bg-yellow-200 border-2 border-yellow-500 text-xs font-bold hover:scale-110 transition shadow active:scale-90">🟡</button>
@@ -155,7 +798,7 @@
                 </div>
 
                 <!-- Frosting Dispenser (Station 3) -->
-                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
+                <div class="dispenser-card flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-amber-300 font-bold mb-1">3. Glaseado (Est. 3)</span>
                     <div class="flex gap-1.5 mt-1">
                         <button onclick="dispenseFrosting('Glaseado Blanco', '#ffffff', '#e2e8f0')" title="Blanco" class="w-7 h-7 rounded-full bg-white border-2 border-slate-300 hover:scale-110 transition shadow active:scale-90">🥛</button>
@@ -166,7 +809,7 @@
                 </div>
 
                 <!-- Topping Dispenser (Station 4) -->
-                <div class="flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-rose-500 transition hover:scale-[1.02]">
+                <div class="dispenser-card flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-rose-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-amber-300 font-bold mb-1">4. Topping (Est. 4)</span>
                     <div class="flex gap-1.5 mt-1">
                         <button onclick="dispenseTopping('Fresas')" title="Fresas" class="w-7 h-7 rounded-full bg-red-600 text-white text-xs flex items-center justify-center hover:scale-110 transition shadow active:scale-90">🍓</button>
@@ -177,40 +820,40 @@
                 </div>
 
                 <!-- Dispatch / Submit (Station 5) -->
-                <div class="col-span-2 sm:col-span-1 flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg hover:scale-[1.02] transition">
+                <div class="dispenser-card col-span-2 sm:col-span-1 flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-emerald-700/60 shadow-lg hover:scale-[1.02] transition">
                     <span class="text-[11px] text-emerald-300 font-bold mb-1">5. Envío (Est. 5)</span>
                     <div class="flex gap-2 mt-1">
-                        <button onclick="sendCake()" title="Enviar Pastel" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">✅ Enviar</button>
-                        <button onclick="trashCake()" title="Basurero" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90">🗑️</button>
+                        <button onclick="sendCake()" title="Enviar Pastel" class="machine-action-btn bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90 flex items-center gap-1">✅ Enviar</button>
+                        <button onclick="trashCake()" title="Basurero" class="machine-action-btn bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-lg active:scale-90">🗑️</button>
                     </div>
                     <span class="text-[9px] text-emerald-400 mt-1">¡Solo Estación 5!</span>
                 </div>
             </div>
 
-            <div class="relative w-full h-56 bg-stone-950 rounded-3xl border-4 border-amber-900/60 flex items-center overflow-hidden shadow-inner">
+            <div class="mobile-scroll"><div class="factory-stage relative w-full h-56 bg-stone-950 rounded-3xl border-4 border-amber-900/60 flex items-center overflow-hidden shadow-inner"><div class="conveyor-lights"><span></span><span></span><span></span><span></span></div>
                 
                 <!-- Conveyor Track Background -->
-                <div id="conveyor-track-bg" class="absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-amber-900/80" style="animation-duration: 7s;"></div>
+                <div id="conveyor-track-bg" class="track-3d absolute bottom-6 w-full h-16 conveyor-track border-y-4 border-amber-900/80" style="animation-duration: 7s;"></div>
 
                 <!-- 5 Fixed Station Slots -->
                 <div class="w-full flex justify-around px-2 md:px-6 relative z-10">
-                    <div id="slot-1" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                    <div id="slot-1" class="station-slot w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">1</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-2" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                    <div id="slot-2" class="station-slot w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">2</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-3" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                    <div id="slot-3" class="station-slot w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">3</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-4" class="w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
+                    <div id="slot-4" class="station-slot w-16 sm:w-20 h-28 border-2 border-dashed border-amber-700/60 rounded-2xl flex flex-col items-center justify-center bg-stone-900/80 relative transition-all duration-300">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-amber-500">4</span>
                         <div class="slot-content"></div>
                     </div>
-                    <div id="slot-5" class="w-16 sm:w-20 h-28 border-2 border-dashed border-emerald-600/80 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/40 relative transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                    <div id="slot-5" class="station-slot w-16 sm:w-20 h-28 border-2 border-dashed border-emerald-600/80 rounded-2xl flex flex-col items-center justify-center bg-emerald-950/40 relative transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                         <span class="absolute top-1 left-2 text-[10px] font-bold text-emerald-400">5 🚀</span>
                         <div class="slot-content"></div>
                     </div>
@@ -221,16 +864,18 @@
                     <span class="text-2xl animate-bounce">🗑️</span>
                     <span class="text-[9px] text-red-400 font-bold">Límite Est. 5</span>
                 </div>
-            </div>
+            </div></div>
 
             <!-- Bottom Controls -->
             <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <div class="text-xs text-amber-300/80 flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
-                    <span id="speed-status-text">¡Selecciona velocidad y comienza tu turno!</span>
+                    <span id="speed-status-text">¡Elige velocidad y empieza! · 3 fallos terminan la partida</span>
+                    <span class="hidden md:inline text-amber-200/40">·</span>
+                    <span class="hidden md:inline text-amber-200/50">Atajos: <span class="tiny-kbd">P</span> pausa · <span class="tiny-kbd">R</span> recetario</span>
                 </div>
-                <button onclick="openSpeedMenu()" class="bg-gradient-to-r from-amber-500 to-pink-600 hover:from-amber-400 hover:to-pink-500 text-stone-950 title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm font-bold">
-                    ⚙️ Cambiar Velocidad / Iniciar
+                <button onclick="openSpeedMenu()" class="ui-3d-btn bg-gradient-to-r from-amber-500 to-pink-600 hover:from-amber-400 hover:to-pink-500 text-stone-950 title-font px-7 py-3 rounded-2xl shadow-xl transition transform hover:scale-105 active:scale-95 text-sm font-bold">
+                    ⚙️ Velocidad / Menú
                 </button>
             </div>
         </section>
@@ -238,36 +883,66 @@
     </main>
 
     <div id="speed-menu-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
-        <div class="glass-panel text-amber-100 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-amber-700/50 text-center animate-drop">
-            <div class="text-5xl mb-3 animate-bounce">🎂</div>
-            <h3 class="title-font text-2xl text-amber-400 mb-1">Pastel Mania - Purble Pro</h3>
-            <p class="text-xs text-amber-200/80 mb-6 leading-relaxed">Selecciona la velocidad de la cinta transportadora para tu turno:</p>
+        <div class="glass-panel speed-modal-shell text-amber-100 rounded-3xl w-full p-6 shadow-2xl border border-amber-700/50 text-center animate-drop">
+            <div class="menu-hero-icon text-5xl">🎂</div>
+            <h3 id="speed-menu-title" class="title-font text-2xl md:text-3xl text-amber-300 mb-1">Pastel Mania - Purble Pro</h3>
+            <p id="speed-menu-description" class="text-sm text-amber-100/80 mb-4 leading-relaxed">Selecciona la velocidad inicial de la cinta transportadora.</p>
+            <div class="menu-chip-row">
+                <span class="menu-chip">❤️ 3 fallos = fin</span>
+                <span class="menu-chip">⚡ la velocidad sube gradualmente</span>
+                <span class="menu-chip">🎵 música de fondo</span>
+            </div>
             
-            <div class="space-y-3 mb-6">
-                <button onclick="selectSpeed(9000, 'Lento')" class="w-full bg-stone-900 hover:bg-emerald-950/60 border border-stone-700 hover:border-emerald-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
-                    <div class="text-left">
-                        <h4 class="title-font text-base text-emerald-400 group-hover:text-white">🐢 Modo Lento (Relajado)</h4>
-                        <p class="text-xs text-amber-300/60">9 segundos por estación.</p>
+            <div id="session-summary" class="hidden mb-4 p-3 rounded-2xl bg-stone-950/60 border border-amber-900/30 text-xs text-amber-200/80"></div>
+            <div class="grid gap-3 mb-6">
+                <button onclick="selectSpeed(9000, 'Lento')" class="mode-card group" style="--modeColor:#34d399;">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h4 class="title-font text-lg text-emerald-300 group-hover:text-white">🐢 Modo Lento</h4>
+                            <p class="text-sm text-amber-100/75">Ideal para aprender y jugar relajado.</p>
+                            <div class="mode-meta"><span class="mode-pill">9.0s inicial</span><span class="mode-pill">Aumenta poco a poco</span><span class="mode-pill">Fácil</span></div>
+                        </div>
+                        <span class="text-2xl">🟢</span>
                     </div>
-                    <span class="text-xl">🟢</span>
                 </button>
 
-                <button onclick="selectSpeed(6500, 'Normal')" class="w-full bg-stone-900 hover:bg-amber-950/60 border border-stone-700 hover:border-amber-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
-                    <div class="text-left">
-                        <h4 class="title-font text-base text-amber-400 group-hover:text-white">⭐ Modo Normal (Clásico)</h4>
-                        <p class="text-xs text-amber-300/60">6.5 segundos por estación.</p>
+                <button onclick="selectSpeed(6500, 'Normal')" class="mode-card group" style="--modeColor:#f59e0b;">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h4 class="title-font text-lg text-amber-300 group-hover:text-white">⭐ Modo Normal</h4>
+                            <p class="text-sm text-amber-100/75">Equilibrio entre rapidez y control.</p>
+                            <div class="mode-meta"><span class="mode-pill">6.5s inicial</span><span class="mode-pill">Progresión media</span><span class="mode-pill">Clásico</span></div>
+                        </div>
+                        <span class="text-2xl">🟡</span>
                     </div>
-                    <span class="text-xl">🟡</span>
                 </button>
 
-                <button onclick="selectSpeed(4500, 'Rápido')" class="w-full bg-stone-900 hover:bg-red-950/60 border border-stone-700 hover:border-red-500 p-4 rounded-2xl transition flex items-center justify-between shadow-lg group active:scale-95">
-                    <div class="text-left">
-                        <h4 class="title-font text-base text-red-400 group-hover:text-white">🔥 Modo Rápido (Experto)</h4>
-                        <p class="text-xs text-amber-300/60">Hasta 1.2s progresivos.</p>
+                <button onclick="selectSpeed(4500, 'Rápido')" class="mode-card group" style="--modeColor:#f87171;">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <h4 class="title-font text-lg text-red-300 group-hover:text-white">🔥 Modo Rápido</h4>
+                            <p class="text-sm text-amber-100/75">Para reflejos rápidos y mayor tensión.</p>
+                            <div class="mode-meta"><span class="mode-pill">4.5s inicial</span><span class="mode-pill">Sube más rápido</span><span class="mode-pill">Experto</span></div>
+                        </div>
+                        <span class="text-2xl">🔴</span>
                     </div>
-                    <span class="text-xl">🔴</span>
                 </button>
             </div>
+            <div class="menu-note-panel text-xs text-amber-100/75">
+                <div class="font-bold text-amber-300 mb-1">Consejo</div>
+                La cinta se acelera por tiempo de juego, no por entregas. Así la dificultad sube de forma gradual aunque juegues con calma o cometas errores.
+            </div>
+            <button id="speed-menu-back-btn" onclick="closeSpeedMenu()" class="hidden ui-3d-btn w-full mt-4 bg-stone-800 hover:bg-stone-700 border border-stone-600 text-stone-200 font-bold py-3 rounded-2xl text-sm transition">↩️ Volver al juego</button>
+        </div>
+    </div>
+
+
+    <div id="pause-overlay" class="fixed inset-0 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4 z-[60]">
+        <div class="glass-panel rounded-3xl p-7 max-w-sm w-full text-center animate-drop">
+            <div class="text-5xl mb-3 animate-float-soft">⏸️</div>
+            <h3 class="title-font text-2xl text-amber-300 mb-2">Juego en pausa</h3>
+            <p class="text-xs text-amber-200/75 mb-5">La cinta está detenida. Continúa cuando estés listo.</p>
+            <button onclick="togglePause()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-2xl transition active:scale-95">▶️ Continuar</button>
         </div>
     </div>
 
@@ -303,10 +978,25 @@
         let wastedCakes = 0;
         let gameActive = false;
         let advanceInterval = null;
-        let dayTimerInterval = null;
-        let remainingSeconds = 60;
         let baseIntervalTime = 6500;
-        let currentIntervalTime = 6500; 
+        let currentIntervalTime = 6500;
+        let combo = 0;
+        let bestCombo = 0;
+        let completedOrders = 0;
+        let soundEnabled = localStorage.getItem('pastelManiaSound') !== 'off';
+        let musicEnabled = localStorage.getItem('pastelManiaMusic') !== 'off';
+        let isPaused = false;
+        let bestScore = Number(localStorage.getItem('pastelManiaBestScore') || 0);
+        let bestMoney = Number(localStorage.getItem('pastelManiaBestMoney') || 150);
+        let speedMenuFromActiveGame = false;
+        let returnToMenuAfterMessage = false;
+        let gameStartTimestamp = 0;
+        let pausedAtTimestamp = 0;
+        let totalPausedDuration = 0;
+        let selectedModeName = 'Normal';
+        let musicCtx = null;
+        let musicLoopInterval = null;
+        let musicStep = 0;
 
         let conveyorStations = [null, null, null, null, null];
         let targetRecipes = [null, null];
@@ -359,11 +1049,181 @@
         const scoreDisplay = document.getElementById('score-display');
         const moneyDisplay = document.getElementById('money-display');
         const wastedDisplay = document.getElementById('wasted-display');
-        const dayTimerElement = document.getElementById('day-timer');
         const targetOrdersContainer = document.getElementById('target-orders-container');
         const speedMenuModal = document.getElementById('speed-menu-modal');
+        const speedMenuTitle = document.getElementById('speed-menu-title');
+        const speedMenuDescription = document.getElementById('speed-menu-description');
+        const speedMenuBackBtn = document.getElementById('speed-menu-back-btn');
         const conveyorTrackBg = document.getElementById('conveyor-track-bg');
         const speedStatusText = document.getElementById('speed-status-text');
+        const comboDisplay = document.getElementById('combo-display');
+        const bestScoreDisplay = document.getElementById('best-score-display');
+        const levelProgress = document.getElementById('level-progress');
+        const levelText = document.getElementById('level-text');
+        const progressLabel = document.getElementById('progress-label');
+        const musicBtn = document.getElementById('music-btn');
+        bestScoreDisplay.innerText = bestScore;
+
+        function playTone(type = 'ok') {
+            if (!soundEnabled) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioCtx();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                const map = { ok: 660, success: 880, error: 180, click: 440 };
+                osc.frequency.value = map[type] || 500;
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.06, ctx.currentTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+                osc.start(); osc.stop(ctx.currentTime + 0.2);
+            } catch (_) {}
+        }
+
+        function ensureMusicContext() {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return null;
+            if (!musicCtx) musicCtx = new AudioCtx();
+            return musicCtx;
+        }
+
+        function playMusicNote(freq, startTime, duration = 0.25, type = 'triangle', volume = 0.024) {
+            if (!musicCtx) return;
+            const osc = musicCtx.createOscillator();
+            const gain = musicCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.0001, startTime);
+            gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+            osc.connect(gain);
+            gain.connect(musicCtx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration + 0.02);
+        }
+
+        function startBackgroundMusic() {
+            if (!musicEnabled || musicLoopInterval) return;
+            const ctx = ensureMusicContext();
+            if (!ctx) return;
+            if (ctx.state === 'suspended') ctx.resume();
+            const melody = [523.25, 659.25, 783.99, 698.46, 659.25, 587.33, 659.25, 783.99];
+            const bass = [261.63, 261.63, 293.66, 293.66, 329.63, 293.66, 261.63, 246.94];
+            const tick = () => {
+                if (!musicEnabled || !musicCtx) return;
+                if (musicCtx.state === 'suspended') musicCtx.resume();
+                const now = musicCtx.currentTime + 0.03;
+                const idx = musicStep % melody.length;
+                playMusicNote(melody[idx], now, 0.24, 'triangle', 0.022);
+                playMusicNote(bass[idx], now, 0.42, 'sine', 0.010);
+                if (idx === 2 || idx === 6) playMusicNote(melody[idx] * 1.5, now + 0.12, 0.13, 'square', 0.006);
+                musicStep++;
+            };
+            tick();
+            musicLoopInterval = setInterval(tick, 360);
+        }
+
+        function stopBackgroundMusic() {
+            if (musicLoopInterval) {
+                clearInterval(musicLoopInterval);
+                musicLoopInterval = null;
+            }
+        }
+
+        function toggleMusic() {
+            musicEnabled = !musicEnabled;
+            localStorage.setItem('pastelManiaMusic', musicEnabled ? 'on' : 'off');
+            musicBtn.innerText = musicEnabled ? '🎵 Música' : '🎵 Música off';
+            if (musicEnabled) {
+                startBackgroundMusic();
+                playTone('click');
+            } else {
+                stopBackgroundMusic();
+            }
+        }
+
+        function getElapsedPlayMs() {
+            if (!gameStartTimestamp) return 0;
+            const currentRef = (isPaused && pausedAtTimestamp) ? pausedAtTimestamp : Date.now();
+            return Math.max(0, currentRef - gameStartTimestamp - totalPausedDuration);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            localStorage.setItem('pastelManiaSound', soundEnabled ? 'on' : 'off');
+            document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
+            if (soundEnabled) playTone('click');
+        }
+
+        function updateMetaHud() {
+            comboDisplay.innerText = `x${combo}`;
+            bestScoreDisplay.innerText = bestScore;
+            const level = Math.floor(score / 200) + 1;
+            const levelNames = ['Aprendiz','Panadero','Repostero','Maestro','Leyenda'];
+            const levelName = levelNames[Math.min(level - 1, levelNames.length - 1)];
+            const inLevel = score % 200;
+            levelText.innerText = `Nivel ${level} · ${levelName}`;
+            progressLabel.innerText = `${inLevel} / 200 pts`;
+            levelProgress.style.width = `${Math.min(100, (inLevel / 200) * 100)}%`;
+        }
+
+        function markScorePop() {
+            scoreDisplay.classList.remove('score-pop');
+            void scoreDisplay.offsetWidth;
+            scoreDisplay.classList.add('score-pop');
+        }
+
+        function flashStation(index) {
+            const el = document.getElementById(`slot-${index}`);
+            if (!el) return;
+            el.classList.remove('station-flash');
+            void el.offsetWidth;
+            el.classList.add('station-flash');
+        }
+
+        function togglePause() {
+            if (!gameActive && !isPaused) return;
+            isPaused = !isPaused;
+            const overlay = document.getElementById('pause-overlay');
+            const btn = document.getElementById('pause-btn');
+            if (isPaused) {
+                pausedAtTimestamp = Date.now();
+                if (advanceInterval) clearTimeout(advanceInterval);
+                overlay.classList.remove('hidden'); overlay.classList.add('flex');
+                btn.innerText = '▶️ Continuar';
+            } else {
+                if (pausedAtTimestamp) {
+                    totalPausedDuration += Date.now() - pausedAtTimestamp;
+                    pausedAtTimestamp = 0;
+                }
+                overlay.classList.remove('flex'); overlay.classList.add('hidden');
+                btn.innerText = '⏸️ Pausa';
+                if (gameActive) {
+                    updateConveyorSpeed();
+                    scheduleNextAdvance();
+                }
+            }
+        }
+
+        function saveRecords() {
+            if (score > bestScore) {
+                bestScore = score;
+                localStorage.setItem('pastelManiaBestScore', String(bestScore));
+            }
+            if (money > bestMoney) {
+                bestMoney = money;
+                localStorage.setItem('pastelManiaBestMoney', String(bestMoney));
+            }
+            bestScoreDisplay.innerText = bestScore;
+        }
+
+        function sessionSummary(reason = 'Turno finalizado') {
+            const box = document.getElementById('session-summary');
+            box.classList.remove('hidden');
+            box.innerHTML = `<div class="font-bold text-amber-300 mb-1">${reason}</div>
+                <div>Pedidos: <b>${completedOrders}</b> · Mejor combo: <b>x${bestCombo}</b> · Puntos: <b>${score}</b> · Dinero: <b>$${money}</b></div>`;
+        }
 
         function showNotification(title, text, icon = '🎉') {
             document.getElementById('modal-title').innerText = title;
@@ -376,6 +1236,10 @@
         function closeMessageModal() {
             document.getElementById('message-modal').classList.remove('flex');
             document.getElementById('message-modal').classList.add('hidden');
+            if (returnToMenuAfterMessage) {
+                returnToMenuAfterMessage = false;
+                openSpeedMenu();
+            }
         }
 
         function openRecipeBook() {
@@ -389,18 +1253,59 @@
         }
 
         function openSpeedMenu() {
-            if (advanceInterval) clearTimeout(advanceInterval);
-            if (dayTimerInterval) clearInterval(dayTimerInterval);
-            gameActive = false;
+            speedMenuFromActiveGame = gameActive;
+
+            if (gameActive) {
+                if (!isPaused) pausedAtTimestamp = Date.now();
+                if (advanceInterval) clearTimeout(advanceInterval);
+                isPaused = true;
+                speedMenuTitle.innerText = '⚙️ Cambiar velocidad';
+                speedMenuDescription.innerText = 'La partida está pausada. Cambia la velocidad inicial sin perder tu progreso. La aceleración seguirá aumentando gradualmente con el tiempo.';
+                speedMenuBackBtn.classList.remove('hidden');
+            } else {
+                speedMenuTitle.innerText = '🎂 Pastel Mania - Purble Pro';
+                speedMenuDescription.innerText = 'Elige una velocidad inicial. Luego la cinta se acelera gradualmente por tiempo de juego.';
+                speedMenuBackBtn.classList.add('hidden');
+            }
+
             speedMenuModal.classList.remove('hidden');
             speedMenuModal.classList.add('flex');
+        }
+
+        function closeSpeedMenu() {
+            if (!gameActive) return;
+            speedMenuModal.classList.remove('flex');
+            speedMenuModal.classList.add('hidden');
+            isPaused = false;
+            speedMenuFromActiveGame = false;
+            if (pausedAtTimestamp) {
+                totalPausedDuration += Date.now() - pausedAtTimestamp;
+                pausedAtTimestamp = 0;
+            }
+            document.getElementById('pause-btn').innerText = '⏸️ Pausa';
+            updateConveyorSpeed();
+            scheduleNextAdvance();
         }
 
         function selectSpeed(speedMs, modeName) {
             baseIntervalTime = speedMs;
             currentIntervalTime = speedMs;
+            selectedModeName = modeName;
             speedMenuModal.classList.remove('flex');
             speedMenuModal.classList.add('hidden');
+
+            if (gameActive && speedMenuFromActiveGame) {
+                isPaused = false;
+                speedMenuFromActiveGame = false;
+                if (pausedAtTimestamp) {
+                    totalPausedDuration += Date.now() - pausedAtTimestamp;
+                    pausedAtTimestamp = 0;
+                }
+                updateConveyorSpeed();
+                scheduleNextAdvance();
+                showNotification('⚙️ Velocidad actualizada', `Modo ${modeName} activado sin reiniciar la partida.`, '✅');
+                return;
+            }
 
             startDay(modeName);
         }
@@ -409,10 +1314,20 @@
             gameActive = true;
             score = 0;
             wastedCakes = 0;
-            remainingSeconds = 60;
+            combo = 0;
+            bestCombo = 0;
+            completedOrders = 0;
+            isPaused = false;
+            selectedModeName = modeName;
+            gameStartTimestamp = Date.now();
+            pausedAtTimestamp = 0;
+            totalPausedDuration = 0;
             scoreDisplay.innerText = score;
             wastedDisplay.innerText = `${wastedCakes} / 3`;
-            dayTimerElement.innerText = `⏰ Tiempo: ${remainingSeconds}s`;
+            updateMetaHud();
+            document.getElementById('session-summary').classList.add('hidden');
+            document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
+            musicBtn.innerText = musicEnabled ? '🎵 Música' : '🎵 Música off';
 
             targetRecipes = [getRandomRecipe(), getRandomRecipe()];
             renderTargetOrders();
@@ -421,37 +1336,16 @@
             updateConveyorVisuals();
             updateConveyorSpeed();
             scheduleNextAdvance();
-            startShiftTimer();
+            if (musicEnabled) startBackgroundMusic();
 
-            showNotification('🚀 ¡Turno Iniciado!', `Modo ${modeName} activado. Estilo Purble Pro.`, '✨');
+            showNotification('🚀 ¡Partida iniciada!', `Modo ${modeName} activado. La velocidad ahora aumenta gradualmente con el tiempo.`, '✨');
         }
 
-        function startShiftTimer() {
-            if (dayTimerInterval) clearInterval(dayTimerInterval);
-
-            dayTimerInterval = setInterval(() => {
-                if (!gameActive) return;
-                remainingSeconds--;
-                dayTimerElement.innerText = `⏰ Tiempo: ${remainingSeconds}s`;
-
-                if (remainingSeconds <= 0) {
-                    endShiftByTime();
-                }
-            }, 1000);
-        }
-
-        function endShiftByTime() {
-            gameActive = false;
-            if (advanceInterval) clearTimeout(advanceInterval);
-            if (dayTimerInterval) clearInterval(dayTimerInterval);
-
-            showNotification('⏰ ¡Tiempo Concluido!', `¡Fin del turno! Puntuación final: ${score} pts y $${money}.`, '🏆');
-            openSpeedMenu();
-        }
 
         function scheduleNextAdvance() {
             if (!gameActive) return;
             if (advanceInterval) clearTimeout(advanceInterval);
+            updateConveyorSpeed();
 
             advanceInterval = setTimeout(() => {
                 advanceConveyor();
@@ -462,13 +1356,13 @@
         }
 
         function updateConveyorSpeed() {
-            let speedLevel = Math.floor(score / 50);
-            // Allow speed to accelerate down to 1200ms (1.2 seconds) per station
-            currentIntervalTime = Math.max(1200, baseIntervalTime - (speedLevel * 500));
-            
+            const elapsedSeconds = Math.floor(getElapsedPlayMs() / 1000);
+            const gradualBoost = elapsedSeconds * 22;
+            currentIntervalTime = Math.max(1200, baseIntervalTime - gradualBoost);
+            const intensity = Math.min(100, Math.round(((baseIntervalTime - currentIntervalTime) / (baseIntervalTime - 1200 || 1)) * 100));
             let trackAnimSeconds = (currentIntervalTime / 1000).toFixed(1);
             conveyorTrackBg.style.animationDuration = `${trackAnimSeconds}s`;
-            speedStatusText.innerText = `⚡ Velocidad de Banda (${(currentIntervalTime/1000).toFixed(1)}s por estación) | Puntos: ${score}`;
+            speedStatusText.innerText = `⚡ ${selectedModeName} · ${trackAnimSeconds}s por estación · Intensidad ${intensity}% · Puntos: ${score}`;
         }
 
         function generateNewTarget(orderIndex) {
@@ -478,7 +1372,7 @@
 
         function renderTargetOrders() {
             targetOrdersContainer.innerHTML = targetRecipes.map((recipe, index) => `
-                <div class="flex items-center gap-4 bg-stone-900/90 p-3 rounded-2xl border border-amber-900/50 shadow-inner w-full justify-between animate-drop relative overflow-hidden">
+                <div class="order-card order-3d flex items-center gap-4 bg-stone-900/90 p-3 rounded-2xl border border-amber-900/50 shadow-inner w-full justify-between animate-drop relative overflow-hidden">
                     <span class="absolute top-1 right-2 text-[9px] font-bold text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-800">Pedido #${index + 1}</span>
                     <div class="text-3xl animate-pulse">${recipe.icon}</div>
                     <div class="flex-1">
@@ -489,27 +1383,37 @@
                             • Glaseado: <span class="font-bold text-amber-300">${recipe.frosting}</span> | 
                             Topping: <span class="font-bold text-pink-300">${recipe.topping}</span>
                         </p>
+                        <p class="text-[10px] text-emerald-300/80 mt-1 font-bold">💰 Recompensa base: $${recipe.reward}</p>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function registerFailure(message, scorePenalty = 0) {
+            wastedCakes++;
+            combo = 0;
+            if (scorePenalty > 0) score = Math.max(0, score - scorePenalty);
+
+            scoreDisplay.innerText = score;
+            wastedDisplay.innerText = `${wastedCakes} / 3`;
+            markScorePop();
+            updateMetaHud();
+            updateConveyorSpeed();
+            playTone('error');
+
+            if (wastedCakes >= 3) {
+                gameOver(message);
+                return true;
+            }
+            return false;
         }
 
         function advanceConveyor() {
             if (!gameActive) return;
 
             if (conveyorStations[4] !== null) {
-                wastedCakes++;
-                score = Math.max(0, score - 25);
-                scoreDisplay.innerText = score;
-                wastedDisplay.innerText = `${wastedCakes} / 3`;
-                updateConveyorSpeed();
-
-                if (wastedCakes >= 3) {
-                    gameOver();
-                    return;
-                } else {
-                    showNotification('💥 ¡Pastel Caído!', `¡Un pastel se cayó al final de la cinta en la Estación 5 (-25 pts)! (${wastedCakes}/3 caídos)`, '❌');
-                }
+                if (registerFailure('Se cayó un pastel al final de la cinta.', 25)) return;
+                showNotification('💥 ¡Fallo!', `Un pastel se cayó al final de la cinta. -25 pts. Fallos: ${wastedCakes}/3.`, '❌');
             }
 
             conveyorStations[4] = conveyorStations[3];
@@ -539,6 +1443,7 @@
                 topping: null
             };
             updateConveyorVisuals();
+            flashStation(1); playTone('click');
         }
 
         function dispenseSponge(name, color, darkColor) {
@@ -553,6 +1458,7 @@
             }
             cake.layers.push({ name, color, darkColor });
             updateConveyorVisuals();
+            flashStation(2); playTone('click');
         }
 
         function dispenseFrosting(name, color, darkColor) {
@@ -563,6 +1469,7 @@
             }
             cake.frosting = { name, color, darkColor };
             updateConveyorVisuals();
+            flashStation(3); playTone('click');
         }
 
         function dispenseTopping(toppingName) {
@@ -573,6 +1480,7 @@
             }
             cake.topping = toppingName;
             updateConveyorVisuals();
+            flashStation(4); playTone('click');
         }
 
         function trashCake() {
@@ -589,7 +1497,8 @@
             }
             conveyorStations[activeIdx] = null;
             updateConveyorVisuals();
-            showNotification('Basurero', 'Has descartado el pastel de la línea.', '🗑️');
+            if (registerFailure('Descartaste un pastel de la línea.', 10)) return;
+            showNotification('🗑️ Pastel descartado', `Descartar un pastel cuenta como fallo. -10 pts. Fallos: ${wastedCakes}/3.`, '🗑️');
         }
 
         function sendCake() {
@@ -618,23 +1527,30 @@
             }
 
             if (matchedIndex !== -1) {
-                score += 60;
-                money += matchedRecipe.reward;
+                combo++;
+                bestCombo = Math.max(bestCombo, combo);
+                completedOrders++;
+                const comboBonus = Math.min(40, Math.max(0, combo - 1) * 5);
+                score += 60 + comboBonus;
+                money += matchedRecipe.reward + Math.floor(comboBonus / 2);
                 scoreDisplay.innerText = score;
+                markScorePop();
+                updateMetaHud();
+                playTone('success');
                 moneyDisplay.innerText = `$${money}`;
                 updateConveyorSpeed();
-                showNotification('✨ ¡Pastel Perfecto!', `¡Entregado a Pedido #${matchedIndex + 1}! +$${matchedRecipe.reward} y +60 pts.`, '🎉');
+                spawnCelebrationBurst();
+                showNotification('✨ ¡Pastel Perfecto!', `Pedido #${matchedIndex + 1} entregado. +${60 + comboBonus} pts, combo x${combo} y recompensa mejorada.`, '🎉');
                 conveyorStations[4] = null;
                 generateNewTarget(matchedIndex);
             } else {
-                score = Math.max(0, score - 20);
-                scoreDisplay.innerText = score;
-                updateConveyorSpeed();
-                
-                generateNewTarget(0);
-
-                showNotification('❌ ¡Error en la Receta!', 'El pastel no coincide con ningún pedido activo. ¡El Pedido #1 fue reemplazado y perdiste 20 pts!', '💥');
                 conveyorStations[4] = null;
+                generateNewTarget(0);
+                if (registerFailure('Entregaste un pastel que no coincide con ningún pedido.', 20)) {
+                    updateConveyorVisuals();
+                    return;
+                }
+                showNotification('❌ ¡Fallo en la receta!', `El pastel no coincide con ningún pedido activo. -20 pts. Fallos: ${wastedCakes}/3.`, '💥');
             }
             updateConveyorVisuals();
         }
@@ -644,9 +1560,11 @@
                 let slotElem = document.getElementById(`slot-${i+1}`);
                 let contentElem = slotElem.querySelector('.slot-content');
                 let cake = conveyorStations[i];
+                slotElem.classList.remove('active-station');
+                if (gameActive && !isPaused && cake) slotElem.classList.add('active-station');
 
                 if (!cake) {
-                    contentElem.innerHTML = `<span class="text-amber-700/60 text-[10px]">Vacío</span>`;
+                    contentElem.innerHTML = `<span class="empty-slot-label text-amber-700/70 text-[10px]">Vacío</span>`;
                     slotElem.classList.remove('border-amber-500', 'bg-stone-900', 'border-emerald-500');
                     if (i === 4) {
                         slotElem.classList.add('border-dashed', 'border-emerald-600/80');
@@ -665,55 +1583,106 @@
             }
         }
 
-        // Realistic Purble Place 3D Cylinder Cake Rendering
+        // Enhanced 3D cake rendering with more cake-like forms
         function renderPurbleCakeHtml(cake) {
-            let html = `<div class="relative flex flex-col items-center justify-end h-24 scale-[0.68] origin-bottom animate-drop">`;
-            
-            // Topping
+            let html = `<div class="cake-3d-wrap animate-drop scale-[0.72] origin-bottom"><div class="cake-shadow"></div>`;
+
             if (cake.topping) {
                 let emoji = cake.topping === 'Fresas' ? '🍓' : cake.topping === 'Vela' ? '🕯️' : '⭐';
-                html += `<div class="text-2xl mb-1 animate-bounce z-30">${emoji}</div>`;
+                html += `<div class="cake-topper text-2xl animate-bounce">${emoji}</div>`;
             }
 
-            // Frosting Layer with Glossy 3D Cylinder effect
             if (cake.frosting) {
                 html += `
-                <div class="relative w-28 h-7 ${cake.panClass} cake-layer flex items-center justify-center text-[9px] font-bold z-20" 
-                     style="background: radial-gradient(circle at 30% 30%, ${cake.frosting.color}, ${cake.frosting.darkColor}); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">
-                    <div class="absolute inset-x-0 top-0 h-2 bg-white/30 rounded-t-full"></div>
-                    ${cake.frosting.name}
+                <div class="cake-frosting-3d ${cake.panClass}" style="--tierColor:${cake.frosting.color}; --tierDark:${cake.frosting.darkColor}; --tierText:#ffffff;">
+                    <div class="frosting-top-swirl"></div>
+                    <div class="frosting-drips"></div>
+                    <span class="cake-tier-label">${cake.frosting.name}</span>
                 </div>`;
             }
 
-            // Sponge Layers with Purble Ruffle Texture
             for (let j = cake.layers.length - 1; j >= 0; j--) {
                 let layer = cake.layers[j];
                 html += `
-                <div class="relative w-26 h-8 ${cake.panClass} cake-layer ruffle-edge flex items-center justify-center text-[10px] font-bold my-[-3px] z-10" 
-                     style="background: radial-gradient(circle at 35% 30%, ${layer.color}, ${layer.darkColor}); color: #1a100a; text-shadow: 0 1px 1px rgba(255,255,255,0.4);">
-                    <div class="absolute inset-x-0 top-0 h-2 bg-white/20 rounded-t-full"></div>
-                    ${layer.name}
+                <div class="cake-tier-3d ruffled ${cake.panClass}" style="--tierColor:${layer.color}; --tierDark:${layer.darkColor}; --tierText:#1a100a;">
+                    <div class="cake-tier-crumb"></div>
+                    <div class="cake-tier-filling"></div>
+                    <span class="cake-tier-label">${layer.name}</span>
                 </div>`;
             }
 
-            // Metal Pan Base
             html += `
-            <div class="w-28 h-5 purble-pan ${cake.panClass} flex items-center justify-center text-[8px] text-stone-700 font-extrabold z-0 shadow-lg">
-                ${cake.panShape}
+            <div class="cake-pan-3d ${cake.panClass}">
+                <div class="cake-pan-rim"></div>
+                <div class="cake-pan-base"></div>
+                <span class="cake-tier-label">${cake.panShape}</span>
             </div>`;
 
             html += `</div>`;
             return html;
         }
 
-        function gameOver() {
-            gameActive = false;
-            if (advanceInterval) clearTimeout(advanceInterval);
-            if (dayTimerInterval) clearInterval(dayTimerInterval);
-
-            showNotification('💀 ¡Turno Terminado!', `Se cayeron 3 pasteles de la cinta. Puntuación final: ${score} pts.`, '📉');
-            openSpeedMenu();
+        function spawnCelebrationBurst() {
+            const layer = document.getElementById('celebration-layer');
+            if (!layer) return;
+            const icons = ['✨','⭐','🍓','🎉','💖'];
+            for (let i = 0; i < 14; i++) {
+                const piece = document.createElement('span');
+                piece.className = 'celebration-piece';
+                piece.innerText = icons[i % icons.length];
+                piece.style.left = `${18 + Math.random() * 64}%`;
+                piece.style.animationDelay = `${Math.random() * 0.18}s`;
+                piece.style.fontSize = `${0.85 + Math.random() * 0.8}rem`;
+                layer.appendChild(piece);
+                setTimeout(() => piece.remove(), 1300);
+            }
         }
+
+        function buildAmbientSparkles() {
+            const box = document.getElementById('ambient-sparkles');
+            if (!box || box.dataset.ready) return;
+            box.dataset.ready = '1';
+            for (let i = 0; i < 26; i++) {
+                const s = document.createElement('span');
+                s.style.left = `${Math.random() * 100}%`;
+                s.style.top = `${Math.random() * 100}%`;
+                const size = 6 + Math.random() * 10;
+                s.style.width = `${size}px`;
+                s.style.height = `${size}px`;
+                s.style.animationDelay = `${Math.random() * 4}s`;
+                s.style.animationDuration = `${3.8 + Math.random() * 3.4}s`;
+                box.appendChild(s);
+            }
+        }
+
+        function gameOver(lastFailure = 'Llegaste al límite de fallos.') {
+            gameActive = false;
+            isPaused = false;
+            speedMenuFromActiveGame = false;
+            if (advanceInterval) clearTimeout(advanceInterval);
+            stopBackgroundMusic();
+
+            saveRecords();
+            sessionSummary('💀 Partida terminada: 3 fallos');
+            returnToMenuAfterMessage = true;
+            showNotification('💀 ¡Fin de la partida!', `${lastFailure} Ya tienes 3/3 fallos. Completaste ${completedOrders} pedidos y lograste ${score} pts.`, '📉');
+        }
+
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key.toLowerCase() === 'p') togglePause();
+            if (e.key.toLowerCase() === 'r') openRecipeBook();
+            if (e.key === 'Escape') {
+                closeRecipeBook();
+                closeMessageModal();
+            }
+        });
+
+        buildAmbientSparkles();
+        updateMetaHud();
+        document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
+        musicBtn.innerText = musicEnabled ? '🎵 Música' : '🎵 Música off';
+
     </script>
 </body>
-</html>
+</html>s
