@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Pastel Mania - Purble Edition Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
@@ -696,6 +696,229 @@
             text-shadow:0 5px 8px rgba(0,0,0,.25);
         }
 
+    
+
+        /* ===== Phone game mode ===== */
+        .mobile-game-controls { display:none; }
+        button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+        @media (max-width: 640px) {
+            html, body { overscroll-behavior-y: none; }
+            body {
+                padding: 6px 6px calc(282px + env(safe-area-inset-bottom)) !important;
+                min-height: 100dvh;
+            }
+            body.mobile-dock-collapsed {
+                padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important;
+            }
+
+            header.hero-panel {
+                position: sticky;
+                top: 4px;
+                z-index: 35;
+                padding: 8px 10px !important;
+                margin-bottom: 7px !important;
+                border-radius: 18px !important;
+                gap: 6px;
+            }
+            header.hero-panel > div:first-child { width:100%; justify-content:center; gap:.45rem; }
+            header.hero-panel > div:first-child > span { font-size: 1.65rem !important; }
+            header.hero-panel h1 { font-size: 1.1rem !important; line-height:1.05; text-align:center; }
+            header.hero-panel p { display:none; }
+            header.hero-panel > div:last-child {
+                width:100%;
+                margin-top:0 !important;
+                display:grid !important;
+                grid-template-columns: repeat(4, minmax(0,1fr));
+                gap:5px !important;
+            }
+            header.hero-panel .hud-card {
+                min-width:0;
+                padding: 5px 4px !important;
+                border-radius: 12px !important;
+            }
+            header.hero-panel .hud-card span:first-child {
+                font-size: 7px !important;
+                line-height:1.1;
+                white-space:nowrap;
+            }
+            header.hero-panel .hud-card span:last-child { font-size: 14px !important; line-height:1.1; }
+            header.hero-panel .hud-card:nth-child(5) { display:none; }
+
+            main { gap:7px !important; width:100% !important; }
+            .order-board { padding:9px !important; border-radius:18px !important; }
+            .order-board > div:first-child { align-items:center; gap:6px; margin-bottom:7px !important; }
+            .order-board h2 { font-size:11px !important; line-height:1.15; }
+            .order-board > div:first-child > div { gap:5px !important; }
+            .order-board > div:first-child > div > span { font-size:9px !important; padding:5px 7px !important; }
+            .order-board > div:first-child button { font-size:0 !important; width:32px; height:32px; padding:0 !important; border-radius:10px !important; }
+            .order-board > div:first-child button::after { content:'📖'; font-size:15px; }
+
+            #target-orders-container {
+                display:flex !important;
+                gap:8px !important;
+                overflow-x:auto;
+                scroll-snap-type:x mandatory;
+                min-height:105px !important;
+                padding-bottom:2px;
+                scrollbar-width:none;
+            }
+            #target-orders-container::-webkit-scrollbar { display:none; }
+            #target-orders-container .order-card {
+                min-width:86%;
+                scroll-snap-align:start;
+                padding:9px 10px !important;
+                gap:8px !important;
+                border-radius:15px !important;
+            }
+            #target-orders-container .order-card > div:first-of-type { font-size:24px !important; }
+            #target-orders-container .order-card h4 { font-size:11px !important; line-height:1.1; padding-right:42px; }
+            #target-orders-container .order-card p { font-size:9px !important; line-height:1.25; }
+
+            main > section.grid { display:none !important; }
+            .desktop-dispenser-grid { display:none !important; }
+            .desktop-bottom-controls { display:none !important; }
+            .machine-panel { padding:8px !important; border-radius:18px !important; }
+
+            .mobile-scroll { overflow:visible !important; width:100%; }
+            .mobile-scroll > div { min-width:0 !important; width:100% !important; }
+            .factory-stage {
+                height:190px !important;
+                border-width:2px !important;
+                border-radius:18px !important;
+                overflow:hidden !important;
+            }
+            .factory-stage .conveyor-lights { inset:9px 9px auto 9px; }
+            .factory-stage .conveyor-lights span { width:8px; height:8px; }
+            .factory-stage > .w-full.flex {
+                gap:3px;
+                padding-left:4px !important;
+                padding-right:4px !important;
+                justify-content:space-between !important;
+            }
+            .station-slot {
+                width:18.6% !important;
+                min-width:0 !important;
+                height:103px !important;
+                border-radius:13px !important;
+                border-width:1px !important;
+            }
+            .station-slot > span:first-child {
+                top:2px !important;
+                left:5px !important;
+                font-size:8px !important;
+            }
+            .station-slot .slot-content { width:100%; display:flex; align-items:center; justify-content:center; }
+            .station-slot .cake-3d-wrap {
+                transform: rotateX(8deg) scale(.54) !important;
+                transform-origin:center bottom !important;
+                width:108px !important;
+                margin-left:-23px;
+                margin-right:-23px;
+            }
+            .empty-slot-label { min-width:0 !important; padding:3px 4px !important; font-size:7px !important; }
+            .track-3d { height:62px !important; bottom:17px !important; }
+            .factory-stage > div.absolute.right-3 { display:none !important; }
+
+            .mobile-game-controls {
+                display:block;
+                position:fixed;
+                left:6px;
+                right:6px;
+                bottom:calc(6px + env(safe-area-inset-bottom));
+                z-index:55;
+                padding:7px;
+                border-radius:20px;
+                background:
+                    radial-gradient(circle at 50% 0%, rgba(245,158,11,.12), transparent 44%),
+                    linear-gradient(180deg, rgba(50,31,21,.98), rgba(20,14,11,.98));
+                border:1px solid rgba(245,158,11,.28);
+                box-shadow:0 18px 50px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.07);
+                backdrop-filter: blur(16px);
+                transition:transform .28s ease;
+            }
+            body.mobile-dock-collapsed .mobile-game-controls {
+                transform:translateY(calc(100% - 48px));
+            }
+            .mobile-dock-handle {
+                width:100%; height:38px; display:flex; align-items:center; justify-content:center; gap:8px;
+                color:#fde68a; font-size:11px; font-weight:800;
+            }
+            .mobile-dock-handle::before {
+                content:''; width:36px; height:4px; border-radius:999px; background:rgba(255,255,255,.22);
+            }
+            .mobile-control-grid {
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:6px;
+            }
+            .mobile-control-card {
+                min-width:0;
+                border-radius:14px;
+                padding:6px;
+                background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(0,0,0,.18));
+                border:1px solid rgba(255,255,255,.07);
+                box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 6px 12px rgba(0,0,0,.18);
+                transition:border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+            }
+            .mobile-control-card.is-ready {
+                border-color:rgba(251,191,36,.68);
+                box-shadow:0 0 0 1px rgba(245,158,11,.18), 0 0 20px rgba(245,158,11,.16), inset 0 1px 0 rgba(255,255,255,.06);
+                transform:translateY(-1px);
+            }
+            .mobile-control-title {
+                display:flex; justify-content:space-between; align-items:center;
+                font-size:9px; font-weight:800; color:#fcd34d; margin-bottom:5px;
+            }
+            .mobile-control-card.is-ready .mobile-control-title::after { content:'●'; color:#34d399; text-shadow:0 0 8px #34d399; }
+            .mobile-action-row { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+            .mobile-action-btn {
+                min-height:43px;
+                border-radius:12px;
+                font-size:19px;
+                font-weight:800;
+                border:1px solid rgba(255,255,255,.12);
+                box-shadow:0 5px 0 rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.16);
+                transition:transform .1s ease, box-shadow .1s ease, filter .1s ease;
+            }
+            .mobile-action-btn:active { transform:translateY(3px) scale(.97); box-shadow:0 2px 0 rgba(0,0,0,.22); }
+            .mobile-submit-row { display:grid; grid-template-columns:1.35fr .65fr; gap:6px; margin-top:6px; border-radius:14px; transition:box-shadow .16s ease, transform .16s ease; }
+            .mobile-submit-row.is-ready { box-shadow:0 0 0 1px rgba(52,211,153,.42), 0 0 22px rgba(52,211,153,.17); transform:translateY(-1px); }
+            .mobile-submit-btn {
+                min-height:46px; border-radius:14px; font-size:13px; font-weight:900;
+                box-shadow:0 6px 0 rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.14);
+            }
+            .mobile-utility-row { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:6px; }
+            .mobile-util-btn {
+                min-height:34px; border-radius:11px; font-size:10px; font-weight:800;
+                background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.08);
+            }
+
+            #speed-menu-modal, #recipe-modal, #message-modal, #pause-overlay {
+                align-items:flex-end !important;
+                padding:8px !important;
+            }
+            #speed-menu-modal .glass-panel, #recipe-modal .glass-panel, #message-modal .glass-panel, #pause-overlay .glass-panel {
+                max-height:92dvh;
+                overflow-y:auto;
+                border-radius:22px !important;
+                padding:16px !important;
+            }
+            .mode-card { padding:.8rem .9rem !important; }
+            .mode-card h4 { font-size:15px !important; }
+            .mode-card p { font-size:11px !important; }
+            .menu-chip { font-size:9px !important; padding:.3rem .55rem !important; }
+        }
+
+        @media (max-width: 390px) {
+            body { padding-left:4px !important; padding-right:4px !important; }
+            .mobile-game-controls { left:4px; right:4px; }
+            .factory-stage { height:178px !important; }
+            .station-slot { height:96px !important; }
+            .mobile-action-btn { min-height:40px; font-size:18px; }
+            .mobile-submit-btn { min-height:43px; }
+        }
+
     </style>
 </head>
 <body class="min-h-screen text-amber-100 flex flex-col items-center justify-between p-2 md:p-5 bakery-bg">
@@ -774,7 +997,7 @@
         <section class="glass-panel machine-panel rounded-3xl p-4 sm:p-5 flex flex-col relative overflow-hidden shadow-2xl">
             
             <!-- Purble Industrial Dispensers (Station-locked) -->
-            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-stone-950/90 p-3 rounded-2xl border border-amber-900/40">
+            <div class="desktop-dispenser-grid grid grid-cols-2 sm:grid-cols-5 gap-2.5 mb-4 bg-stone-950/90 p-3 rounded-2xl border border-amber-900/40">
                 <!-- Pan Dispenser (Station 1) -->
                 <div class="dispenser-card flex flex-col items-center bg-stone-900/90 p-2.5 rounded-xl border border-stone-700 hover:border-amber-500 transition hover:scale-[1.02]">
                     <span class="text-[11px] text-amber-300 font-bold mb-1">1. Molde (Est. 1)</span>
@@ -867,7 +1090,7 @@
             </div></div>
 
             <!-- Bottom Controls -->
-            <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="desktop-bottom-controls mt-4 flex flex-wrap items-center justify-between gap-3">
                 <div class="text-xs text-amber-300/80 flex items-center gap-2">
                     <span class="w-3.5 h-3.5 rounded-full bg-emerald-500 inline-block animate-ping"></span>
                     <span id="speed-status-text">¡Elige velocidad y empieza! · 3 fallos terminan la partida</span>
@@ -881,6 +1104,56 @@
         </section>
 
     </main>
+
+
+    <div id="mobile-game-controls" class="mobile-game-controls" aria-label="Controles para teléfono">
+        <button class="mobile-dock-handle" onclick="toggleMobileDock()" aria-label="Mostrar u ocultar controles">CONTROLES</button>
+        <div class="mobile-control-grid">
+            <div id="mobile-control-pan" class="mobile-control-card">
+                <div class="mobile-control-title"><span>1 · MOLDE</span></div>
+                <div class="mobile-action-row">
+                    <button class="mobile-action-btn bg-amber-500/25" onclick="dispensePan('Redondo', 'rounded-[50%_/_15px]')" title="Molde redondo">⚪</button>
+                    <button class="mobile-action-btn bg-amber-500/25" onclick="dispensePan('Cuadrado', 'rounded-lg')" title="Molde cuadrado">⬛</button>
+                    <button class="mobile-action-btn bg-pink-500/20" onclick="dispensePan('Corazón', 'rounded-[0_0_50%_50%_/_0_0_30px_30px]')" title="Molde corazón">💖</button>
+                </div>
+            </div>
+            <div id="mobile-control-sponge" class="mobile-control-card">
+                <div class="mobile-control-title"><span>2 · BIZCOCHO</span></div>
+                <div class="mobile-action-row">
+                    <button class="mobile-action-btn bg-yellow-200 text-stone-800" onclick="dispenseSponge('Vainilla', '#fef08a', '#ca8a04')" title="Vainilla">🟡</button>
+                    <button class="mobile-action-btn bg-amber-900" onclick="dispenseSponge('Chocolate', '#78350f', '#451a03')" title="Chocolate">🟤</button>
+                    <button class="mobile-action-btn bg-pink-300" onclick="dispenseSponge('Fresa', '#fbcfe8', '#db2777')" title="Fresa">🌸</button>
+                </div>
+            </div>
+            <div id="mobile-control-frosting" class="mobile-control-card">
+                <div class="mobile-control-title"><span>3 · GLASEADO</span></div>
+                <div class="mobile-action-row">
+                    <button class="mobile-action-btn bg-white text-stone-800" onclick="dispenseFrosting('Glaseado Blanco', '#ffffff', '#e2e8f0')" title="Glaseado blanco">🥛</button>
+                    <button class="mobile-action-btn bg-amber-950" onclick="dispenseFrosting('Chocolate', '#451a03', '#291102')" title="Chocolate">🍫</button>
+                    <button class="mobile-action-btn bg-pink-400" onclick="dispenseFrosting('Fresa', '#f472b6', '#db2777')" title="Fresa">🍓</button>
+                </div>
+            </div>
+            <div id="mobile-control-topping" class="mobile-control-card">
+                <div class="mobile-control-title"><span>4 · TOPPING</span></div>
+                <div class="mobile-action-row">
+                    <button class="mobile-action-btn bg-red-600" onclick="dispenseTopping('Fresas')" title="Fresas">🍓</button>
+                    <button class="mobile-action-btn bg-blue-600" onclick="dispenseTopping('Vela')" title="Vela">🕯️</button>
+                    <button class="mobile-action-btn bg-amber-500" onclick="dispenseTopping('Estrellas')" title="Estrellas">⭐</button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-control-send" class="mobile-submit-row">
+            <button class="mobile-submit-btn bg-emerald-600 text-white" onclick="sendCake()">✅ ENVIAR PASTEL</button>
+            <button class="mobile-submit-btn bg-red-600 text-white" onclick="trashCake()">🗑️ TIRAR</button>
+        </div>
+        <div class="mobile-utility-row">
+            <button class="mobile-util-btn" onclick="togglePause()">⏸️ Pausa</button>
+            <button class="mobile-util-btn" onclick="openSpeedMenu()">⚙️ Menú</button>
+            <button class="mobile-util-btn" onclick="toggleMusic()">🎵 Música</button>
+            <button class="mobile-util-btn" onclick="toggleSound()">🔊 Sonido</button>
+        </div>
+    </div>
+
 
     <div id="speed-menu-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
         <div class="glass-panel speed-modal-shell text-amber-100 rounded-3xl w-full p-6 shadow-2xl border border-amber-700/50 text-center animate-drop">
@@ -1174,12 +1447,38 @@
             scoreDisplay.classList.add('score-pop');
         }
 
+        function toggleMobileDock() {
+            document.body.classList.toggle('mobile-dock-collapsed');
+        }
+
+        function mobileHaptic(pattern = 10) {
+            try {
+                if (window.matchMedia('(max-width: 640px)').matches && navigator.vibrate) navigator.vibrate(pattern);
+            } catch (_) {}
+        }
+
+        function updateMobileControlHints() {
+            const ids = ['mobile-control-pan','mobile-control-sponge','mobile-control-frosting','mobile-control-topping','mobile-control-send'];
+            ids.forEach(id => document.getElementById(id)?.classList.remove('is-ready'));
+            if (!gameActive || isPaused) return;
+
+            if (!conveyorStations[0]) document.getElementById('mobile-control-pan')?.classList.add('is-ready');
+            const s2 = conveyorStations[1];
+            if (s2 && s2.hasPan && s2.layers.length < 2) document.getElementById('mobile-control-sponge')?.classList.add('is-ready');
+            const s3 = conveyorStations[2];
+            if (s3 && s3.layers.length > 0 && !s3.frosting) document.getElementById('mobile-control-frosting')?.classList.add('is-ready');
+            const s4 = conveyorStations[3];
+            if (s4 && s4.frosting && !s4.topping) document.getElementById('mobile-control-topping')?.classList.add('is-ready');
+            if (conveyorStations[4]) document.getElementById('mobile-control-send')?.classList.add('is-ready');
+        }
+
         function flashStation(index) {
             const el = document.getElementById(`slot-${index}`);
             if (!el) return;
             el.classList.remove('station-flash');
             void el.offsetWidth;
             el.classList.add('station-flash');
+            mobileHaptic(8);
         }
 
         function togglePause() {
@@ -1581,6 +1880,7 @@
                     contentElem.innerHTML = renderPurbleCakeHtml(cake);
                 }
             }
+            updateMobileControlHints();
         }
 
         // Enhanced 3D cake rendering with more cake-like forms
@@ -1682,7 +1982,8 @@
         updateMetaHud();
         document.getElementById('sound-btn').innerText = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
         musicBtn.innerText = musicEnabled ? '🎵 Música' : '🎵 Música off';
+        updateMobileControlHints();
 
     </script>
 </body>
-</html>s
+</html>
