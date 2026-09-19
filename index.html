@@ -31,6 +31,14 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;background:rad
 @media(max-width:640px){.game-card:hover{transform:none}.game-card:active{transform:scale(.975)}body{min-height:100dvh}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#070b1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mini Juegos">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
 </head>
 <body class="min-h-screen text-white selection:bg-pink-500 selection:text-white overflow-x-hidden">
 <div class="grid-bg"></div>
@@ -51,11 +59,25 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;background:rad
       <div class="min-w-0"><p class="font-black text-sm sm:text-base truncate">Mini Juegos Marcenaro</p><p class="text-[10px] sm:text-xs text-indigo-300">Elige un juego y supera tu récord</p></div>
     </div>
     <div class="flex items-center gap-2 shrink-0">
+      <button id="install-app-btn" class="hidden sm:inline-flex h-10 px-3 rounded-xl bg-emerald-500/10 border border-emerald-400/20 items-center gap-2 justify-center hover:bg-emerald-500/20 active:scale-95 transition text-xs font-bold text-emerald-200" title="Instalar app">📲 <span class="hidden md:inline">Instalar</span></button>
       <a href="ranking.html" onclick="fx('click',35)" class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/20 flex items-center justify-center hover:bg-amber-500/20 active:scale-90 transition" title="Ranking global">🏆</a>
       <button id="sound-toggle-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-90 transition" title="Sonido"><span id="sound-icon">🔊</span></button>
     </div>
   </div>
 </header>
+
+<section class="w-full max-w-5xl mx-auto px-4 sm:px-6 mt-3 relative z-10 reveal d1">
+  <div class="glass rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      <div id="menu-user-avatar" class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center font-bold shrink-0 overflow-hidden">👤</div>
+      <div class="min-w-0">
+        <p id="menu-user-name" class="font-bold text-sm truncate">Invitado</p>
+        <p id="menu-user-status" class="text-[10px] sm:text-xs text-slate-400">Inicia sesión para usar la misma cuenta en todos los mini juegos</p>
+      </div>
+    </div>
+    <button id="menu-auth-btn" class="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 active:scale-95 text-white font-black text-xs px-4 py-2.5 rounded-xl shadow-lg transition-all whitespace-nowrap">🔐 Iniciar sesión con Google</button>
+  </div>
+</section>
 
 <main class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
   <section class="text-center mb-6 reveal d1">
@@ -96,7 +118,7 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;background:rad
 
   <section class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 reveal d3">
     <button onclick="openNewsModal()" class="game-card glass rounded-2xl p-4 text-left flex items-center gap-3 hover:border-pink-400/40"><span class="w-11 h-11 rounded-xl bg-pink-500/10 flex items-center justify-center text-xl">📣</span><span><b class="block text-sm">Novedades</b><small class="text-slate-400">Mira los últimos cambios del proyecto</small></span></button>
-    <a href="index_palabra_secreta.html" onclick="fx('click',30)" class="game-card glass rounded-2xl p-4 flex items-center gap-3 hover:border-indigo-400/40"><span class="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">👤</span><span><b class="block text-sm">Cuenta y progreso</b><small class="text-slate-400">Inicia sesión desde Palabra Secreta</small></span></a>
+    <button id="account-card-btn" type="button" class="w-full text-left game-card glass rounded-2xl p-4 flex items-center gap-3 hover:border-indigo-400/40"><span class="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">👤</span><span><b class="block text-sm">Cuenta para todos los juegos</b><small id="account-card-copy" class="text-slate-400">Inicia sesión con Google desde el menú</small></span></button>
   </section>
 </main>
 
@@ -130,5 +152,130 @@ window.addEventListener('pointerdown',initAudio,{once:true});
 window.addEventListener('DOMContentLoaded',updateSoundIcon);
 window.addEventListener('load',()=>{const s=document.getElementById('splash-screen');setTimeout(()=>{s.classList.add('opacity-0','scale-110','pointer-events-none');setTimeout(()=>s.remove(),700)},850)});
 </script>
+
+<div id="install-help-modal" class="fixed inset-0 z-[150] bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
+  <div class="glass rounded-3xl max-w-sm w-full p-5">
+    <div class="flex items-center justify-between gap-3">
+      <h3 class="text-lg font-black">📲 Instalar Mini Juegos</h3>
+      <button id="close-install-help" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10">✕</button>
+    </div>
+    <p id="install-help-text" class="mt-4 text-sm text-slate-300 leading-relaxed"></p>
+  </div>
+</div>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC7hjuWiRx3uBdfKAS3mj9na6zqO6xtQUY",
+  authDomain: "palabra-secre.firebaseapp.com",
+  projectId: "palabra-secre",
+  storageBucket: "palabra-secre.firebasestorage.app",
+  messagingSenderId: "1057501011597",
+  appId: "1:1057501011597:web:ab2dd815a8ad9a293cccc4"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
+
+const authBtn = document.getElementById("menu-auth-btn");
+const accountCardBtn = document.getElementById("account-card-btn");
+const nameEl = document.getElementById("menu-user-name");
+const statusEl = document.getElementById("menu-user-status");
+const avatarEl = document.getElementById("menu-user-avatar");
+const accountCopy = document.getElementById("account-card-copy");
+
+try { await setPersistence(auth, browserLocalPersistence); } catch (e) { console.warn("Persistencia:", e); }
+
+async function toggleGoogleSession() {
+  try {
+    if (auth.currentUser) {
+      await signOut(auth);
+    } else {
+      await signInWithPopup(auth, provider);
+    }
+  } catch (e) {
+    console.error("Google Auth:", e);
+    alert("No se pudo iniciar sesión con Google. Revisa que el dominio de GitHub Pages esté autorizado en Firebase.");
+  }
+}
+
+authBtn.addEventListener("click", toggleGoogleSession);
+accountCardBtn?.addEventListener("click", toggleGoogleSession);
+
+onAuthStateChanged(auth, user => {
+  if (user) {
+    nameEl.textContent = user.displayName || "Jugador";
+    statusEl.textContent = "Cuenta conectada • disponible en los mini juegos que usan Firebase";
+    authBtn.textContent = "Cerrar sesión";
+    accountCopy.textContent = `Conectado como ${user.displayName || "Jugador"}`;
+    if (user.photoURL) {
+      avatarEl.innerHTML = `<img src="${user.photoURL}" alt="Avatar" class="w-full h-full object-cover" referrerpolicy="no-referrer">`;
+    } else avatarEl.textContent = "👤";
+  } else {
+    nameEl.textContent = "Invitado";
+    statusEl.textContent = "Inicia sesión para usar la misma cuenta en todos los mini juegos";
+    authBtn.textContent = "🔐 Iniciar sesión con Google";
+    accountCopy.textContent = "Inicia sesión con Google desde el menú";
+    avatarEl.textContent = "👤";
+  }
+});
+
+// PWA install
+let deferredPrompt = null;
+const installBtn = document.getElementById("install-app-btn");
+const helpModal = document.getElementById("install-help-modal");
+const helpText = document.getElementById("install-help-text");
+
+function isIOS() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+function showInstallHelp() {
+  helpText.textContent = isIOS()
+    ? "En iPhone/iPad abre esta página en Safari, toca Compartir y elige “Añadir a pantalla de inicio”. Después abre Mini Juegos desde el nuevo icono."
+    : "Abre el menú del navegador y busca “Instalar aplicación” o “Añadir a pantalla de inicio”.";
+  helpModal.classList.remove("hidden");
+  helpModal.classList.add("flex");
+}
+function updateInstallButton() {
+  if (isStandalone()) {
+    installBtn.classList.add("hidden");
+    return;
+  }
+  installBtn.classList.remove("hidden");
+  installBtn.classList.add("inline-flex");
+}
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  updateInstallButton();
+});
+installBtn.addEventListener("click", async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+  } else {
+    showInstallHelp();
+  }
+});
+document.getElementById("close-install-help").addEventListener("click", () => {
+  helpModal.classList.add("hidden");
+  helpModal.classList.remove("flex");
+});
+if (isIOS() && !isStandalone()) updateInstallButton();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+}
+</script>
+
 </body>
 </html>
