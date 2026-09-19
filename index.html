@@ -1,388 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menú Principal - Mini Juegos</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23ec4899' d='M448 32H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h384c35.35 0 64-28.65 64-64V96c0-35.35-28.65-64-64-64zm-244.5 288.5h-37.8v37.8c0 10.5-8.5 19-19 19s-19-8.5-19-19v-37.8h-37.8c-10.5 0-19-8.5-19-19s8.5-19 19-19h37.8v-37.8c0-10.5 8.5-19 19-19s19 8.5 19 19v37.8h37.8c10.5 0 19 8.5 19 19s-8.5 19-19 19zm171.5 37.8c-21.2 0-38.5-17.3-38.5-38.5s17.3-38.5 38.5-38.5 38.5 17.3 38.5 38.5-17.3 38.5-38.5 38.5zm64-96c-21.2 0-38.5-17.3-38.5-38.5s17.3-38.5 38.5-38.5 38.5 17.3 38.5 38.5-17.3 38.5-38.5 38.5z'/></svg>">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card:hover {
-            transform: translateY(-3px) scale(1.01);
-            box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.25);
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .pop-animation {
-            animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        @keyframes floatGlow {
-            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.2; }
-            50% { transform: translateY(-15px) scale(1.05); opacity: 0.35; }
-        }
-        .floating-blob-1 { animation: floatGlow 8s ease-in-out infinite; }
-        .floating-blob-2 { animation: floatGlow 10s ease-in-out infinite reverse; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mini Juegos Marcenaro</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🎮</text></svg>">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+:root{--glass:rgba(15,23,42,.72);--line:rgba(255,255,255,.10)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit',sans-serif;touch-action:manipulation;background:#070b1a}
+body:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 12%,rgba(236,72,153,.15),transparent 28%),radial-gradient(circle at 82% 18%,rgba(99,102,241,.18),transparent 30%),radial-gradient(circle at 50% 90%,rgba(168,85,247,.12),transparent 34%);z-index:-2}
+.grid-bg{position:fixed;inset:0;z-index:-3;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:34px 34px;mask-image:linear-gradient(to bottom,black,transparent 90%)}
+.glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 18px 45px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.05)}
+.game-card{position:relative;overflow:hidden;transition:transform .28s cubic-bezier(.22,1,.36,1),border-color .28s ease,box-shadow .28s ease}
+.game-card:before{content:'';position:absolute;inset:-1px;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.09) 48%,transparent 75%);transform:translateX(-120%);transition:transform .7s ease;pointer-events:none}
+.game-card:hover:before{transform:translateX(120%)}
+.game-card:hover{transform:translateY(-4px) scale(1.012);box-shadow:0 22px 50px rgba(0,0,0,.34)}
+.game-card:active{transform:scale(.975)}
+.featured{background:linear-gradient(135deg,rgba(79,70,229,.22),rgba(168,85,247,.15),rgba(236,72,153,.12));border-color:rgba(129,140,248,.35)}
+.featured:hover{border-color:rgba(244,114,182,.55);box-shadow:0 24px 60px rgba(99,102,241,.20)}
+@keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:none}}
+.reveal{animation:rise .62s cubic-bezier(.22,1,.36,1) both}.d1{animation-delay:.06s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}.d4{animation-delay:.24s}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}.floaty{animation:floaty 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 18px rgba(236,72,153,.15)}50%{box-shadow:0 0 34px rgba(99,102,241,.28)}}.glow{animation:glow 2.8s ease-in-out infinite}
+@keyframes splashPop{0%{opacity:0;transform:scale(.75)}70%{opacity:1;transform:scale(1.05)}100%{transform:scale(1)}}.splash-pop{animation:splashPop .65s cubic-bezier(.175,.885,.32,1.275) both}
+.mode-icon{transition:transform .3s cubic-bezier(.175,.885,.32,1.275)}.game-card:hover .mode-icon{transform:scale(1.13) rotate(-4deg)}
+.badge{border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 1px rgba(255,255,255,.06)}
+@media(max-width:640px){.game-card:hover{transform:none}.game-card:active{transform:scale(.975)}body{min-height:100dvh}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+<body class="min-h-screen text-white selection:bg-pink-500 selection:text-white overflow-x-hidden">
+<div class="grid-bg"></div>
 
-    <div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-all duration-700 ease-in-out px-4">
-        <div class="flex flex-col items-center justify-center pop-animation text-center">
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300 drop-shadow-2xl mb-4 sm:mb-6 animate-pulse">
-                MINI<br>JUEGOS
-            </h1>
-            
-            <div class="flex items-center gap-2 mt-2 sm:mt-4 opacity-80 animate-bounce">
-                <span class="font-bold tracking-widest text-indigo-200 text-xs sm:text-sm">
-                    By: <span class="text-pink-400">Marcenaroc64</span>
-                </span>
-            </div>
-            
-            <div class="mt-6 sm:mt-8 flex gap-1.5">
-                <div class="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
-                <div class="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
-                <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
-            </div>
-        </div>
+<div id="splash-screen" class="fixed inset-0 z-[100] bg-slate-950 flex items-center justify-center px-4 transition-all duration-700">
+  <div class="text-center splash-pop">
+    <div class="w-20 h-20 mx-auto rounded-[1.7rem] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-4xl shadow-2xl glow">🎮</div>
+    <h1 class="mt-5 text-4xl sm:text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-yellow-300">MINI JUEGOS</h1>
+    <p class="mt-3 text-xs font-bold tracking-[.25em] text-indigo-200">BY <span class="text-pink-400">MARCENAROC64</span></p>
+    <div class="mt-7 flex justify-center gap-2"><span class="w-2 h-2 rounded-full bg-pink-400 animate-bounce"></span><span class="w-2 h-2 rounded-full bg-purple-400 animate-bounce" style="animation-delay:.15s"></span><span class="w-2 h-2 rounded-full bg-yellow-300 animate-bounce" style="animation-delay:.3s"></span></div>
+  </div>
+</div>
+
+<header class="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 relative z-10 reveal">
+  <div class="glass rounded-2xl px-3 py-3 sm:px-4 flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-xl shadow-lg shrink-0">🎮</div>
+      <div class="min-w-0"><p class="font-black text-sm sm:text-base truncate">Mini Juegos Marcenaro</p><p class="text-[10px] sm:text-xs text-indigo-300">Elige un juego y supera tu récord</p></div>
     </div>
-
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[280px] sm:w-[600px] h-[180px] sm:h-[350px] bg-indigo-600/20 blur-[90px] sm:blur-[140px] pointer-events-none rounded-full floating-blob-1"></div>
-    <div class="absolute bottom-0 right-4 sm:right-10 w-[220px] sm:w-[400px] h-[180px] sm:h-[300px] bg-purple-600/15 blur-[80px] sm:blur-[120px] pointer-events-none rounded-full floating-blob-2"></div>
-
-    <header class="p-4 sm:p-6 flex items-center justify-between max-w-2xl mx-auto w-full z-10">
-        <a href="index_palabra_secreta.html" 
-           onmouseenter="playSound('hover')" 
-           onclick="playSound('click'); triggerVibration(30);"
-           class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-slate-300 text-xs sm:text-sm font-medium shadow-lg hover:border-indigo-500/40 active:scale-95">
-            <i class="fa-solid fa-arrow-right-to-bracket text-xs text-indigo-400"></i>
-            <span>Iniciar Sesión</span>
-        </a>
-
-        <div class="flex items-center gap-2 sm:gap-3">
-            <button id="sound-toggle-btn" 
-                    onclick="toggleAudio()" 
-                    onmouseenter="playSound('hover')"
-                    class="inline-flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-all text-indigo-400 shadow-lg hover:border-indigo-500/40 active:scale-95"
-                    title="Activar / Desactivar Sonidos y Vibración">
-                <i id="sound-icon" class="fa-solid fa-volume-high text-sm"></i>
-            </button>
-            <div>
-                <span class="text-[10px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-indigo-400 font-semibold px-2.5 sm:px-3 py-1 rounded-full bg-indigo-950/60 border border-indigo-800/40 whitespace-nowrap">Mini Juegos</span>
-            </div>
-        </div>
-    </header>
-
-    <main class="flex-grow px-4 sm:px-6 py-4 sm:py-6 max-w-xl mx-auto w-full flex flex-col items-center justify-center z-10">
-        
-        <div class="text-center mb-6 sm:mb-8">
-            <div class="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-tr from-indigo-600 to-purple-600 text-white rounded-2xl mb-3 sm:mb-4 shadow-xl shadow-indigo-500/20 animate-pulse">
-                <i class="fa-solid fa-gamepad text-xl sm:text-2xl"></i>
-            </div>
-            <h1 class="text-2xl sm:text-4xl font-extrabold bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-500 bg-clip-text text-transparent px-2">
-                MENÚ PRINCIPAL
-            </h1>
-            <p class="text-slate-400 text-xs sm:text-sm mt-2 px-2">Selecciona el modo de juego o sección que deseas explorar</p>
-        </div>
-
-        <div class="w-full grid gap-3 sm:gap-4">
-            
-            <!-- 1. Adivina la Palabra en Español -->
-            <a href="index_palabra_secreta.html" 
-               onmouseenter="playSound('hover')" 
-               onclick="playSound('click'); triggerVibration(40);"
-               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-indigo-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-md shrink-0">
-                        <i class="fa-solid fa-language"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-indigo-300 transition-colors">Adivina la Palabra en Español</h2>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Ir al juego clásico en idioma español</p>
-                    </div>
-                </div>
-                <span class="text-slate-600 group-hover:text-indigo-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
-            </a>
-
-            <!-- 2. Modo Temperatura -->
-            <a href="index_temp.html" 
-               onmouseenter="playSound('hover')" 
-               onclick="playSound('click'); triggerVibration(40);"
-               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-orange-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-orange-400 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-md shrink-0">
-                        <i class="fa-solid fa-temperature-three-quarters"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-orange-300 transition-colors">Modo Temperatura</h2>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Adivina guiado por pistas de frío o calor</p>
-                    </div>
-                </div>
-                <span class="text-slate-600 group-hover:text-orange-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
-            </a>
-
-            <!-- 3. Modo Inglés -->
-            <a href="index_en.html" 
-               onmouseenter="playSound('hover')" 
-               onclick="playSound('click'); triggerVibration(40);"
-               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-cyan-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-cyan-400 group-hover:bg-cyan-600 group-hover:text-white transition-all shadow-md shrink-0">
-                        <i class="fa-solid fa-globe"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-cyan-300 transition-colors">Modo Inglés</h2>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Practica y adivina palabras en idioma inglés</p>
-                    </div>
-                </div>
-                <span class="text-slate-600 group-hover:text-cyan-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
-            </a>
-
-            <!-- 4. Novedades -->
-            <button onclick="openNewsModal()" 
-                    onmouseenter="playSound('hover')" 
-                    class="w-full text-left group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-pink-500/60 rounded-2xl shadow-xl active:scale-[0.98] cursor-pointer">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-pink-400 group-hover:bg-pink-600 group-hover:text-white transition-all shadow-md shrink-0">
-                        <i class="fa-solid fa-bullhorn"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-pink-300 transition-colors">Novedades</h2>
-                            <span class="text-[9px] bg-pink-500/20 border border-pink-500/40 text-pink-300 px-2 py-0.5 rounded-full font-semibold animate-pulse">¡Nuevo!</span>
-                        </div>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Últimas actualizaciones y mejoras del juego</p>
-                    </div>
-                </div>
-                <span class="text-slate-600 group-hover:text-pink-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
-            </button>
-
-            <!-- 5. Ranking Global -->
-            <a href="ranking.html" 
-               onmouseenter="playSound('hover')" 
-               onclick="playSound('click'); triggerVibration(40);"
-               class="group flex items-center justify-between p-3.5 sm:p-4 glass-card border border-slate-800 hover:border-amber-500/60 rounded-2xl shadow-xl active:scale-[0.98]">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-800/80 border border-slate-700/50 flex items-center justify-center text-sm sm:text-lg text-amber-400 group-hover:bg-amber-600 group-hover:text-white transition-all shadow-md shrink-0">
-                        <i class="fa-solid fa-trophy"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-xs sm:text-base font-bold text-slate-200 group-hover:text-amber-300 transition-colors">Ranking Global</h2>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Tabla de líderes y mejores puntuaciones</p>
-                    </div>
-                </div>
-                <span class="text-slate-600 group-hover:text-amber-400 font-bold transition-colors text-base pr-1 group-hover:translate-x-1 duration-200">→</span>
-            </a>
-
-        </div>
-
-    </main>
-
-    <div id="news-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div id="news-modal-content" class="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl transform scale-95 transition-all duration-300">
-            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800">
-                <div class="flex items-center gap-2 text-pink-400">
-                    <i class="fa-solid fa-bullhorn text-lg"></i>
-                    <h3 class="text-base sm:text-lg font-bold text-white">Novedades de la Versión</h3>
-                </div>
-                <button onclick="closeNewsModal()" onmouseenter="playSound('hover')" class="text-slate-400 hover:text-white w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-            
-            <div class="space-y-3.5 text-xs sm:text-sm text-slate-300 max-h-[60vh] overflow-y-auto pr-1">
-                <div class="p-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-pink-400">Actualización 2.5</span>
-                        <span class="text-[10px] text-slate-500">Marzo 2026</span>
-                    </div>
-                    <p class="text-slate-300 text-xs">¡Menú principal totalmente rediseñado con efectos visuales de cristal (*glassmorphism*), integración completa de audio sintético y vibración háptica para móviles!</p>
-                </div>
-
-                <div class="p-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-indigo-400">Modo Temperatura</span>
-                        <span class="text-[10px] text-slate-500">Nuevo Modo</span>
-                    </div>
-                    <p class="text-slate-300 text-xs">Adivina palabras guiado por pistas de temperatura (frío o calor) según la cercanía al objetivo.</p>
-                </div>
-
-                <div class="p-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-cyan-400">Modo Inglés Global</span>
-                        <span class="text-[10px] text-slate-500">Disponible</span>
-                    </div>
-                    <p class="text-slate-300 text-xs">Practica tu vocabulario en inglés con nuevos diccionarios de palabras y rachas de puntuación.</p>
-                </div>
-            </div>
-
-            <div class="p-3 bg-slate-950/60 border border-slate-800/80 rounded-2xl">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-green-400">sistema de puntos</span>
-                        <span class="text-[10px] text-slate-500">Disponible</span>
-                    </div>
-                    <p class="text-slate-300 text-xs">sistema de puntos en el juego adivina la palabra servira mas adelante para muchas cosas asi que farmealos.<br>.<br>cuidado no pierdas los puntos gastando intentos<br>si saltas la palbra puedes perder puntos</p>
-                </div>
-            </div>
-
-            <div class="mt-5 text-center">
-                <button onclick="closeNewsModal()" onmouseenter="playSound('hover')" onclick="playSound('click')" class="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl text-xs sm:text-sm shadow-lg transition-all active:scale-95">
-                    ¡Entendido!
-                </button>
-            </div>
-        </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <a href="ranking.html" onclick="fx('click',35)" class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-400/20 flex items-center justify-center hover:bg-amber-500/20 active:scale-90 transition" title="Ranking global">🏆</a>
+      <button id="sound-toggle-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 active:scale-90 transition" title="Sonido"><span id="sound-icon">🔊</span></button>
     </div>
+  </div>
+</header>
 
-    <footer class="w-full max-w-sm mx-auto flex flex-col items-center justify-center gap-2 text-xs text-indigo-300/80 pt-4 pb-6 px-4 border-t border-white/10 mt-auto text-center">
-        <span class="font-bold tracking-wide text-indigo-200/90 text-center w-full block">
-            By: <span class="text-pink-400">Marcenaroc64</span>
-        </span>
+<main class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 relative z-10">
+  <section class="text-center mb-6 reveal d1">
+    <div class="inline-flex items-center gap-2 badge bg-indigo-500/10 text-indigo-200 rounded-full px-3 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-widest">✨ Colección de juegos</div>
+    <h1 class="mt-3 text-3xl sm:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-400">¿QUÉ QUIERES JUGAR?</h1>
+    <p class="mt-2 text-slate-400 text-xs sm:text-sm">El juego principal es <b class="text-slate-200">Palabra Secreta</b>; los demás son modos y experiencias adicionales.</p>
+  </section>
 
-        <div class="flex items-center justify-center gap-2 w-full">
-            <a href="https://www.tiktok.com/@marcenaroc64" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               onmouseenter="playSound('hover')" 
-               onclick="playSound('click'); triggerVibration(30);"
-               class="inline-flex items-center justify-center gap-1.5 bg-black/60 hover:bg-black/95 active:scale-95 border border-white/20 text-white px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all shadow-md hover:border-pink-500/50">
-                <svg class="w-3.5 h-3.5 fill-current text-cyan-400" viewBox="0 0 24 24">
-                    <path d="M12.525 0h3.08c.12 1.052.752 1.988 1.7 2.493a4.757 4.757 0 002.595.6v3.169a8.03 8.03 0 01-3.692-.903c-.235-.126-.454-.27-.658-.432v8.92c0 3.823-3.105 6.928-6.928 6.928-3.823 0-6.928-3.105-6.928-6.928 0-3.823 3.105-6.928 6.928-6.928.324 0 .643.023.956.068v3.2a3.732 3.732 0 00-.956-.123c-2.062 0-3.732 1.67-3.732 3.732 0 2.062 1.67 3.732 3.732 3.732 2.062 0 3.732-1.67 3.732-3.732V0z"/>
-                </svg>
-                <span class="text-white">TikTok</span>
-            </a>
-        </div>
-    </footer>
+  <a href="index_palabra_secreta.html" onmouseenter="playSound('hover')" onclick="fx('click',45)" class="featured game-card glass rounded-3xl p-5 sm:p-6 block reveal d1 mb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+      <div class="relative shrink-0 self-start sm:self-auto">
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-4xl sm:text-5xl shadow-2xl floaty">🔤</div>
+        <span class="absolute -top-2 -right-2 text-[9px] font-black uppercase tracking-wider bg-pink-500 text-white px-2 py-1 rounded-full shadow-lg">Principal</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2"><h2 class="text-2xl sm:text-3xl font-black">Palabra Secreta</h2><span class="badge text-[9px] sm:text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-300">☁️ Guardado en cuenta</span></div>
+        <p class="mt-2 text-sm text-slate-300 leading-relaxed">El juego base y más completo: palabras, pistas, rachas, puntos, estadísticas, animaciones y progreso en la nube.</p>
+        <div class="mt-4 flex flex-wrap gap-2 text-[10px] sm:text-xs"><span class="badge bg-white/5 px-2.5 py-1 rounded-lg">🔥 Rachas</span><span class="badge bg-white/5 px-2.5 py-1 rounded-lg">⭐ Puntos</span><span class="badge bg-white/5 px-2.5 py-1 rounded-lg">📊 Estadísticas</span><span class="badge bg-white/5 px-2.5 py-1 rounded-lg">📱 Móvil</span></div>
+      </div>
+      <div class="sm:self-center"><span class="inline-flex items-center gap-2 bg-white text-slate-950 font-black text-xs sm:text-sm px-4 py-3 rounded-xl shadow-xl">JUGAR <span>→</span></span></div>
+    </div>
+  </a>
 
-    <script>
-        // Ocultar la pantalla de carga después de 900ms con efecto suave
-        window.addEventListener('load', () => {
-            const splash = document.getElementById('splash-screen');
-            setTimeout(() => {
-                splash.style.opacity = '0';
-                splash.style.visibility = 'hidden';
-            }, 900);
-        });
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 reveal d2">
+    <a href="index_temp.html" onmouseenter="playSound('hover')" onclick="fx('click',35)" class="game-card glass rounded-2xl p-4 sm:p-5 border-cyan-400/10 hover:border-cyan-400/40">
+      <div class="flex items-start gap-4"><div class="mode-icon w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/20 flex items-center justify-center text-2xl shrink-0">🌡️</div><div><div class="flex items-center gap-2"><h3 class="font-black text-lg">Modo Temperatura</h3><span class="text-[9px] bg-cyan-500/10 text-cyan-300 px-2 py-0.5 rounded-full">MODO</span></div><p class="text-xs text-slate-400 mt-1">Busca la palabra siguiendo pistas de frío y calor.</p><p class="text-cyan-300 text-xs font-bold mt-3">Jugar ahora →</p></div></div>
+    </a>
+    <a href="index_en.html" onmouseenter="playSound('hover')" onclick="fx('click',35)" class="game-card glass rounded-2xl p-4 sm:p-5 border-sky-400/10 hover:border-sky-400/40">
+      <div class="flex items-start gap-4"><div class="mode-icon w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-2xl shrink-0">🌎</div><div><div class="flex items-center gap-2"><h3 class="font-black text-lg">English Mode</h3><span class="text-[9px] bg-sky-500/10 text-sky-300 px-2 py-0.5 rounded-full">EN</span></div><p class="text-xs text-slate-400 mt-1">Practica vocabulario jugando Palabra Secreta en inglés.</p><p class="text-sky-300 text-xs font-bold mt-3">Play now →</p></div></div>
+    </a>
+    <a href="pastel.html" onmouseenter="playSound('hover')" onclick="fx('click',35)" class="game-card glass rounded-2xl p-4 sm:p-5 border-amber-400/10 hover:border-amber-400/40">
+      <div class="flex items-start gap-4"><div class="mode-icon w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-400/20 flex items-center justify-center text-2xl shrink-0">🎂</div><div><div class="flex items-center gap-2"><h3 class="font-black text-lg">Pastel Mania</h3><span class="text-[9px] bg-pink-500/15 text-pink-300 px-2 py-0.5 rounded-full">NUEVO</span></div><p class="text-xs text-slate-400 mt-1">Prepara pedidos, arma pasteles y evita acumular fallos.</p><p class="text-amber-300 text-xs font-bold mt-3">Entrar a la pastelería →</p></div></div>
+    </a>
+    <a href="ranking.html" onmouseenter="playSound('hover')" onclick="fx('click',35)" class="game-card glass rounded-2xl p-4 sm:p-5 border-yellow-400/10 hover:border-yellow-400/40">
+      <div class="flex items-start gap-4"><div class="mode-icon w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-400/20 flex items-center justify-center text-2xl shrink-0">🏆</div><div><h3 class="font-black text-lg">Ranking Global</h3><p class="text-xs text-slate-400 mt-1">Consulta jugadores, victorias, rachas, puntos y efectividad.</p><p class="text-yellow-300 text-xs font-bold mt-3">Ver clasificación →</p></div></div>
+    </a>
+  </div>
 
-        // Configuración de Audio (Web Audio API) y Vibración Háptica
-        let audioEnabled = localStorage.getItem('mini_juegos_audio') !== 'false';
-        let audioCtx = null;
+  <section class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 reveal d3">
+    <button onclick="openNewsModal()" class="game-card glass rounded-2xl p-4 text-left flex items-center gap-3 hover:border-pink-400/40"><span class="w-11 h-11 rounded-xl bg-pink-500/10 flex items-center justify-center text-xl">📣</span><span><b class="block text-sm">Novedades</b><small class="text-slate-400">Mira los últimos cambios del proyecto</small></span></button>
+    <a href="index_palabra_secreta.html" onclick="fx('click',30)" class="game-card glass rounded-2xl p-4 flex items-center gap-3 hover:border-indigo-400/40"><span class="w-11 h-11 rounded-xl bg-indigo-500/10 flex items-center justify-center text-xl">👤</span><span><b class="block text-sm">Cuenta y progreso</b><small class="text-slate-400">Inicia sesión desde Palabra Secreta</small></span></a>
+  </section>
+</main>
 
-        function initAudioContext() {
-            if (!audioCtx) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                if (AudioContext) {
-                    audioCtx = new AudioContext();
-                }
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
+<div id="news-modal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+  <div id="news-modal-content" class="glass rounded-3xl max-w-md w-full p-5 sm:p-6 transform scale-95 transition-all duration-300">
+    <div class="flex items-center justify-between"><div><p class="text-pink-400 text-xs font-bold uppercase tracking-widest">Actualizaciones</p><h3 class="text-xl font-black mt-1">📣 Novedades</h3></div><button onclick="closeNewsModal()" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10">✕</button></div>
+    <div class="mt-5 space-y-3 max-h-[60vh] overflow-y-auto">
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><div class="flex justify-between gap-2"><b class="text-indigo-300">Palabra Secreta</b><span class="text-[10px] text-emerald-300">JUEGO PRINCIPAL</span></div><p class="text-xs text-slate-400 mt-1">Rachas, puntos, estadísticas, guardado en cuenta y más animaciones.</p></div>
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><div class="flex justify-between gap-2"><b class="text-amber-300">Pastel Mania</b><span class="text-[10px] text-pink-300">NUEVO</span></div><p class="text-xs text-slate-400 mt-1">Nuevo juego de pastelería con pedidos, velocidad gradual y experiencia adaptada a móvil.</p></div>
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-4"><b class="text-cyan-300">Más modos</b><p class="text-xs text-slate-400 mt-1">Temperatura y modo inglés continúan como variantes de Palabra Secreta.</p></div>
+    </div>
+    <button onclick="closeNewsModal()" class="mt-5 w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 font-black text-sm active:scale-95 transition">¡Entendido!</button>
+  </div>
+</div>
 
-        // Inicializar al primer toque o clic en la página
-        window.addEventListener('pointerdown', () => {
-            initAudioContext();
-        }, { once: true });
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            updateSoundIcon();
-        });
+<footer class="max-w-5xl mx-auto w-full px-4 sm:px-6 pb-6 relative z-10 reveal d4">
+  <div class="border-t border-white/10 pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500"><span>Hecho por <b class="text-pink-400">Marcenaroc64</b></span><a href="https://www.tiktok.com/@marcenaroc64" target="_blank" rel="noopener noreferrer" class="px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300">♪ TikTok</a></div>
+</footer>
 
-        function toggleAudio() {
-            audioEnabled = !audioEnabled;
-            localStorage.setItem('mini_juegos_audio', audioEnabled);
-            updateSoundIcon();
-            if (audioEnabled) {
-                initAudioContext();
-                playSound('click');
-                triggerVibration(50);
-            }
-        }
-
-        function updateSoundIcon() {
-            const icon = document.getElementById('sound-icon');
-            if (audioEnabled) {
-                icon.className = 'fa-solid fa-volume-high text-sm';
-            } else {
-                icon.className = 'fa-solid fa-volume-xmark text-sm text-slate-500';
-            }
-        }
-
-        function playSound(type) {
-            if (!audioEnabled) return;
-            try {
-                initAudioContext();
-                if (!audioCtx) return;
-                
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-
-                if (type === 'hover') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(554.37, audioCtx.currentTime + 0.08);
-                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.08);
-                } else if (type === 'click') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.12);
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.12);
-                }
-            } catch (e) {
-                console.warn('AudioContext restricted or error:', e);
-            }
-        }
-
-        function triggerVibration(duration) {
-            if (!audioEnabled) return;
-            if (typeof navigator !== 'undefined' && navigator.vibrate) {
-                try {
-                    navigator.vibrate(duration);
-                } catch (e) {
-                    // Ignorar si el navegador bloquea la vibración
-                }
-            }
-        }
-
-        // Control del Modal de Novedades
-        function openNewsModal() {
-            playSound('click');
-            triggerVibration(40);
-            const modal = document.getElementById('news-modal');
-            const content = document.getElementById('news-modal-content');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.remove('scale-95');
-            content.classList.add('scale-100');
-        }
-
-        function closeNewsModal() {
-            playSound('click');
-            triggerVibration(30);
-            const modal = document.getElementById('news-modal');
-            const content = document.getElementById('news-modal-content');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            content.classList.remove('scale-100');
-            content.classList.add('scale-95');
-        }
-    </script>
-
+<script>
+let audioEnabled=localStorage.getItem('mini_juegos_audio')!=='false',audioCtx=null;
+function initAudio(){try{if(!audioCtx){const A=window.AudioContext||window.webkitAudioContext;if(A)audioCtx=new A()}if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume()}catch(e){}}
+function updateSoundIcon(){const el=document.getElementById('sound-icon');if(el)el.textContent=audioEnabled?'🔊':'🔇'}
+function toggleAudio(){audioEnabled=!audioEnabled;localStorage.setItem('mini_juegos_audio',audioEnabled);updateSoundIcon();if(audioEnabled){initAudio();playSound('click');triggerVibration(40)}}
+function playSound(type){if(!audioEnabled)return;try{initAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type=type==='click'?'triangle':'sine';o.frequency.setValueAtTime(type==='click'?587:440,audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(type==='click'?880:554,audioCtx.currentTime+.1);g.gain.setValueAtTime(type==='click'?.08:.025,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.11);o.start();o.stop(audioCtx.currentTime+.11)}catch(e){}}
+function triggerVibration(ms){if(audioEnabled&&navigator.vibrate)try{navigator.vibrate(ms)}catch(e){}}
+function fx(type,ms){playSound(type);triggerVibration(ms)}
+function openNewsModal(){fx('click',35);const m=document.getElementById('news-modal'),c=document.getElementById('news-modal-content');m.classList.remove('opacity-0','pointer-events-none');c.classList.remove('scale-95');c.classList.add('scale-100')}
+function closeNewsModal(){fx('click',25);const m=document.getElementById('news-modal'),c=document.getElementById('news-modal-content');m.classList.add('opacity-0','pointer-events-none');c.classList.remove('scale-100');c.classList.add('scale-95')}
+window.addEventListener('pointerdown',initAudio,{once:true});
+window.addEventListener('DOMContentLoaded',updateSoundIcon);
+window.addEventListener('load',()=>{const s=document.getElementById('splash-screen');setTimeout(()=>{s.classList.add('opacity-0','scale-110','pointer-events-none');setTimeout(()=>s.remove(),700)},850)});
+</script>
 </body>
 </html>
