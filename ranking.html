@@ -74,7 +74,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, collectionGroup, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7hjuWiRx3uBdfKAS3mj9na6zqO6xtQUY",
@@ -164,17 +164,41 @@ async function loadRanking(user) {
   tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-500">Cargando estadísticas...</td></tr>';
 
   try {
-    const snapshot = await getDocs(collectionGroup(db, 'stats'));
+    // El juego guarda stats como DOCUMENTO: gameData/stats.
+    // Por eso collectionGroup('stats') nunca encontraba esos documentos.
+    // El ranking global usa ahora una colección real: artifacts/{APP_ID}/leaderboard.
+    const leaderboardCol = collection(db, 'artifacts', APP_ID, 'leaderboard');
+
+    // Migrar/actualizar al jugador conectado para que aparezca inmediatamente.
+    // Esto también rescata las cuentas creadas antes del nuevo leaderboard.
+    try {
+      const ownStatsRef = doc(db, 'artifacts', APP_ID, 'users', user.uid, 'gameData', 'stats');
+      const ownStatsSnap = await getDoc(ownStatsRef);
+      if (ownStatsSnap.exists()) {
+        const own = ownStatsSnap.data() || {};
+        await setDoc(doc(db, 'artifacts', APP_ID, 'leaderboard', user.uid), {
+          userId: user.uid,
+          displayName: user.displayName || own.displayName || 'Jugador',
+          photoURL: user.photoURL || own.photoURL || '',
+          won: numberValue(own.won ?? own.wins ?? own.ganadas),
+          played: numberValue(own.played ?? own.gamesPlayed ?? own.jugadas),
+          lost: numberValue(own.lost ?? own.losses),
+          streak: numberValue(own.streak),
+          score: numberValue(own.score),
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      }
+    } catch (migrationError) {
+      console.warn('No se pudo migrar el jugador actual al leaderboard:', migrationError);
+    }
+
+    const snapshot = await getDocs(leaderboardCol);
 
     const playersMap = new Map();
 
     snapshot.forEach(statsDoc => {
       const data = statsDoc.data() || {};
-      const parts = statsDoc.ref.path.split('/');
-      const usersIndex = parts.indexOf('users');
-      const pathUid = usersIndex >= 0 ? parts[usersIndex + 1] : '';
-
-      const userId = String(data.userId || data.uid || pathUid || statsDoc.id);
+      const userId = String(data.userId || data.uid || statsDoc.id);
       const name = String(
         data.displayName ||
         data.name ||
@@ -231,7 +255,7 @@ async function loadRanking(user) {
       `✅ Firestore conectado\n` +
       `• Cuenta: ${user.displayName || 'Jugador'}\n` +
       `• UID: ${user.uid}\n` +
-      `• Documentos stats encontrados: ${snapshot.size}\n` +
+      `• Jugadores en leaderboard: ${snapshot.size}\n` +
       `• Jugadores con estadísticas: ${players.length}\n` +
       `• Campos usados: won, played, streak, score`
     );
