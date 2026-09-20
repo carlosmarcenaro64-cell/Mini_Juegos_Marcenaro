@@ -1,76 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ranking Global - Palabra Secreta</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>body{font-family:'Inter',sans-serif}</style>
+<meta name="theme-color" content="#070b24">
+<style>
+*{box-sizing:border-box}html{background:#05091b}body{margin:0;min-height:100vh;color:#f8f7ff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 50% 15%,#23105a 0,#0b1233 28%,#05091b 68%);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 30%,rgba(122,65,255,.08),transparent 70%);animation:bgmove 8s linear infinite}@keyframes bgmove{50%{transform:translateX(4%)}}
+.wrap{width:min(100% - 24px,980px);margin:auto;padding:14px 0 44px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px}.pill,.iconbtn{border:1px solid #334270;background:#111a3a;color:#ddd9ff;border-radius:14px;padding:10px 14px;text-decoration:none;font-weight:800;box-shadow:0 8px 24px #0005}.brand{font-size:12px;letter-spacing:1.4px;font-weight:900;color:#a876ff}.hero{text-align:center;padding:14px 0 6px}.hero h1{margin:5px 0;font-size:clamp(30px,7vw,52px);line-height:1;background:linear-gradient(90deg,#ffd345,#ffad67,#ec79ff);-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 18px #ff9d5540)}.hero p{margin:7px;color:#9ca9c9;font-size:13px}.meta{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:10px}.meta span{padding:7px 11px;border-radius:999px;background:#101b3a;border:1px solid #31406a;color:#aeb9d7;font-size:11px}.podium{position:relative;display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:10px;align-items:end;margin:22px auto 18px;max-width:760px}.pod{position:relative;text-align:center;border-radius:20px;padding:18px 8px 14px;min-height:190px;background:linear-gradient(180deg,#121b42cc,#090f2de8);border:1px solid var(--edge);box-shadow:0 0 28px var(--glow),inset 0 0 25px #ffffff08;animation:rise .65s both}.pod.first{min-height:230px;--edge:#ffd13d;--glow:#ffb30044}.pod.second{--edge:#58d6ff;--glow:#19bfff38}.pod.third{--edge:#ff934d;--glow:#ff6a2538}.crown{font-size:34px;animation:float 2.2s ease-in-out infinite}.avatar{width:64px;height:64px;margin:4px auto 8px;border-radius:50%;display:grid;place-items:center;font-size:26px;font-weight:900;background:#162553;border:3px solid var(--edge);overflow:hidden;box-shadow:0 0 18px var(--glow)}.avatar img{width:100%;height:100%;object-fit:cover}.rankbubble{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--edge);color:#211509;font-weight:1000;margin-top:-15px;position:relative}.pname{font-weight:900;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pstats{display:flex;justify-content:center;gap:14px;margin-top:12px;font-size:11px;color:#b7c1dc}.pstats b{display:block;font-size:16px;color:#fff}.filters{display:flex;gap:7px;overflow:auto;padding:3px 1px 12px;scrollbar-width:none}.filter{flex:0 0 auto;border:1px solid #27375f;background:#0d1735;color:#bdc6df;border-radius:999px;padding:9px 14px;font-weight:800;font-size:11px}.filter.active{background:linear-gradient(90deg,#6947ff,#a84bff);color:white;box-shadow:0 0 20px #754cff55}.board{border:1px solid #25345c;background:#09122de6;border-radius:18px;overflow:hidden;box-shadow:0 16px 45px #0007}.row{display:grid;grid-template-columns:42px minmax(115px,1.5fr) repeat(4,minmax(68px,.72fr)) minmax(86px,.9fr);align-items:center;border-bottom:1px solid #1b294b;padding:11px 10px;gap:4px;font-size:12px;animation:slide .5s both}.row:last-child{border-bottom:0}.head{color:#8493b7;font-size:9px;font-weight:900;text-transform:uppercase;background:#0d1733}.name{display:flex;align-items:center;gap:8px;font-weight:850;min-width:0}.miniav{width:28px;height:28px;border-radius:50%;background:#26365d;display:grid;place-items:center;overflow:hidden;flex:none}.miniav img{width:100%;height:100%;object-fit:cover}.green{color:#31e3a2;font-weight:900}.fire{color:#ffb42b;font-weight:900}.star{color:#ffd43b;font-weight:900}.rate{color:#9eb4ff;font-weight:900}.bar{height:4px;background:#263252;border-radius:9px;margin-top:4px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#6d6cff,#d05aff);border-radius:9px}.banner{margin-top:14px;border:1px solid #6f2f9c;background:linear-gradient(90deg,#2b1252,#6e1e78,#281044);border-radius:18px;padding:15px;text-align:center;font-weight:900;box-shadow:0 0 25px #8f39c733;animation:pulse 3s infinite}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}.sum{background:#0c1633;border:1px solid #203157;border-radius:15px;padding:12px;text-align:center}.sum b{display:block;font-size:20px}.sum small{color:#91a0c1}.auth{text-align:center;margin:14px 0}.auth button{border:0;border-radius:13px;background:linear-gradient(90deg,#5c43f4,#8b4cff);color:white;padding:10px 15px;font-weight:900}.empty{padding:30px;text-align:center;color:#9aa8c8}.hidden{display:none!important}
+#diagnostic-box{margin:12px 0;padding:12px;background:#0c142d;border:1px solid #33416a;border-radius:15px}#diagnostic-content{white-space:pre-wrap;font-size:11px;color:#cbd4eb}.diagtop{display:flex;justify-content:space-between}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}@keyframes slide{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}@keyframes float{50%{transform:translateY(-7px) rotate(3deg)}}@keyframes pulse{50%{box-shadow:0 0 40px #a94cff66}}
+@media(max-width:650px){.wrap{width:min(100% - 18px,980px)}.brand{font-size:10px}.podium{gap:5px;margin-top:18px}.pod{min-height:165px;padding:12px 5px 10px;border-radius:17px}.pod.first{min-height:200px}.crown{font-size:28px}.avatar{width:52px;height:52px}.pname{font-size:11px}.pstats{gap:7px;font-size:9px}.pstats b{font-size:13px}.board{overflow:hidden}.row{grid-template-columns:34px minmax(105px,1.4fr) 55px 55px 58px 55px;font-size:10px;padding:10px 7px}.row>*:nth-child(4){display:none}.row>*:nth-child(7){display:none}.head>*:nth-child(4),.head>*:nth-child(7){display:none}.summary{grid-template-columns:1fr 1fr}.hero h1{font-size:30px}.pill{padding:9px 11px;font-size:11px}}
+@media(max-width:390px){.podium{grid-template-columns:1fr 1.08fr 1fr}.pstats span:nth-child(2){display:none}.pod{min-height:150px}.pod.first{min-height:185px}.avatar{width:46px;height:46px}.row{grid-template-columns:30px minmax(95px,1.4fr) 46px 52px 50px}.row>*:nth-child(6){display:none}.head>*:nth-child(6){display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;scroll-behavior:auto!important}}
+</style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
-<header class="p-4 sm:p-6 flex items-center justify-between max-w-5xl mx-auto w-full">
-<a href="index.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition text-slate-300 text-sm font-medium">← Volver</a>
-<div class="flex items-center gap-3">
-<span class="text-xs uppercase tracking-widest text-indigo-400 font-semibold hidden sm:inline">Palabra Secreta</span>
-<button id="btn-secret-diagnostic" class="text-xs text-slate-600 hover:text-slate-400 transition p-2 rounded-lg bg-slate-900/50 border border-slate-800/50" title="Herramienta de diagnóstico">🛠️</button>
+<body>
+<div class="wrap">
+<header class="top"><a class="pill" href="index.html">◀ Volver</a><div class="brand">🎮 PALABRA SECRETA</div><button id="btn-secret-diagnostic" class="iconbtn">✨</button></header>
+<section class="hero"><h1>🏆 RANKING GLOBAL</h1><p>Los mejores jugadores de Palabra Secreta</p><div class="meta"><span id="players-meta">👥 Jugadores: —</span><span>◷ Última actualización: Ahora</span></div><div class="auth"><button id="ranking-auth-btn">Iniciar sesión con Google</button><p id="auth-status"></p></div></section>
+<div id="diagnostic-box" class="hidden"><div class="diagtop"><b>🛠️ Diagnóstico</b><button id="close-diagnostic">✕</button></div><pre id="diagnostic-content">Iniciando...</pre></div>
+<section id="podium" class="podium"></section>
+<nav class="filters"><button class="filter active">♛ Todos</button><button class="filter">🔥 Racha</button><button class="filter">⭐ Puntos</button><button class="filter">📊 Victorias</button><button class="filter">🎯 Efectividad</button></nav>
+<section class="board"><div class="row head"><span>#</span><span>Jugador</span><span>Victorias</span><span>Partidas</span><span>🔥 Racha</span><span>⭐ Puntos</span><span>Efect.</span></div><div id="leaderboard-body"></div></section>
+<div class="banner">🏆 ¡Juega y sube en el ranking!<br><small style="color:#d6bce9;font-weight:600">Entre menos intentos, más puntos. Mantén tu racha.</small></div>
+<section class="summary"><div class="sum"><b id="sum-players">0</b><small>👥 Jugadores</small></div><div class="sum"><b id="sum-games">0</b><small>🎮 Partidas</small></div><div class="sum"><b id="sum-wins">0</b><small>🔥 Victorias</small></div><div class="sum"><b id="sum-rate">0%</b><small>🎯 Efectividad</small></div></section>
 </div>
-</header>
-
-<main class="flex-grow px-4 py-6 max-w-4xl mx-auto w-full flex flex-col items-center">
-<div class="text-center mb-8">
-<h1 class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-amber-400 via-yellow-200 to-amber-500 bg-clip-text text-transparent flex items-center justify-center gap-3">🏆 RANKING GLOBAL</h1>
-<p class="text-slate-400 text-sm mt-2">Tabla de Líderes y Estadísticas de Jugadores</p>
-<div class="mt-4 flex justify-center">
-<button id="ranking-auth-btn" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold transition">Iniciar sesión con Google para ver el ranking</button>
-</div>
-<p id="auth-status" class="text-xs text-slate-500 mt-2"></p>
-</div>
-
-<div id="diagnostic-box" class="w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-5 mb-8 shadow-xl hidden">
-<div class="flex items-center justify-between mb-2">
-<h2 class="text-sm font-semibold text-amber-400 flex items-center gap-2">🛠️ Panel de Diagnóstico Firestore</h2>
-<button id="close-diagnostic" class="text-slate-400 hover:text-slate-200 text-xs px-2 py-1 bg-slate-800 rounded">Cerrar ✕</button>
-</div>
-<pre id="diagnostic-content" class="text-xs font-mono text-slate-300 whitespace-pre-line bg-slate-950/80 p-3 rounded-xl border border-slate-800/80 max-h-60 overflow-y-auto">Iniciando...</pre>
-</div>
-
-<div class="w-full bg-slate-900/60 border border-slate-800/80 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-md">
-<div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="border-b border-slate-800 text-slate-400 text-xs uppercase tracking-wider bg-slate-900/90">
-<th class="py-3 px-4 sm:px-6">Pos</th>
-<th class="py-3 px-4 sm:px-6">Jugador</th>
-<th class="py-3 px-4 sm:px-6 text-center">Victorias</th>
-<th class="py-3 px-4 sm:px-6 text-center">Partidas</th>
-<th class="py-3 px-4 sm:px-6 text-center">🔥 Racha</th>
-<th class="py-3 px-4 sm:px-6 text-center">⭐ Puntos</th>
-<th class="py-3 px-4 sm:px-6 text-right">Efectividad</th>
-</tr>
-</thead>
-<tbody id="leaderboard-body" class="divide-y divide-slate-800/50 text-sm">
-<tr><td colspan="7" class="py-8 text-center text-slate-500">Inicia sesión con Google para cargar el ranking...</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</main>
-
-<footer class="py-6 text-center text-xs text-slate-600">By: Marcenaroc64</footer>
-
-<div id="pin-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center">
-<h3 class="text-base font-semibold text-slate-200 mb-2">Acceso Restringido</h3>
-<p class="text-xs text-slate-400 mb-4">Ingresa el código de acceso para ver el panel de diagnóstico.</p>
-<input type="password" id="pin-input" placeholder="Código PIN" maxlength="6" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center text-lg tracking-widest text-slate-100 mb-4 focus:outline-none focus:border-indigo-500">
-<div class="flex gap-2">
-<button id="cancel-pin" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium py-2.5 rounded-xl transition">Cancelar</button>
-<button id="submit-pin" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold py-2.5 rounded-xl transition">Verificar</button>
-</div>
-</div>
-</div>
-
+<div id="pin-modal" class="hidden" style="position:fixed;inset:0;background:#000b;z-index:99;display:grid;place-items:center"><div style="background:#101933;padding:20px;border-radius:18px;border:1px solid #33416a"><b>PIN diagnóstico</b><input id="pin-input" type="password" style="display:block;margin:12px 0;padding:10px;border-radius:10px;background:#070d20;color:white;border:1px solid #39486e"><button id="submit-pin">Abrir</button> <button id="cancel-pin">Cancelar</button></div></div>
+<script>
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function av(p){return p.photoURL?`<img src="${esc(p.photoURL)}" alt="">`:esc((p.name||'?').charAt(0).toUpperCase())}
+function renderBeautifulRanking(players,user){
+ const body=document.getElementById('leaderboard-body'),pod=document.getElementById('podium');
+ document.getElementById('players-meta').textContent=`👥 Jugadores: ${players.length}`;
+ if(!players.length){pod.innerHTML='';body.innerHTML='<div class="empty">No hay estadísticas accesibles todavía.</div>';return}
+ const top=players.slice(0,3), order=top.length>=3?[top[1],top[0],top[2]]:top;
+ pod.innerHTML=order.map((p,i)=>{let real=players.indexOf(p),cls=real===0?'first':real===1?'second':'third',crow=real===0?'👑':real===1?'♛':'♕';return `<article class="pod ${cls}" style="animation-delay:${i*.12}s"><div class="crown">${crow}</div><div class="avatar">${av(p)}</div><div class="rankbubble">${real+1}</div><div class="pname">${esc(p.name)}</div><div class="pstats"><span><b>🔥 ${p.streak}</b>Racha</span><span><b>⭐ ${Number(p.score).toLocaleString('es-ES')}</b>Puntos</span></div></article>`}).join('');
+ body.innerHTML=players.map((p,i)=>{let rate=p.played?((p.won/p.played)*100):0,med=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;return `<div class="row" style="animation-delay:${Math.min(i*.055,.5)}s"><span>${med}</span><span class="name"><i class="miniav">${av(p)}</i><span style="overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</span></span><span class="green">${p.won}</span><span>${p.played}</span><span class="fire">🔥 ${p.streak}</span><span class="star">⭐ ${Number(p.score).toLocaleString('es-ES')}</span><span class="rate">${rate.toFixed(1)}%<div class="bar"><i style="width:${Math.min(rate,100)}%"></i></div></span></div>`}).join('');
+ const games=players.reduce((a,p)=>a+p.played,0),wins=players.reduce((a,p)=>a+p.won,0);
+ document.getElementById('sum-players').textContent=players.length;document.getElementById('sum-games').textContent=games;document.getElementById('sum-wins').textContent=wins;document.getElementById('sum-rate').textContent=(games?wins/games*100:0).toFixed(0)+'%';
+}
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -208,6 +179,7 @@ async function loadRanking(user) {
 
       const player = {
         name,
+        photoURL: String(data.photoURL || ''),
         won: numberValue(data.won ?? data.wins ?? data.ganadas),
         played: numberValue(data.played ?? data.gamesPlayed ?? data.jugadas),
         lost: numberValue(data.lost ?? data.losses),
@@ -228,28 +200,7 @@ async function loadRanking(user) {
       a.name.localeCompare(b.name, 'es')
     );
 
-    if (!players.length) {
-      tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-400">No hay estadísticas accesibles todavía.</td></tr>';
-    } else {
-      tbody.innerHTML = '';
-      players.forEach((player, index) => {
-        const winrate = player.played > 0 ? ((player.won / player.played) * 100).toFixed(1) : '0.0';
-        const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
-
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-900/80 transition-colors';
-        row.innerHTML = `
-          <td class="py-4 px-4 sm:px-6 font-medium">${medal}</td>
-          <td class="py-4 px-4 sm:px-6 font-semibold text-slate-200">${escapeHtml(player.name)}</td>
-          <td class="py-4 px-4 sm:px-6 text-center text-emerald-400 font-bold">${player.won}</td>
-          <td class="py-4 px-4 sm:px-6 text-center text-slate-300">${player.played}</td>
-          <td class="py-4 px-4 sm:px-6 text-center text-amber-300 font-bold">🔥 ${player.streak}</td>
-          <td class="py-4 px-4 sm:px-6 text-center text-yellow-300 font-extrabold">⭐ ${player.score.toLocaleString('es-ES')}</td>
-          <td class="py-4 px-4 sm:px-6 text-right font-mono text-indigo-400">${winrate}%</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
+    renderBeautifulRanking(players, user);
 
     showDiagnostic(
       `✅ Firestore conectado\n` +
@@ -268,14 +219,13 @@ async function loadRanking(user) {
       `❌ Error Firestore\n` +
       `Código: ${error.code || 'sin código'}\n` +
       `Mensaje: ${error.message || error}\n\n` +
-      `La consulta intenta leer la colección group 'stats' en:\n` +
-      `artifacts/${APP_ID}/users/{userId}/gameData/stats\n\n` +
-      `Para un ranking global, las reglas deben permitir lectura a usuarios autenticados.`
+      `La consulta intenta leer:\n` +
+      `artifacts/${APP_ID}/leaderboard\n\n` +
+      `Revisa las reglas de lectura del leaderboard para usuarios autenticados.`
     );
   }
 }
 
 onAuthStateChanged(auth, user => loadRanking(user));
 </script>
-</body>
-</html>
+</body></html>
