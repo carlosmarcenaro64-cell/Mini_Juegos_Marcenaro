@@ -14,6 +14,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:lin
 @media(max-width:650px){.wrap{width:min(100% - 18px,980px)}.brand{font-size:10px}.podium{gap:5px;margin-top:18px}.pod{min-height:165px;padding:12px 5px 10px;border-radius:17px}.pod.first{min-height:200px}.crown{font-size:28px}.avatar{width:52px;height:52px}.pname{font-size:11px}.pstats{gap:7px;font-size:9px}.pstats b{font-size:13px}.board{overflow:hidden}.row{grid-template-columns:34px minmax(105px,1.4fr) 55px 55px 58px 55px;font-size:10px;padding:10px 7px}.row>*:nth-child(4){display:none}.row>*:nth-child(7){display:none}.head>*:nth-child(4),.head>*:nth-child(7){display:none}.summary{grid-template-columns:1fr 1fr}.hero h1{font-size:30px}.pill{padding:9px 11px;font-size:11px}}
 @media(max-width:390px){.podium{grid-template-columns:1fr 1.08fr 1fr}.pstats span:nth-child(2){display:none}.pod{min-height:150px}.pod.first{min-height:185px}.avatar{width:46px;height:46px}.row{grid-template-columns:30px minmax(95px,1.4fr) 46px 52px 50px}.row>*:nth-child(6){display:none}.head>*:nth-child(6){display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before{animation:none!important;scroll-behavior:auto!important}}
+
+.my-stats{margin-top:16px;border:1px solid #754cff;background:linear-gradient(135deg,#101944ee,#20114dee);border-radius:20px;padding:14px;box-shadow:0 0 32px #6e42ff35,inset 0 0 24px #ffffff06;animation:rise .6s both}
+.my-stats-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.my-stats-title>div{display:flex;flex-direction:column;gap:3px}.my-stats-title span:first-child{font-weight:1000;color:#eee9ff}.my-stats-title small{color:#aeb9d7;font-weight:700}.online-dot{font-size:10px;color:#38e8a3!important;background:#0b2a2a;padding:6px 9px;border-radius:999px;border:1px solid #1c765f}
+.my-stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.my-stat{text-align:center;padding:12px 7px;border-radius:15px;background:#0b1535;border:1px solid #27365f;min-width:0}.my-stat>span{display:block;font-size:20px;margin-bottom:3px}.my-stat b{display:block;font-size:21px;color:#fff}.my-stat small{display:block;color:#9ca9c9;font-size:10px;margin-top:2px}
+@media(max-width:650px){.my-stats{padding:12px}.my-stats-grid{grid-template-columns:repeat(2,1fr)}.my-stat:last-child{grid-column:1/-1}.my-stat{padding:11px 6px}.my-stat b{font-size:19px}}
+
 </style>
 </head>
 <body>
@@ -26,6 +32,22 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background:lin
 <section class="board"><div class="row head"><span>#</span><span>Jugador</span><span>Victorias</span><span>Partidas</span><span>🔥 Racha</span><span>⭐ Puntos</span><span>Efect.</span></div><div id="leaderboard-body"></div></section>
 <div class="banner">🏆 ¡Juega y sube en el ranking!<br><small style="color:#d6bce9;font-weight:600">Entre menos intentos, más puntos. Mantén tu racha.</small></div>
 <section class="summary"><div class="sum"><b id="sum-players">0</b><small>👥 Jugadores</small></div><div class="sum"><b id="sum-games">0</b><small>🎮 Partidas</small></div><div class="sum"><b id="sum-wins">0</b><small>🔥 Victorias</small></div><div class="sum"><b id="sum-rate">0%</b><small>🎯 Efectividad</small></div></section>
+<section id="my-stats-panel" class="my-stats hidden">
+  <div class="my-stats-title">
+    <div>
+      <span>👤 TUS ESTADÍSTICAS</span>
+      <small id="my-stats-name">Jugador</small>
+    </div>
+    <span class="online-dot">● En línea</span>
+  </div>
+  <div class="my-stats-grid">
+    <div class="my-stat"><span>🎮</span><b id="my-played">0</b><small>Partidas</small></div>
+    <div class="my-stat"><span>🏆</span><b id="my-won">0</b><small>Victorias</small></div>
+    <div class="my-stat"><span>🎯</span><b id="my-rate">0%</b><small>Efectividad</small></div>
+    <div class="my-stat"><span>🔥</span><b id="my-streak">0</b><small>Racha actual</small></div>
+    <div class="my-stat"><span>⭐</span><b id="my-score">0</b><small>Puntos</small></div>
+  </div>
+</section>
 </div>
 <div id="pin-modal" class="hidden" style="position:fixed;inset:0;background:#000b;z-index:99;display:grid;place-items:center"><div style="background:#101933;padding:20px;border-radius:18px;border:1px solid #33416a"><b>PIN diagnóstico</b><input id="pin-input" type="password" style="display:block;margin:12px 0;padding:10px;border-radius:10px;background:#070d20;color:white;border:1px solid #39486e"><button id="submit-pin">Abrir</button> <button id="cancel-pin">Cancelar</button></div></div>
 <script>
@@ -40,6 +62,22 @@ function renderBeautifulRanking(players,user){
  body.innerHTML=players.map((p,i)=>{let rate=p.played?((p.won/p.played)*100):0,med=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;return `<div class="row" style="animation-delay:${Math.min(i*.055,.5)}s"><span>${med}</span><span class="name"><i class="miniav">${av(p)}</i><span style="overflow:hidden;text-overflow:ellipsis">${esc(p.name)}</span></span><span class="green">${p.won}</span><span>${p.played}</span><span class="fire">🔥 ${p.streak}</span><span class="star">⭐ ${Number(p.score).toLocaleString('es-ES')}</span><span class="rate">${rate.toFixed(1)}%<div class="bar"><i style="width:${Math.min(rate,100)}%"></i></div></span></div>`}).join('');
  const games=players.reduce((a,p)=>a+p.played,0),wins=players.reduce((a,p)=>a+p.won,0);
  document.getElementById('sum-players').textContent=players.length;document.getElementById('sum-games').textContent=games;document.getElementById('sum-wins').textContent=wins;document.getElementById('sum-rate').textContent=(games?wins/games*100:0).toFixed(0)+'%';
+
+ // Estadísticas personales del usuario que tiene la sesión iniciada.
+ const me = user ? players.find(p => p.userId === user.uid) : null;
+ const myPanel = document.getElementById('my-stats-panel');
+ if (me) {
+   const myRate = me.played > 0 ? (me.won / me.played) * 100 : 0;
+   document.getElementById('my-stats-name').textContent = me.name;
+   document.getElementById('my-played').textContent = me.played;
+   document.getElementById('my-won').textContent = me.won;
+   document.getElementById('my-rate').textContent = myRate.toFixed(1) + '%';
+   document.getElementById('my-streak').textContent = me.streak;
+   document.getElementById('my-score').textContent = Number(me.score || 0).toLocaleString('es-ES');
+   myPanel.classList.remove('hidden');
+ } else {
+   myPanel.classList.add('hidden');
+ }
 }
 </script>
 <script type="module">
@@ -178,6 +216,7 @@ async function loadRanking(user) {
       );
 
       const player = {
+        userId,
         name,
         photoURL: String(data.photoURL || ''),
         won: numberValue(data.won ?? data.wins ?? data.ganadas),
