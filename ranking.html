@@ -192,13 +192,26 @@ async function loadRanking(user) {
       }
     });
 
-    const players = Array.from(playersMap.values()).sort((a, b) =>
-      b.score - a.score ||
-      b.streak - a.streak ||
-      b.won - a.won ||
-      b.played - a.played ||
-      a.name.localeCompare(b.name, 'es')
-    );
+    // ORDEN DEL RANKING:
+    // 1) Primero manda la RACHA ACTUAL más alta.
+    // 2) Si dos jugadores tienen la misma racha, desempata PUNTOS.
+    // 3) Si NO tienen racha (0), se ordenan directamente por PUNTOS.
+    // 4) Si siguen empatados: victorias, partidas y nombre.
+    const players = Array.from(playersMap.values()).sort((a, b) => {
+      const streakA = Number(a.streak || 0);
+      const streakB = Number(b.streak || 0);
+      const scoreA = Number(a.score || 0);
+      const scoreB = Number(b.score || 0);
+
+      if (streakA !== streakB) return streakB - streakA;
+      if (scoreA !== scoreB) return scoreB - scoreA;
+
+      return (
+        Number(b.won || 0) - Number(a.won || 0) ||
+        Number(b.played || 0) - Number(a.played || 0) ||
+        a.name.localeCompare(b.name, 'es')
+      );
+    });
 
     renderBeautifulRanking(players, user);
 
